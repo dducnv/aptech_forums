@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -49,10 +51,9 @@ public class AccountService implements UserDetailsService {
         return accountRegisterDto;
 
     }
-    public UserInfoDto getUserInfo(String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer", "").trim();
-        DecodedJWT decodedJWT = JwtUtil.getDecodedJwt(token);
-        Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(decodedJWT.getSubject()));
+    public UserInfoDto getUserInfo() {
+        Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
         if(!optionalAccount.isPresent()){
             throw new UsernameNotFoundException("User not found");
         }
@@ -63,6 +64,8 @@ public class AccountService implements UserDetailsService {
                 .role(account.getRole())
                 .build();
     }
+
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByEmail(email);
