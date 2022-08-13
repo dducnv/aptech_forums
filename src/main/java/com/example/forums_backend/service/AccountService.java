@@ -1,13 +1,10 @@
 package com.example.forums_backend.service;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.dto.RegisterDto;
 import com.example.forums_backend.entity.dto.UserInfoDto;
-import com.example.forums_backend.exception.AccountExistException;
+import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.repository.AccountRepository;
-import com.example.forums_backend.utils.JwtUtil;
-import com.sun.javaws.exceptions.ExitException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -34,10 +30,13 @@ public class AccountService implements UserDetailsService {
     AccountRepository accountRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
-    public RegisterDto register(RegisterDto accountRegisterDto) throws AccountExistException {
+    public RegisterDto register(RegisterDto accountRegisterDto) throws AccountException {
         Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(accountRegisterDto.getEmail()));
         if (account.isPresent()) {
-           throw new AccountExistException("Account is exist");
+           throw new AccountException("Account is exist");
+        }
+        if(!accountRegisterDto.getPassword().equals(accountRegisterDto.getConfirmPassword())) {
+            throw new AccountException("Password is not match");
         }
         Account newAccount = Account.builder()
                 .name(accountRegisterDto.getName())
@@ -64,8 +63,6 @@ public class AccountService implements UserDetailsService {
                 .role(account.getRole())
                 .build();
     }
-
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByEmail(email);

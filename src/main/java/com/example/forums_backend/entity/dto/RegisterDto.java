@@ -1,7 +1,7 @@
 package com.example.forums_backend.entity.dto;
 
 import lombok.*;
-import javax.validation.constraints.*;
+    import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -20,5 +20,6 @@ public class RegisterDto {
     @NotNull(message = "password shouldn't be null")
     @NotBlank
     private String password;
+
     private String confirmPassword;
 }

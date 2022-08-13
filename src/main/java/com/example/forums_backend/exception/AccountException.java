@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class AccountExistException extends Exception{
+public class AccountException extends Exception{
 
-    public AccountExistException(String errorMessage) {
+    public AccountException(String errorMessage) {
         super(errorMessage);
     }
 }
