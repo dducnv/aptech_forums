@@ -14,6 +14,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.forums_backend.config.route.constant.AccountRoute.PREFIX_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_ROUTE;
+import static com.example.forums_backend.config.route.constant.AuthRoute.PREFIX_AUTH_ROUTE;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,22 +29,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         ApiAuthenticationFilter apiAuthenticationFilter = new ApiAuthenticationFilter(authenticationManagerBean());
-        apiAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
+        apiAuthenticationFilter.setFilterProcessesUrl(LOGIN_ROUTE);
         http.cors().and().csrf().disable();
         //route dành cho user không cần đang nhập
         http
                 .authorizeRequests()
-                .antMatchers("/api/auth/**")
+                .antMatchers(
+                        PREFIX_AUTH_ROUTE.concat("/**"),
+                        PREFIX_ACCOUNT_ROUTE.concat("/**")
+                )
                 .permitAll();
         //route quyền truy cập danh cho user đã đang nhập
         http
                 .authorizeRequests()
-                .antMatchers("/api/user/**")
+                .antMatchers("/api/user-role/**", "/api/auth/user/**")
                 .hasAnyAuthority("USER", "ADMIN");
         //route quyền truy cập dành cho admin
         http
                 .authorizeRequests()
-                .antMatchers("/api/user/get-admin")
+                .antMatchers("/api/admin-role/**")
                 .hasAnyAuthority("ADMIN");
         http
                 .addFilter(apiAuthenticationFilter);

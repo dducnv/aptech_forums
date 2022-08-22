@@ -18,8 +18,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
+import static com.example.forums_backend.config.route.constant.AccountRoute.GET_ALL_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.route.constant.AccountRoute.UPDATE_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_ROUTE;
+import static com.example.forums_backend.config.route.constant.AuthRoute.REGISTER_ROUTE;
+
 public class ApiAuthorizationFilter extends OncePerRequestFilter {
-    private static final String[] IGNORE_PATHS = {"/api/auth/login", "/api/auth/register"};
+    private static final String[] IGNORE_PATHS = {
+            LOGIN_ROUTE,
+            REGISTER_ROUTE,
+            GET_ALL_ACCOUNT_ROUTE,
+            UPDATE_ACCOUNT_ROUTE
+    };
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

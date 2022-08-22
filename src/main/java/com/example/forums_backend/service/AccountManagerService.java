@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,5 +21,12 @@ public class AccountManagerService {
 
     public List<Account> findAll() {
         return accountRepository.findAll();
+    }
+
+    public Account update(Account account, Long id) {
+        Optional<Account> optionalAccount = accountRepository.findById(id);
+        Account accountModal = optionalAccount.get();
+        accountModal.setRole(account.getRole());
+        return accountRepository.save(accountModal);
     }
 }

@@ -12,17 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static com.example.forums_backend.config.route.constant.AuthRoute.*;
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(PREFIX_AUTH_ROUTE)
 @RequiredArgsConstructor
 public class AuthController {
     final AccountService accountService;
-    @RequestMapping(value = "/register", produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
+    @RequestMapping(value = REGISTER_PATH, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
     public ResponseEntity<RegisterDto> register(@RequestBody @Valid RegisterDto registerDto) throws AccountException {
         return ResponseEntity.ok(accountService.register(registerDto));
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @RequestMapping(value = USER_INFO_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> userInfo(){
         return ResponseEntity.ok(accountService.getUserInfo());
     }
