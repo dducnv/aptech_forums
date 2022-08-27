@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -53,19 +54,17 @@ public class ApiAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws IOException, ServletException {
         User user = (User) authResult.getPrincipal(); //get user that successfully login
         //generate tokens
-        int currentTimeMillis = Integer.parseInt(String.valueOf(System.currentTimeMillis()));
         String accessToken = JwtUtil.generateToken(user.getUsername(),
                 user.getAuthorities().iterator().next().getAuthority(),
-                request.getRequestURL().toString(), currentTimeMillis + JwtUtil.ONE_DAY * 7);
+                request.getRequestURL().toString(), JwtUtil.ONE_DAY * 7);
         // generate refresh token
         String refreshToken = JwtUtil.generateToken(user.getUsername(),
                 user.getAuthorities().iterator().next().getAuthority(),
-                request.getRequestURL().toString(),
-                currentTimeMillis + JwtUtil.ONE_DAY * 14);
+                request.getRequestURL().toString(),JwtUtil.ONE_DAY * 14);
         CredentialDto credential = CredentialDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .expiresIn(currentTimeMillis + JwtUtil.ONE_DAY * 7)
+                .expiresIn(System.currentTimeMillis() + JwtUtil.ONE_DAY * 7)
                 .tokenType("Bearer")
                 .scope("basic_info")
                 .build();

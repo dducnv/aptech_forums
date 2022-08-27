@@ -2,6 +2,8 @@ package com.example.forums_backend.entity.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Builder
@@ -13,7 +15,7 @@ public class CredentialDto {
     private String email;
     private String accessToken;
     private String refreshToken;
-    private long expiresIn;
+    private Long expiresIn;
     private String tokenType;
     private String scope;
 }
