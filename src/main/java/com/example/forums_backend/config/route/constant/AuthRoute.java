@@ -1,7 +1,7 @@
 package com.example.forums_backend.config.route.constant;
 
 public class AuthRoute {
-    public static final String PREFIX_AUTH_ROUTE = "/api/auth";
+    public static final String PREFIX_AUTH_ROUTE = "/api";
 
     public static final String LOGIN_PATH = "/login";
     public static final String REGISTER_PATH = "/register";
