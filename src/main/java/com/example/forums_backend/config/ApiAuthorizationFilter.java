@@ -20,13 +20,14 @@ import java.util.*;
 
 import static com.example.forums_backend.config.route.constant.AccountRoute.GET_ALL_ACCOUNT_ROUTE;
 import static com.example.forums_backend.config.route.constant.AccountRoute.UPDATE_ACCOUNT_ROUTE;
-import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_ROUTE;
-import static com.example.forums_backend.config.route.constant.AuthRoute.REGISTER_ROUTE;
+import static com.example.forums_backend.config.route.constant.AuthRoute.*;
 
 public class ApiAuthorizationFilter extends OncePerRequestFilter {
     private static final String[] IGNORE_PATHS = {
             LOGIN_ROUTE,
             REGISTER_ROUTE,
+            GET_OTP_ROUTE,
+            LOGIN_WITH_EMAIL_ROUTE,
             GET_ALL_ACCOUNT_ROUTE,
             UPDATE_ACCOUNT_ROUTE
     };

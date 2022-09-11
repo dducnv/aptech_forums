@@ -11,8 +11,6 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class CredentialDto {
-    private String name;
-    private String email;
     private String accessToken;
     private String refreshToken;
     private Long expiresIn;

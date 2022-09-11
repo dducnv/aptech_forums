@@ -14,9 +14,6 @@ public class RegisterDto {
     private String name;
     @Email(message = "invalid email address")
     private String email;
-    @NotNull(message = "phone shouldn't be null")
-    @NotBlank
-    private String phone;
     @NotNull(message = "password shouldn't be null")
     @NotBlank
     private String password;
