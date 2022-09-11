@@ -28,13 +28,8 @@ public class AuthController {
     }
 
     @RequestMapping(value = LOGIN_WITH_EMAIL_PATH,produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<CredentialDto> loginWithEmailOtp(@RequestBody @Valid LoginDto loginDto){
-        CredentialDto credentialDto;
-        try {
-            credentialDto = accountService.loginWithOTP(loginDto);
-        } catch (AccountException e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<CredentialDto> loginWithEmailOtp(@RequestBody @Valid LoginDto loginDto)throws AccountException{
+        CredentialDto  credentialDto = accountService.loginWithOTP(loginDto);
         return ResponseEntity.ok(credentialDto);
     }
     @RequestMapping(value = REGISTER_PATH, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
