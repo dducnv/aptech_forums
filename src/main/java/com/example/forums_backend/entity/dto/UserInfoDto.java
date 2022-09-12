@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class UserInfoDto {
+    private String avatar;
     private String name;
     private String email;
     private String role;

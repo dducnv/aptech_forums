@@ -103,13 +103,10 @@ public class AccountService implements UserDetailsService {
         if (account.isPresent()) {
             throw new AccountException("Account is exist");
         }
-        if (!accountRegisterDto.getPassword().equals(accountRegisterDto.getConfirmPassword())) {
-            throw new AccountException("Password is not match");
-        }
         Account newAccount = Account.builder()
+                .avatar(accountRegisterDto.getAvatar())
                 .name(accountRegisterDto.getName())
                 .email(accountRegisterDto.getEmail())
-                .password(passwordEncoder.encode(accountRegisterDto.getPassword()))
                 .role("USER")
                 .build();
         accountRepository.save(newAccount);
@@ -126,6 +123,7 @@ public class AccountService implements UserDetailsService {
         }
         Account account = optionalAccount.get();
         return UserInfoDto.builder()
+                .avatar(account.getAvatar())
                 .name(account.getName())
                 .email(account.getEmail())
                 .role(account.getRole())

@@ -12,11 +12,9 @@ public class RegisterDto {
     @NotNull(message = "name shouldn't be null")
     @NotBlank
     private String name;
+    @NotNull(message = "avatar shouldn't be null")
+    @NotBlank
+    private String avatar;
     @Email(message = "invalid email address")
     private String email;
-    @NotNull(message = "password shouldn't be null")
-    @NotBlank
-    private String password;
-
-    private String confirmPassword;
 }
