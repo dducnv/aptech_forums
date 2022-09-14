@@ -79,6 +79,9 @@ public class AccountService implements UserDetailsService {
             Account accountUpdate = account.get();
             accountUpdate.setOne_time_password(passwordEncoder.encode(password));
             accountUpdate.setExpire_time(new Date(System.currentTimeMillis() + expireTime));
+            if(!accountUpdate.isEmail_verify()){
+                accountUpdate.setEmail_verify(true);
+            }
             accountRepository.save(accountUpdate);
             Context context = new Context();
             context.setVariable("password", password);
@@ -88,6 +91,7 @@ public class AccountService implements UserDetailsService {
             emailDetails.setMsgBody(template);
             emailDetails.setSubject("OTP LOGIN");
             emailService.sendSimpleMail(emailDetails);
+
             return CheckAccount.builder()
                     .accountExist(true)
                     .build();
@@ -107,6 +111,7 @@ public class AccountService implements UserDetailsService {
                 .avatar(accountRegisterDto.getAvatar())
                 .name(accountRegisterDto.getName())
                 .email(accountRegisterDto.getEmail())
+                .email_verify(false)
                 .role("USER")
                 .build();
         accountRepository.save(newAccount);

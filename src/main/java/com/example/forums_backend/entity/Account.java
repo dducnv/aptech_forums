@@ -26,6 +26,7 @@ public class Account {
     private String name;
     private String email;
     private String password;
+    private boolean email_verify;
     private String one_time_password;
     private Date expire_time;
     @Column(columnDefinition = "varchar(255) default 'USER'")
