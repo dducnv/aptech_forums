@@ -25,6 +25,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -32,6 +34,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
     private int expireTime = 60 * 1000 * 5;
+
+    public static final Pattern STUDENT_FPT_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Za-z0-9._%+-]+@fpt.edu.vn$", Pattern.CASE_INSENSITIVE);
+
+    public static final Pattern STAFF_FPT_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Za-z0-9._%+-]+@fe.edu.vn$", Pattern.CASE_INSENSITIVE);
 
     @Autowired
     AccountRepository accountRepository;
@@ -42,6 +50,7 @@ public class AccountService implements UserDetailsService {
     EmailService emailService;
     @Autowired
     private TemplateEngine templateEngine;
+
 
 
     public CredentialDto loginWithOTP(LoginDto loginDto) throws AccountException {
@@ -107,11 +116,18 @@ public class AccountService implements UserDetailsService {
         if (account.isPresent()) {
             throw new AccountException("Account is exist");
         }
+        Matcher studentMatcher = STUDENT_FPT_EMAIL_ADDRESS_REGEX.matcher(accountRegisterDto.getEmail());
+        Matcher staffMatcher = STAFF_FPT_EMAIL_ADDRESS_REGEX.matcher(accountRegisterDto.getEmail());
+        boolean isFptMember = false;
+        if(studentMatcher.find() || staffMatcher.find()){
+            isFptMember = true;
+        }
         Account newAccount = Account.builder()
                 .avatar(accountRegisterDto.getAvatar())
                 .name(accountRegisterDto.getName())
                 .email(accountRegisterDto.getEmail())
                 .email_verify(false)
+                .fpt_member(isFptMember)
                 .role("USER")
                 .build();
         accountRepository.save(newAccount);
@@ -131,6 +147,7 @@ public class AccountService implements UserDetailsService {
                 .avatar(account.getAvatar())
                 .name(account.getName())
                 .email(account.getEmail())
+                .fpt_member(account.isFpt_member())
                 .role(account.getRole())
                 .build();
     }

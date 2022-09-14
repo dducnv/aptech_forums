@@ -11,6 +11,7 @@ import lombok.Setter;
 public class UserInfoDto {
     private String avatar;
     private String name;
+    private boolean fpt_member;
     private String email;
     private String role;
 }
