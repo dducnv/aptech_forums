@@ -18,8 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-import static com.example.forums_backend.config.route.constant.AccountRoute.GET_ALL_ACCOUNT_ROUTE;
-import static com.example.forums_backend.config.route.constant.AccountRoute.UPDATE_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.route.constant.AccountRoute.*;
 import static com.example.forums_backend.config.route.constant.AuthRoute.*;
 
 public class ApiAuthorizationFilter extends OncePerRequestFilter {
@@ -29,7 +28,8 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             GET_OTP_ROUTE,
             LOGIN_WITH_EMAIL_ROUTE,
             GET_ALL_ACCOUNT_ROUTE,
-            UPDATE_ACCOUNT_ROUTE
+            UPDATE_ACCOUNT_ROUTE,
+            DELETE_ACCOUNT_ROUTE
     };
 
     @Override

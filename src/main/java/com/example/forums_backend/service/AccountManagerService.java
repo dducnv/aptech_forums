@@ -29,4 +29,8 @@ public class AccountManagerService {
         accountModal.setRole(account.getRole());
         return accountRepository.save(accountModal);
     }
+
+    public void delete(Long id){
+       accountRepository.deleteById(id);
+    }
 }
