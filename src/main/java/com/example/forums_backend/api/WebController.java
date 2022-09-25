@@ -21,5 +21,9 @@ public class WebController {
         return ResponseEntity.ok("This is admin");
     }
 
+    @RequestMapping(value = "/upload-image", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadImage(){
+        return ResponseEntity.ok("it uploaded");
+    }
 
 }
