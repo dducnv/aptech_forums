@@ -10,8 +10,8 @@ spring:
   mail:
     port: 587
     host: smtp.gmail.com
-    username: ducbe2k2@gmail.com
-    password: zptpdrrklfaepqwv
+    username: forum.fptaptech@gmail.com
+    password: rmdiupuwvzfvguon
     properties.mail.smtp:
       auth: true
       starttls.enable: true
@@ -63,13 +63,14 @@ app:
     tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
     tokenExpirationMsec: 864000000
   cors:
-    allowedOrigins: http://localhost:3000,http://localhost:8080
+    allowedOrigins: http://localhost:3000,http://localhost:8080,https://forums-aptech.herokuapp.com
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
+      - https://forums-aptech.herokuapp.com
       - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
