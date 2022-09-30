@@ -3,6 +3,7 @@ package com.example.forums_backend.service;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.EmailDetails;
 import com.example.forums_backend.entity.dto.*;
+import com.example.forums_backend.entity.my_enum.AuthProvider;
 import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.utils.GeneratingPassword;
@@ -123,11 +124,12 @@ public class AccountService implements UserDetailsService {
             isFptMember = true;
         }
         Account newAccount = Account.builder()
-                .avatar(accountRegisterDto.getAvatar())
+                .imageUrl(accountRegisterDto.getAvatar())
                 .name(accountRegisterDto.getName())
                 .email(accountRegisterDto.getEmail())
                 .email_verify(false)
                 .fpt_member(isFptMember)
+                .provider(AuthProvider.local)
                 .role("USER")
                 .build();
         accountRepository.save(newAccount);
@@ -144,7 +146,7 @@ public class AccountService implements UserDetailsService {
         }
         Account account = optionalAccount.get();
         return UserInfoDto.builder()
-                .avatar(account.getAvatar())
+                .avatar(account.getImageUrl())
                 .name(account.getName())
                 .email(account.getEmail())
                 .fpt_member(account.isFpt_member())

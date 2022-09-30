@@ -1,5 +1,6 @@
 package com.example.forums_backend.entity;
 
+import com.example.forums_backend.entity.my_enum.AuthProvider;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,12 +23,16 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "TEXT" )
-    private String avatar;
+    //avatar nhưng là link
+    private String imageUrl;
     private String name;
     private String email;
     private String password;
     private boolean email_verify;
     private boolean fpt_member;
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+    private String providerId;
     private String one_time_password;
     private Date expire_time;
     @Column(columnDefinition = "varchar(255) default 'USER'")

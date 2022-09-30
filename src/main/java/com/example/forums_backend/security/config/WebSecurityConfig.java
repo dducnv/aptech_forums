@@ -2,6 +2,10 @@ package com.example.forums_backend.security.config;
 
 import com.example.forums_backend.config.ApiAuthenticationFilter;
 import com.example.forums_backend.config.ApiAuthorizationFilter;
+import com.example.forums_backend.config.oauth2.CustomOAuth2UserService;
+import com.example.forums_backend.config.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.example.forums_backend.config.oauth2.OAuth2AuthenticationFailureHandler;
+import com.example.forums_backend.config.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +29,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     UserDetailsService userDetailsService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    @Autowired
+    private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -50,6 +63,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin-role/**")
                 .hasAnyAuthority("ADMIN");
         http
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService).and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
+        http
                 .addFilter(apiAuthenticationFilter);
         http
                 .addFilterBefore(new ApiAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -61,7 +87,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
