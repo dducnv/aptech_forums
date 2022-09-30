@@ -22,10 +22,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   security:
     oauth2:
       client:
@@ -37,16 +37,9 @@ spring:
             scope:
               - email
               - profile
-          facebook:
-            clientId: 121189305185277
-            clientSecret: 42ffe5aa7379e8326387e0fe16f34132
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
-            scope:
-              - email
-              - public_profile
           github:
-            clientId: a79b0ea9de18af8f30d6
-            clientSecret: b48889f2b33cc82b905e2863abd7c23e8b3ffdf3
+            clientId: 31c2e8628954c21966c1
+            clientSecret: b361c098f56d45e7df4149c1cce6639b65eaac89
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - user:email
