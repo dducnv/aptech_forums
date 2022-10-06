@@ -10,15 +10,14 @@ public class GeneratingPassword {
     private static String numbers = "1234567890";
 
     public static char[] generatePassword(int length){
-        String combinedChars =  numbers;
+        String combinedChars = capitalCaseLetters + lowerCaseLetters + specialCharacters + numbers;
         Random random = new Random();
         char[] password = new char[length];
-        password[0] = numbers.charAt(random.nextInt(numbers.length()));
-        password[1] = numbers.charAt(random.nextInt(numbers.length()));
-        password[2] = numbers.charAt(random.nextInt(numbers.length()));
+        password[0] = lowerCaseLetters.charAt(random.nextInt(lowerCaseLetters.length()));
+        password[1] = capitalCaseLetters.charAt(random.nextInt(capitalCaseLetters.length()));
+        password[2] = specialCharacters.charAt(random.nextInt(specialCharacters.length()));
         password[3] = numbers.charAt(random.nextInt(numbers.length()));
-        password[4] = numbers.charAt(random.nextInt(numbers.length()));
-        for(int i = 5; i< length ; i++) {
+        for(int i = 4; i< length ; i++) {
             password[i] = combinedChars.charAt(random.nextInt(combinedChars.length()));
         }
         return password;

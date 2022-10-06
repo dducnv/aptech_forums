@@ -85,7 +85,7 @@ public class AccountService implements UserDetailsService {
                         .accountExist(false)
                         .build();
             }
-            String password = String.valueOf(GeneratingPassword.generatePassword(6));
+            String password = String.valueOf(GeneratingPassword.generatePassword(12));
             Account accountUpdate = account.get();
             accountUpdate.setOne_time_password(passwordEncoder.encode(password));
             accountUpdate.setExpire_time(new Date(System.currentTimeMillis() + expireTime));
