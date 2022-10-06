@@ -10,7 +10,7 @@ public class GeneratingPassword {
     private static String numbers = "1234567890";
 
     public static char[] generatePassword(int length){
-        String combinedChars = capitalCaseLetters + lowerCaseLetters + specialCharacters + numbers;
+        String combinedChars =  numbers;
         Random random = new Random();
         char[] password = new char[length];
         password[0] = numbers.charAt(random.nextInt(numbers.length()));
