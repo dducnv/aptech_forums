@@ -17,9 +17,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.example.forums_backend.config.route.constant.AccountRoute.*;
+import static com.example.forums_backend.config.route.constant.AuthRoute.*;
+import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_WITH_EMAIL_ROUTE;
 
 @Service
 @Slf4j
@@ -32,6 +37,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     public static final Pattern STAFF_FPT_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Za-z0-9._%+-]+@fe.edu.vn$", Pattern.CASE_INSENSITIVE);
+
+    private static final String[] IS_ADMIN = {"dduc7th.dec@gmail.com", "ducnvth2008042@fpt.edu.vn"};
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
@@ -48,15 +56,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
+        if (StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
         Optional<Account> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
         Account account;
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             account = userOptional.get();
-            if(!account.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+            if (!account.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                         account.getProvider() + " account. Please use your " + account.getProvider() +
                         " account to login.");
@@ -73,8 +81,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Matcher studentMatcher = STUDENT_FPT_EMAIL_ADDRESS_REGEX.matcher(oAuth2UserInfo.getEmail());
         Matcher staffMatcher = STAFF_FPT_EMAIL_ADDRESS_REGEX.matcher(oAuth2UserInfo.getEmail());
         boolean isFptMember = false;
-        if(studentMatcher.find() || staffMatcher.find()){
+        boolean isAdmin = false;
+        if (studentMatcher.find() || staffMatcher.find()) {
             isFptMember = true;
+        }
+        if (Arrays.asList(IS_ADMIN).contains(oAuth2UserInfo.getEmail())) {
+            isAdmin = true;
         }
         Account user = new Account();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
@@ -84,7 +96,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setFpt_member(isFptMember);
         user.setEmail_verify(true);
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        user.setRole("USER");
+        user.setRole(isAdmin ? "ADMIN" : "USER");
         return userRepository.save(user);
     }
 

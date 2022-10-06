@@ -29,7 +29,8 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             LOGIN_WITH_EMAIL_ROUTE,
             GET_ALL_ACCOUNT_ROUTE,
             UPDATE_ACCOUNT_ROUTE,
-            DELETE_ACCOUNT_ROUTE
+            DELETE_ACCOUNT_ROUTE,
+            "/"
     };
 
     @Override

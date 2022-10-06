@@ -48,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(
+                        "/",
                         PREFIX_AUTH_ROUTE.concat("/**"),
                         PREFIX_ACCOUNT_ROUTE.concat("/**")
                 )
