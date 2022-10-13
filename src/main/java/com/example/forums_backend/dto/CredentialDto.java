@@ -1,4 +1,4 @@
-package com.example.forums_backend.entity.dto;
+package com.example.forums_backend.dto;
 
 import lombok.*;
 

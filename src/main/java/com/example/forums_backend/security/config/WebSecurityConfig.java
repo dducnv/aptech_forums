@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static com.example.forums_backend.config.route.constant.AccountRoute.PREFIX_ACCOUNT_ROUTE;
 import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_ROUTE;
 import static com.example.forums_backend.config.route.constant.AuthRoute.PREFIX_AUTH_ROUTE;
+import static com.example.forums_backend.config.route.constant.ClientRoute.POST_CLIENT_ROUTE;
 
 @Configuration
 @EnableWebSecurity

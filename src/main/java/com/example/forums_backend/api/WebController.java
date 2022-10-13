@@ -25,10 +25,4 @@ public class WebController {
     public ResponseEntity<?> getAdmin(){
         return ResponseEntity.ok("This is admin");
     }
-
-    @RequestMapping(value = "/api/upload-image", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadImage(){
-        return ResponseEntity.ok("it uploaded");
-    }
-
 }

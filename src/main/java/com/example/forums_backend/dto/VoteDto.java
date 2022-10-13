@@ -1,4 +1,4 @@
-package com.example.forums_backend.entity.dto;
+package com.example.forums_backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginEmailDto {
-    private String email;
+public class VoteDto {
+    private Long subject_id;
+    private String subject;
 }

@@ -1,12 +1,12 @@
 spring:
   datasource:
-#        url: jdbc:mysql://localhost:3306/aptech_forums?createDatabaseIfNotExist=true
-#        username: root
-#        password:
-    url: postgres://ajibecqpnajisk:2ca0a101a0b902cabd1a5ed94b1071f24d46954b30e36c1df545a54343579d10@ec2-44-206-197-71.compute-1.amazonaws.com:5432/de4v9f51953m50
-    username: ajibecqpnajisk
-    password: 2ca0a101a0b902cabd1a5ed94b1071f24d46954b30e36c1df545a54343579d10
-    driverClassName: org.postgresql.Driver
+        url: jdbc:mysql://localhost:3306/aptech_forums?createDatabaseIfNotExist=true
+        username: root
+        password:
+#    url: postgres://ajibecqpnajisk:2ca0a101a0b902cabd1a5ed94b1071f24d46954b30e36c1df545a54343579d10@ec2-44-206-197-71.compute-1.amazonaws.com:5432/de4v9f51953m50
+#    username: ajibecqpnajisk
+#    password: 2ca0a101a0b902cabd1a5ed94b1071f24d46954b30e36c1df545a54343579d10
+#    driverClassName: org.postgresql.Driver
   mail:
     port: 587
     host: smtp.gmail.com
@@ -21,11 +21,11 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
-#      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-#      properties:
-#        hibernate:
-#          dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      ddl-auto: create-drop
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   security:
     oauth2:
       client:
