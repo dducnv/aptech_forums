@@ -1,8 +1,8 @@
 package com.example.forums_backend.service;
 
+import com.example.forums_backend.dto.*;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.EmailDetails;
-import com.example.forums_backend.entity.dto.*;
 import com.example.forums_backend.entity.my_enum.AuthProvider;
 import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.repository.AccountRepository;
@@ -138,7 +138,7 @@ public class AccountService implements UserDetailsService {
 
     }
 
-    public UserInfoDto getUserInfo() {
+    public UserInfoDto getUserBaseInfo() {
         Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
         if (!optionalAccount.isPresent()) {
@@ -153,6 +153,16 @@ public class AccountService implements UserDetailsService {
                 .role(account.getRole())
                 .build();
     }
+
+    public Account getUserInfoData(){
+        Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
+        if (!optionalAccount.isPresent()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return optionalAccount.get();
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

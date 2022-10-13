@@ -1,7 +1,7 @@
 package com.example.forums_backend.config;
 
-import com.example.forums_backend.entity.dto.CredentialDto;
-import com.example.forums_backend.entity.dto.LoginDto;
+import com.example.forums_backend.dto.CredentialDto;
+import com.example.forums_backend.dto.LoginDto;
 import com.example.forums_backend.utils.JwtUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 

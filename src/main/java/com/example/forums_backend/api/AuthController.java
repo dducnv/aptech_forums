@@ -1,9 +1,8 @@
 package com.example.forums_backend.api;
 
-import com.example.forums_backend.entity.dto.*;
+import com.example.forums_backend.dto.*;
 import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.service.AccountService;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +38,7 @@ public class AuthController {
 
     @RequestMapping(value = USER_INFO_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> userInfo(){
-        return ResponseEntity.ok(accountService.getUserInfo());
+        return ResponseEntity.ok(accountService.getUserBaseInfo());
     }
 
 }
