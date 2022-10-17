@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.forums_backend.config.route.constant.AccountRoute.*;
+import static com.example.forums_backend.config.constant.route.AccountRoute.*;
 
 @RestController
 @RequestMapping(PREFIX_ACCOUNT_ROUTE)

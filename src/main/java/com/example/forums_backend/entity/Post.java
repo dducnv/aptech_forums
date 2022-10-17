@@ -8,9 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -18,7 +16,6 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Data
 @Entity
 @Table(name = "posts")
@@ -27,6 +24,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(unique = true)
+    private String slug;
     @Column(columnDefinition = "text")
     private String content;
     @Column(columnDefinition = "int(11) default 0")
@@ -41,9 +40,15 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonIgnoreProperties("posts")
     Set<Tag> tags = new HashSet<>();
-
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JsonIgnore
     Set<Voting> voting = new HashSet<>();
+    @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JsonIgnore
+    Set<Comment> comment = new HashSet<>();
+    @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JsonIgnore
+    Set<Bookmark> bookmarks = new HashSet<>();
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

@@ -15,23 +15,26 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "TEXT" )
-    //avatar nhưng là link
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
     private String name;
     @JsonIgnore
+    @Column(unique = true)
     private String email;
+    @JsonIgnore
+    @Column(unique = true)
+    private String username;
     @JsonIgnore
     private String password;
     private boolean email_verify;
     private boolean fpt_member;
+    private int reputation;
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
     private String providerId;
@@ -46,6 +49,11 @@ public class Account {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     @JsonIgnore
-    @OneToMany(mappedBy = "author",  cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
     Set<Post> posts = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    Set<TagFollowing> tagFollowings = new HashSet<>();
+    @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    Set<UserContact> userContacts = new HashSet<>();
 }

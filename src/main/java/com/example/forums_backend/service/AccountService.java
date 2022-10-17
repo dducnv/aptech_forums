@@ -8,6 +8,7 @@ import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.utils.GeneratingPassword;
 import com.example.forums_backend.utils.JwtUtil;
+import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,6 @@ public class AccountService implements UserDetailsService {
     private TemplateEngine templateEngine;
 
 
-
     public CredentialDto loginWithOTP(LoginDto loginDto) throws AccountException {
         Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(loginDto.getEmail()));
         if (!account.isPresent()) {
@@ -89,7 +89,7 @@ public class AccountService implements UserDetailsService {
             Account accountUpdate = account.get();
             accountUpdate.setOne_time_password(passwordEncoder.encode(password));
             accountUpdate.setExpire_time(new Date(System.currentTimeMillis() + expireTime));
-            if(!accountUpdate.isEmail_verify()){
+            if (!accountUpdate.isEmail_verify()) {
                 accountUpdate.setEmail_verify(true);
             }
             accountRepository.save(accountUpdate);
@@ -120,13 +120,14 @@ public class AccountService implements UserDetailsService {
         Matcher studentMatcher = STUDENT_FPT_EMAIL_ADDRESS_REGEX.matcher(accountRegisterDto.getEmail());
         Matcher staffMatcher = STAFF_FPT_EMAIL_ADDRESS_REGEX.matcher(accountRegisterDto.getEmail());
         boolean isFptMember = false;
-        if(studentMatcher.find() || staffMatcher.find()){
+        if (studentMatcher.find() || staffMatcher.find()) {
             isFptMember = true;
         }
+        String username = SlugGenerating.toUsername(accountRegisterDto.getName().trim());
         Account newAccount = Account.builder()
-                .imageUrl(accountRegisterDto.getAvatar())
-                .name(accountRegisterDto.getName())
+                .name(accountRegisterDto.getName().trim())
                 .email(accountRegisterDto.getEmail())
+                .username(username)
                 .email_verify(false)
                 .fpt_member(isFptMember)
                 .provider(AuthProvider.local)
@@ -154,16 +155,25 @@ public class AccountService implements UserDetailsService {
                 .build();
     }
 
-    public Account getUserInfoData(){
+    public Account getUserInfoData() {
         Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
-        if (!optionalAccount.isPresent()) {
-            throw new UsernameNotFoundException("User not found");
+        if (userInfo != "anonymousUser") {
+            Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
+            if (!optionalAccount.isPresent()) {
+                throw new UsernameNotFoundException("User not found");
+            }
+            return optionalAccount.get();
         }
-        return optionalAccount.get();
+        return null;
     }
 
+    public Account findById(Long id){
+        return accountRepository.findById(id).get();
+    }
 
+    public Account findByUsername(String username){
+        return accountRepository.findFirstByUsername(username).get();
+    }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByEmail(email);

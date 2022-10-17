@@ -5,7 +5,7 @@ import com.example.forums_backend.entity.EmailDetails;
 public interface EmailService {
     // Method
     // To send a simple email
-    String sendSimpleMail(EmailDetails details);
+    void sendSimpleMail(EmailDetails details);
 
     // Method
     // To send an email with attachment

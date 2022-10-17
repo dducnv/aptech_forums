@@ -6,6 +6,7 @@ import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.my_enum.AuthProvider;
 import com.example.forums_backend.exception.OAuth2AuthenticationProcessingException;
 import com.example.forums_backend.repository.AccountRepository;
+import com.example.forums_backend.utils.SlugGenerating;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -21,10 +22,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.example.forums_backend.config.route.constant.AccountRoute.*;
-import static com.example.forums_backend.config.route.constant.AuthRoute.*;
-import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_WITH_EMAIL_ROUTE;
 
 @Service
 @Slf4j
@@ -89,10 +86,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             isAdmin = true;
         }
         Account user = new Account();
+        String username = SlugGenerating.toUsername(oAuth2UserInfo.getName());
+
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
+        user.setUsername(username);
         user.setFpt_member(isFptMember);
         user.setEmail_verify(true);
         user.setImageUrl(oAuth2UserInfo.getImageUrl());

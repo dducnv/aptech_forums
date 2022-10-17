@@ -1,5 +1,7 @@
 package com.example.forums_backend.entity;
 
+import com.example.forums_backend.entity.my_enum.Subject;
+import com.example.forums_backend.entity.my_enum.VoteType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -10,25 +12,26 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
-@Table(name = "voting")
+@Table(name = "vote")
 public class Voting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
-//    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private Account account;
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     @JsonIgnore
     @JoinColumn(name = "post_id")
     private Post post;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    private String subject;
-    private int type;
+    @Enumerated(EnumType.ORDINAL)
+    private Subject subject;
+    @Enumerated(EnumType.ORDINAL)
+    private VoteType type;
 }
