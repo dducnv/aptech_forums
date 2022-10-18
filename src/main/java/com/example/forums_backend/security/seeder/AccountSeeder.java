@@ -1,4 +1,4 @@
-package com.example.forums_backend.seeder;
+package com.example.forums_backend.security.seeder;
 
 import com.example.forums_backend.dto.RegisterDto;
 import com.example.forums_backend.service.AccountService;
