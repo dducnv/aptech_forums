@@ -27,23 +27,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 //@Transactional
 public class CommentService {
-    CommentRepository commentRepository;
-    PostRepository postRepository;
-    AccountService accountService;
-    VoteRepository voteRepository;
-    PostService postService;
-
-    BookmarkRepository bookmarkRepository;
-
     @Autowired
-    public CommentService(CommentRepository commentRepository, AccountService accountService, PostService postService, PostRepository postRepository, VoteRepository voteRepository, BookmarkRepository bookmarkRepository) {
-        this.commentRepository = commentRepository;
-        this.accountService = accountService;
-        this.postService = postService;
-        this.postRepository = postRepository;
-        this.voteRepository = voteRepository;
-        this.bookmarkRepository = bookmarkRepository;
-    }
+    CommentRepository commentRepository;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    VoteRepository voteRepository;
+    @Autowired
+    PostService postService;
+    @Autowired
+    BookmarkRepository bookmarkRepository;
 
     public List<Comment> findAll() {
         return commentRepository.findAll();

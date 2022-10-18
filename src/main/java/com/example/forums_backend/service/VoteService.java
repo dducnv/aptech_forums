@@ -28,22 +28,18 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class VoteService {
-    VoteRepository voteRepository;
-    PostRepository postRepository;
-    CommentRepository commentRepository;
-    AccountService accountService;
-    PostService postService;
-    CommentService commentService;
-
     @Autowired
-    public VoteService(VoteRepository voteRepository, PostRepository postRepository, AccountService accountService, PostService postService, CommentService commentService, CommentRepository commentRepository) {
-        this.voteRepository = voteRepository;
-        this.postRepository = postRepository;
-        this.accountService = accountService;
-        this.postService = postService;
-        this.commentService = commentService;
-        this.commentRepository = commentRepository;
-    }
+    VoteRepository voteRepository;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    CommentRepository commentRepository;
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    PostService postService;
+    @Autowired
+    CommentService commentService;
 
     public VoteResDto vote(VoteDto voteDto) throws AppException {
         Account author = accountService.getUserInfoData();

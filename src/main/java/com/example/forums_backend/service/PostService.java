@@ -27,20 +27,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class PostService {
-    PostRepository postRepository;
-
-    AccountService accountService;
-
-    VoteRepository voteRepository;
-    BookmarkRepository bookmarkRepository;
-
     @Autowired
-    public PostService(PostRepository postRepository, AccountService accountService, VoteRepository voteRepository, BookmarkRepository bookmarkRepository) {
-        this.postRepository = postRepository;
-        this.accountService = accountService;
-        this.voteRepository = voteRepository;
-        this.bookmarkRepository = bookmarkRepository;
-    }
+    PostRepository postRepository;
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    VoteRepository voteRepository;
+    @Autowired
+    BookmarkRepository bookmarkRepository;
 
     public List<PostResDto> findAll() {
         Account currentUser = accountService.getUserInfoData();

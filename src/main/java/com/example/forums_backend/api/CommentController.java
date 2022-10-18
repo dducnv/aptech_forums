@@ -21,17 +21,14 @@ import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 @RequestMapping(PREFIX_CLIENT_ROUTE)
 @RequiredArgsConstructor
 public class CommentController {
+    @Autowired
     CommentService commentService;
+    @Autowired
     VoteService voteService;
-
+    @Autowired
     BookmarkService bookmarkService;
 
-    @Autowired
-    public CommentController(CommentService commentService, VoteService voteService, BookmarkService bookmarkService) {
-        this.commentService = commentService;
-        this.voteService = voteService;
-        this.bookmarkService = bookmarkService;
-    }
+
 
     @RequestMapping(value = FIND_COMMENTS_BY_POST_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> findCommentsByPostId(@PathVariable Long post_id) {

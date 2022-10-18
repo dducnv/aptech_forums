@@ -1,12 +1,15 @@
 spring:
   datasource:
-#        url: jdbc:mysql://localhost:3306/aptech_forums?createDatabaseIfNotExist=true
-#        username: root
-#        password:
-    url: jdbc:postgres://dynucvvoykwddi:9446267fc3e2c7410197d2619d63d84ce58521e874fd707f68a931f6bba2fc0f@ec2-54-147-36-107.compute-1.amazonaws.com:5432/dbe7fvut53d1s9
-    username: dynucvvoykwddi
-    password: 9446267fc3e2c7410197d2619d63d84ce58521e874fd707f68a931f6bba2fc0f
-    driverClassName: org.postgresql.Driver
+        url: jdbc:mysql://root:EQRtI3AEKZYBc3D5bZAf@containers-us-west-98.railway.app:6778/railway
+        username: root
+        password: EQRtI3AEKZYBc3D5bZAf
+#        url: postgres://forums_db_user:63s3a2xklP8vsKTUFDpMtZfkCTO8J2Ov@dpg-cd75is82i3mt3nkajgp0-a.oregon-postgres.render.com/forums_db
+#        username: forums_db_user
+#        password: 63s3a2xklP8vsKTUFDpMtZfkCTO8J2Ov
+#    url: jdbc:postgres://dynucvvoykwddi:9446267fc3e2c7410197d2619d63d84ce58521e874fd707f68a931f6bba2fc0f@ec2-54-147-36-107.compute-1.amazonaws.com:5432/dbe7fvut53d1s9
+#    username: dynucvvoykwddi
+#    password: 9446267fc3e2c7410197d2619d63d84ce58521e874fd707f68a931f6bba2fc0f
+#        driverClassName: org.postgresql.Driver
   mail:
     port: 587
     host: smtp.gmail.com
@@ -21,12 +24,11 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      ddl-auto: update
       properties:
         hibernate:
-#          dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-          dialect: org.hibernate.dialect.PostgresSQLDialect
+          dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#          dialect: org.hibernate.dialect.PostgresSQLDialect
   security:
     oauth2:
       client:
