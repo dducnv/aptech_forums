@@ -25,6 +25,7 @@ import org.thymeleaf.context.Context;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -42,6 +43,8 @@ public class AccountService implements UserDetailsService {
 
     public static final Pattern STAFF_FPT_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Za-z0-9._%+-]+@fe.edu.vn$", Pattern.CASE_INSENSITIVE);
+
+    private static final String[] IS_ADMIN = {"dduc7th.dec@gmail.com", "ducnvth2008042@fpt.edu.vn","quangnhth2008059@fpt.edu.vn"};
 
     @Autowired
     AccountRepository accountRepository;
@@ -120,8 +123,15 @@ public class AccountService implements UserDetailsService {
         Matcher studentMatcher = STUDENT_FPT_EMAIL_ADDRESS_REGEX.matcher(accountRegisterDto.getEmail());
         Matcher staffMatcher = STAFF_FPT_EMAIL_ADDRESS_REGEX.matcher(accountRegisterDto.getEmail());
         boolean isFptMember = false;
+        boolean isAdmin = false;
         if (studentMatcher.find() || staffMatcher.find()) {
             isFptMember = true;
+        }
+        if (studentMatcher.find() || staffMatcher.find()) {
+            isFptMember = true;
+        }
+        if (Arrays.asList(IS_ADMIN).contains(accountRegisterDto.getEmail())) {
+            isAdmin = true;
         }
         String username = SlugGenerating.toUsername(accountRegisterDto.getName().trim());
         Account newAccount = Account.builder()
@@ -131,7 +141,7 @@ public class AccountService implements UserDetailsService {
                 .email_verify(false)
                 .fpt_member(isFptMember)
                 .provider(AuthProvider.local)
-                .role("USER")
+                .role(isAdmin ? "ADMIN" : "USER")
                 .build();
         accountRepository.save(newAccount);
         accountRegisterDto.setEmail(newAccount.getEmail());

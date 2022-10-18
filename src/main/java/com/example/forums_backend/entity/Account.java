@@ -22,38 +22,39 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "TEXT")
-    private String imageUrl;
-    private String name;
+    private String imageUrl; //null hoặc sử dụng link ảnh
+    private String name;//not null
     @JsonIgnore
     @Column(unique = true)
-    private String email;
+    private String email;// not null - unique
     @JsonIgnore
     @Column(unique = true)
-    private String username;
+    private String username;//not null - unique
     @JsonIgnore
-    private String password;
-    private boolean email_verify;
-    private boolean fpt_member;
-    private int reputation;
+    private String password; //null
+    private boolean email_verify;//true - false
+    private boolean fpt_member; // true - false
+    @Column(columnDefinition = "int(11) default 0")
+    private int reputation; // default 0
     @Enumerated(EnumType.STRING)
-    private AuthProvider provider;
-    private String providerId;
+    private AuthProvider provider; // enum
+    private String providerId;// null khi là local
     @JsonIgnore
-    private String one_time_password;
+    private String one_time_password; // null
     @JsonIgnore
-    private Date expire_time;
+    private Date expire_time; //null
     @Column(columnDefinition = "varchar(255) default 'USER'")
-    private String role;
+    private String role; //USER - ADMIN
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; //null
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt; //null
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
-    Set<Post> posts = new HashSet<>();
+    Set<Post> posts = new HashSet<>(); //null
     @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
-    Set<TagFollowing> tagFollowings = new HashSet<>();
+    Set<TagFollowing> tagFollowings = new HashSet<>(); // null
     @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
-    Set<UserContact> userContacts = new HashSet<>();
+    Set<UserContact> userContacts = new HashSet<>(); //null
 }

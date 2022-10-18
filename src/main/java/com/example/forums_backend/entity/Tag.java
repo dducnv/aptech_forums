@@ -24,9 +24,9 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String name; //not null
     @Column(columnDefinition = "int(11) default 0")
-    private int follow_count;
+    private int follow_count; // 0
     @JsonIgnore
     @ManyToMany(mappedBy = "tags", targetEntity = Post.class)
     @JsonIgnoreProperties("tags")

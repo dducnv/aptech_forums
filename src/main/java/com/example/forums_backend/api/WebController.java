@@ -21,15 +21,6 @@ public class WebController {
     public void home(HttpServletResponse httpServletResponse) throws IOException {
          httpServletResponse.sendRedirect("https://forums-demo.vercel.app/");
     }
-    @RequestMapping(value = "/api/user-role", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(){
-        return ResponseEntity.ok("This is user");
-    }
-
-    @RequestMapping(value = "/api/admin-role", method = RequestMethod.GET)
-    public ResponseEntity<?> getAdmin(){
-        return ResponseEntity.ok("This is admin");
-    }
     @RequestMapping(value = "/api/notification", method = RequestMethod.GET)
     public ResponseEntity<?> getAllNotification(){
         return ResponseEntity.ok(notificationService.getAllNotification());
