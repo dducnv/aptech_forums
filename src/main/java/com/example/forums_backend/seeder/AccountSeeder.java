@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+
 public class AccountSeeder implements CommandLineRunner {
     List<RegisterDto> registerDtoList = new ArrayList<>();
     @Autowired
