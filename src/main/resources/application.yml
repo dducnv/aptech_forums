@@ -3,9 +3,9 @@ spring:
 #        url: jdbc:mysql://localhost:3306/aptech_forums?createDatabaseIfNotExist=true
 #        username: root
 #        password:
-    url: postgres://ajibecqpnajisk:2ca0a101a0b902cabd1a5ed94b1071f24d46954b30e36c1df545a54343579d10@ec2-44-206-197-71.compute-1.amazonaws.com:5432/de4v9f51953m50
-    username: ajibecqpnajisk
-    password: 2ca0a101a0b902cabd1a5ed94b1071f24d46954b30e36c1df545a54343579d10
+    url: postgres://pjsyhotrlkpswc:a9ac19e9c8ff3a913b9ccf11ec70c1ded4d8156f711e7bad7ef76d5a3b293697@ec2-52-70-86-157.compute-1.amazonaws.com:5432/d8pfe82b8fo18o
+    username: pjsyhotrlkpswc
+    password: a9ac19e9c8ff3a913b9ccf11ec70c1ded4d8156f711e7bad7ef76d5a3b293697
     driverClassName: org.postgresql.Driver
   mail:
     port: 587
