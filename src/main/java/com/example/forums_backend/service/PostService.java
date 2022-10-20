@@ -42,7 +42,8 @@ public class PostService {
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
-    public boolean savePost(PostRequestDto postRequestDto) {
+    public PostResDto savePost(PostRequestDto postRequestDto) {
+        Account currentUser = accountService.getUserInfoData();
         Account author = accountService.getUserInfoData();
         Post postSave = new Post();
         String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-"+System.currentTimeMillis());
@@ -52,7 +53,7 @@ public class PostService {
         postSave.setTags(postRequestDto.getTags());
         postSave.setAuthor(author);
         postRepository.save(postSave);
-        return true;
+        return fromEntityPostDto(postSave,currentUser);
     }
 
     public PostResDto detailsPost(Long id) throws AppException {
