@@ -97,7 +97,7 @@ public class VoteService {
             voteRepository.save(voteSave);
             postRepository.save(post);
         }
-        return postService.detailsPost(post.getId());
+        return postService.detailsPost(post.getSlug());
     }
 
     public CommentResDto commentVote(Long commentId, VoteType type, Account account) throws AppException {

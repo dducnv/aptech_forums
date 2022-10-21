@@ -56,10 +56,10 @@ public class PostService {
         return fromEntityPostDto(postSave,currentUser);
     }
 
-    public PostResDto detailsPost(Long id) throws AppException {
+    public PostResDto detailsPost(String slug) throws AppException {
         try {
             Account currentUser = accountService.getUserInfoData();
-            Optional<Post> optionalPost = postRepository.findById(id);
+            Optional<Post> optionalPost = postRepository.findFirstBySlug(slug);
             if (!optionalPost.isPresent()) {
                 throw new AppException("POST NOT FOUND!");
             }
@@ -78,6 +78,7 @@ public class PostService {
         }
         return optionalPost.get();
     }
+
 
     public PostResDto fromEntityPostDto(Post post, Account currentUser) {
         Voting voting = null;

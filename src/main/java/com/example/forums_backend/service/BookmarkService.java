@@ -49,13 +49,13 @@ public class BookmarkService {
         if(bookmarkOptional.isPresent()){
            Bookmark bookmarkGet = bookmarkOptional.get();
            delete(bookmarkGet.getId());
-           return postService.detailsPost(postId);
+           return postService.detailsPost(post.getSlug());
         }
         bookmark.setPost(post);
         bookmark.setAccount(account);
         bookmark.setSubject(Subject.POST);
         bookmarkRepository.save(bookmark);
-        return postService.detailsPost(post.getId());
+        return postService.detailsPost(post.getSlug());
     }
     public CommentResDto commentBookmark(Long commentId, Account account) throws AppException {
         Comment comment = commentService.findById(commentId);
