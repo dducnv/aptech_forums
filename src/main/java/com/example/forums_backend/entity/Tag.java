@@ -18,14 +18,15 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "tags")
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String name; //not null
+    @Column(columnDefinition = "int(11) default 0")
+    private int follow_count; // 0
     @JsonIgnore
     @ManyToMany(mappedBy = "tags", targetEntity = Post.class)
     @JsonIgnoreProperties("tags")
@@ -34,4 +35,7 @@ public class Tag {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    @JsonIgnore
+    @OneToMany(mappedBy = "account",  cascade = CascadeType.MERGE)
+    Set<TagFollowing> tagFollowings = new HashSet<>();
 }

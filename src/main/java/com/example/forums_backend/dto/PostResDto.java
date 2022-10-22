@@ -3,23 +3,30 @@ package com.example.forums_backend.dto;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Tag;
 import com.example.forums_backend.entity.Voting;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.forums_backend.entity.my_enum.VoteType;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostResDto {
+    private Long id;
     private String title;
+    private String slug;
     private String content;
-    private List<Tag> tags;
+    private Set<Tag> tags;
     private Account account;
     private boolean isVote;
-    private int voteType;
+    private boolean isBookmark;
+    private int commentCount;
+    private int bookmarkCount;
+    private VoteType voteType;
     private int voteCount;
+    private LocalDateTime createdAt;
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static com.example.forums_backend.config.route.constant.AuthRoute.*;
+import static com.example.forums_backend.config.constant.route.AuthRoute.*;
 
 @RestController
 @RequestMapping(PREFIX_AUTH_ROUTE)

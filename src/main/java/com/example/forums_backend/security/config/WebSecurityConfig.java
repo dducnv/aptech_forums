@@ -18,10 +18,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.example.forums_backend.config.route.constant.AccountRoute.PREFIX_ACCOUNT_ROUTE;
-import static com.example.forums_backend.config.route.constant.AuthRoute.LOGIN_ROUTE;
-import static com.example.forums_backend.config.route.constant.AuthRoute.PREFIX_AUTH_ROUTE;
-import static com.example.forums_backend.config.route.constant.ClientRoute.POST_CLIENT_ROUTE;
+import static com.example.forums_backend.config.constant.route.AccountRoute.PREFIX_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.constant.route.AuthRoute.LOGIN_ROUTE;
+import static com.example.forums_backend.config.constant.route.AuthRoute.PREFIX_AUTH_ROUTE;
+import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 
 @Configuration
 @EnableWebSecurity
@@ -51,13 +51,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/",
                         PREFIX_AUTH_ROUTE.concat("/**"),
-                        PREFIX_ACCOUNT_ROUTE.concat("/**")
+                        PREFIX_ACCOUNT_ROUTE.concat("/**"),
+                        POSTS_CLIENT_ROUTE.concat("/**"),
+                        TAG_CLIENT_ROUTE.concat("/**"),
+                        POST_COMMENTS_ROUTE_ANT_MATCHES.concat("/**"),
+                        POST_DETAILS_ROUTE_ANT_MATCHES.concat("/**")
                 )
                 .permitAll();
         //route quyền truy cập danh cho user đã đang nhập
         http
                 .authorizeRequests()
-                .antMatchers("/api/user-role/**", "/api/auth/user/**")
+                .antMatchers(
+                        COMMENT_POST_ROUTE_ANT_MATCHES.concat("/**"),
+                        POST_VOTE_ROUTE_ANT_MATCHES.concat("/**"),
+                        COMMENT_VOTE_ROUTE_ANT_MATCHES.concat("/**"),
+                        POST_CLIENT_CREATE_POST_ROUTE.concat("/**"),
+                        TAG_FOLLOW_CLIENT_ROUTE.concat("/**")
+                )
+
                 .hasAnyAuthority("USER", "ADMIN");
         //route quyền truy cập dành cho admin
         http

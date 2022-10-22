@@ -15,37 +15,46 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "TEXT" )
-    //avatar nhưng là link
-    private String imageUrl;
-    private String name;
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl; //null hoặc sử dụng link ảnh
+    private String name;//not null
     @JsonIgnore
-    private String email;
+    @Column(unique = true)
+    private String email;// not null - unique
     @JsonIgnore
-    private String password;
-    private boolean email_verify;
-    private boolean fpt_member;
+    @Column(unique = true)
+    private String username;//not null - unique
+    @JsonIgnore
+    private String password; //null
+    private boolean email_verify;//true - false
+    private boolean fpt_member; // true - false
+    @Column(columnDefinition = "int(11) default 0")
+    private int reputation; // default 0
     @Enumerated(EnumType.STRING)
-    private AuthProvider provider;
-    private String providerId;
+    private AuthProvider provider; // enum
+    private String providerId;// null khi là local
     @JsonIgnore
-    private String one_time_password;
+    private String one_time_password; // null
     @JsonIgnore
-    private Date expire_time;
+    private Date expire_time; //null
     @Column(columnDefinition = "varchar(255) default 'USER'")
-    private String role;
+    private String role; //USER - ADMIN
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; //null
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt; //null
     @JsonIgnore
-    @OneToMany(mappedBy = "author",  cascade = CascadeType.ALL)
-    Set<Post> posts = new HashSet<>();
+    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
+    Set<Post> posts = new HashSet<>(); //null
+    @JsonIgnore
+    @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    Set<TagFollowing> tagFollowings = new HashSet<>(); // null
+    @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    Set<UserContact> userContacts = new HashSet<>(); //null
 }

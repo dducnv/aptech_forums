@@ -1,4 +1,4 @@
-package com.example.forums_backend.config.route.constant;
+package com.example.forums_backend.config.constant.route;
 
 public class AccountRoute {
     public static final String PREFIX_ACCOUNT_ROUTE = "/api/account";

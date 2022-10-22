@@ -18,11 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-import static com.example.forums_backend.config.route.constant.AccountRoute.*;
-import static com.example.forums_backend.config.route.constant.AuthRoute.*;
+import static com.example.forums_backend.config.constant.route.AccountRoute.*;
+import static com.example.forums_backend.config.constant.route.AuthRoute.*;
+import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 
 public class ApiAuthorizationFilter extends OncePerRequestFilter {
     private static final String[] IGNORE_PATHS = {
+            "/",
             LOGIN_ROUTE,
             REGISTER_ROUTE,
             GET_OTP_ROUTE,
@@ -30,7 +32,10 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             GET_ALL_ACCOUNT_ROUTE,
             UPDATE_ACCOUNT_ROUTE,
             DELETE_ACCOUNT_ROUTE,
-            "/"
+            POSTS_CLIENT_ROUTE,
+            TAG_CLIENT_ROUTE,
+            POST_COMMENTS_ROUTE_ANT_MATCHES,
+            POST_DETAILS_ROUTE_ANT_MATCHES
     };
 
     @Override
