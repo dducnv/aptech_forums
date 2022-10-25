@@ -88,7 +88,6 @@ public class VoteService {
                     delete(voteExist.getId());
                     post.setVote_count(post.getVote_count() + 1);
                 }else if(voteExist.getType().equals(VoteType.UPVOTE)){
-                    int vote = 12;
                     voteExist.setType(VoteType.DOWN_VOTE);
                     post.setVote_count(post.getVote_count() - 2);
                     voteRepository.save(voteExist);
