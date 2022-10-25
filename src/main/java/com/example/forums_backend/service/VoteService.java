@@ -80,7 +80,7 @@ public class VoteService {
                     post.setVote_count(post.getVote_count() - 1);
                 }else if(voteExist.getType() == VoteType.DOWN_VOTE){
                     voteExist.setType(VoteType.UPVOTE);
-                    post.setVote_count(upVotePostCount(post) + 1);
+                    post.setVote_count(post.getVote_count() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type == VoteType.DOWN_VOTE) {
@@ -89,7 +89,7 @@ public class VoteService {
                     post.setVote_count(post.getVote_count() + 1);
                 }else if(voteExist.getType() == VoteType.UPVOTE){
                     voteExist.setType(VoteType.DOWN_VOTE);
-                    post.setVote_count(upVotePostCount(post) - 1);
+                    post.setVote_count(post.getVote_count() - 2);
                     voteRepository.save(voteExist);
                 }
             }
@@ -123,7 +123,7 @@ public class VoteService {
                     comment.setVote_count(comment.getVote_count() - 1);
                 }else if(voteExist.getType() == VoteType.DOWN_VOTE){
                     voteExist.setType(VoteType.UPVOTE);
-                    comment.setVote_count(upVoteCommentCount(comment) - 1);
+                    comment.setVote_count(upVoteCommentCount(comment) - 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type == VoteType.DOWN_VOTE) {
@@ -132,7 +132,7 @@ public class VoteService {
                     comment.setVote_count(comment.getVote_count() + 1);
                 }else if(voteExist.getType() == VoteType.UPVOTE){
                     voteExist.setType(VoteType.DOWN_VOTE);
-                    comment.setVote_count(upVoteCommentCount(comment) - 1);
+                    comment.setVote_count(upVoteCommentCount(comment) - 2);
                     voteRepository.save(voteExist);
                 }
             }
