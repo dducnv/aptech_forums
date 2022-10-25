@@ -6,10 +6,13 @@ spring:
 #     url: jdbc:mysql://root:EQRtI3AEKZYBc3D5bZAf@containers-us-west-98.railway.app:6778/railway
 #     username: root
 #     password: EQRtI3AEKZYBc3D5bZAf
-     url: jdbc:postgresql://free-tier6.gcp-asia-southeast1.cockroachlabs.cloud:26257/forums_db?options=--cluster%3Dforest-markhor-3447&password=vgxtYL6tYwU4UG2ssbqgdw&sslmode=verify-full&user=ducnv
-     username: ducnv
-     password: vgxtYL6tYwU4UG2ssbqgdw
-     driverClassName: org.postgresql.Driver
+       url: jdbc:mysql://ap-southeast.connect.psdb.cloud/forum_db?sslMode=VERIFY_IDENTITY
+       username: ldlblzo7mmju1qv54n8y
+       password: pscale_pw_fNjlvaX8AiTsgxC4ODKfTqcD599J7FdYWlMS4EUmiNE
+#     url: jdbc:postgresql://free-tier6.gcp-asia-southeast1.cockroachlabs.cloud:26257/forums_db?options=--cluster%3Dforest-markhor-3447&password=vgxtYL6tYwU4UG2ssbqgdw&sslmode=verify-full&user=ducnv
+#     username: ducnv
+#     password: vgxtYL6tYwU4UG2ssbqgdw
+#     driverClassName: org.postgresql.Driver
 
   mvc:
     pathmatch:
