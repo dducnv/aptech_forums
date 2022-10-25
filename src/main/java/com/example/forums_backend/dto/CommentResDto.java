@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentResDto {
+    private  Long id;
     private Account account;
     private String content;
     private boolean isVote;

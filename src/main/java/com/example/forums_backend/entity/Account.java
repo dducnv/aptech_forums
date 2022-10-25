@@ -27,7 +27,6 @@ public class Account {
     @JsonIgnore
     @Column(unique = true)
     private String email;// not null - unique
-    @JsonIgnore
     @Column(unique = true)
     private String username;//not null - unique
     @JsonIgnore

@@ -91,6 +91,7 @@ public class CommentService {
             bookmark = bookmarkRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), currentUser.getId()).orElse(null);
         }
         List<CommentResDto> replyComment = comment.getReply_to().stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
+        commentResDto.setId(comment.getId());
         commentResDto.setAccount(comment.getAccount());
         commentResDto.setContent(comment.getContent());
         commentResDto.setVoteCount(comment.getVote_count());

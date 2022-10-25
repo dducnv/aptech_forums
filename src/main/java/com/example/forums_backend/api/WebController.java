@@ -2,6 +2,7 @@ package com.example.forums_backend.api;
 
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.service.AccountManagerService;
+import com.example.forums_backend.service.BookmarkService;
 import com.example.forums_backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.io.IOException;
 public class WebController {
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    BookmarkService bookmarkService;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void home(HttpServletResponse httpServletResponse) throws IOException {
          httpServletResponse.sendRedirect("https://forums-demo.vercel.app/");
@@ -26,4 +29,8 @@ public class WebController {
         return ResponseEntity.ok(notificationService.getAllNotification());
     }
 
+    @RequestMapping(value = "/api/my-bookmarks", method = RequestMethod.GET)
+    public ResponseEntity<?> getBookmarks(){
+        return ResponseEntity.ok(bookmarkService.BookmarkList());
+    }
 }
