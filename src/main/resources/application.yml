@@ -3,9 +3,13 @@ spring:
 #    url: jdbc:mysql://localhost:3306/forum_aptech?createDatabaseIfNotExist=true
 #    username: root
 #    password:
-        url: jdbc:mysql://root:EQRtI3AEKZYBc3D5bZAf@containers-us-west-98.railway.app:6778/railway
-        username: root
-        password: EQRtI3AEKZYBc3D5bZAf
+#     url: jdbc:mysql://root:EQRtI3AEKZYBc3D5bZAf@containers-us-west-98.railway.app:6778/railway
+#     username: root
+#     password: EQRtI3AEKZYBc3D5bZAf
+     url: jdbc:postgresql://free-tier6.gcp-asia-southeast1.cockroachlabs.cloud:26257/forums_db?options=--cluster%3Dforest-markhor-3447&password=vgxtYL6tYwU4UG2ssbqgdw&sslmode=verify-full&user=ducnv
+     username: ducnv
+     password: vgxtYL6tYwU4UG2ssbqgdw
+     driverClassName: org.postgresql.Driver
 
   mvc:
     pathmatch:
