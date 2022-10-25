@@ -63,10 +63,10 @@ public class VoteService {
             Voting voteSave = new Voting();
             voteSave.setPost(post);
             voteSave.setAccount(account);
-            if(type == VoteType.UPVOTE){
+            if(type.equals(VoteType.UPVOTE)){
                 voteSave.setType(VoteType.UPVOTE);
                 post.setVote_count(post.getVote_count() + 1);
-            }else if(type == VoteType.DOWN_VOTE){
+            }else if(type.equals(VoteType.DOWN_VOTE)){
                 voteSave.setType(VoteType.DOWN_VOTE);
                 post.setVote_count(post.getVote_count() - 1);
             }
@@ -74,20 +74,21 @@ public class VoteService {
             postRepository.save(post);
         }else {
             Voting voteExist = votingOptional.get();
-            if(type == VoteType.UPVOTE){
-                if(voteExist.getType() == VoteType.UPVOTE){
+            if(type.equals(VoteType.UPVOTE)){
+                if(voteExist.getType().equals(VoteType.UPVOTE)){
                     delete(voteExist.getId());
                     post.setVote_count(post.getVote_count() - 1);
-                }else if(voteExist.getType() == VoteType.DOWN_VOTE){
+                }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
                     voteExist.setType(VoteType.UPVOTE);
                     post.setVote_count(post.getVote_count() + 2);
                     voteRepository.save(voteExist);
                 }
-            } else if (type == VoteType.DOWN_VOTE) {
-                if(voteExist.getType() == VoteType.DOWN_VOTE){
+            } else if (type.equals(VoteType.DOWN_VOTE)) {
+                if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
                     delete(voteExist.getId());
                     post.setVote_count(post.getVote_count() + 1);
-                }else if(voteExist.getType() == VoteType.UPVOTE){
+                }else if(voteExist.getType().equals(VoteType.UPVOTE)){
+                    int vote = 12;
                     voteExist.setType(VoteType.DOWN_VOTE);
                     post.setVote_count(post.getVote_count() - 2);
                     voteRepository.save(voteExist);
