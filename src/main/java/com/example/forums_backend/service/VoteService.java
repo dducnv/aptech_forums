@@ -107,10 +107,10 @@ public class VoteService {
             Voting voteSave = new Voting();
             voteSave.setComment(comment);
             voteSave.setAccount(account);
-            if(type == VoteType.UPVOTE){
+            if(type.equals(VoteType.UPVOTE)){
                 voteSave.setType(VoteType.UPVOTE);
                 comment.setVote_count(comment.getVote_count() + 1);
-            }else if(type == VoteType.DOWN_VOTE){
+            }else if(type.equals(VoteType.DOWN_VOTE)){
                 voteSave.setType(VoteType.DOWN_VOTE);
                 comment.setVote_count(comment.getVote_count() - 1);
             }
@@ -118,20 +118,20 @@ public class VoteService {
             commentRepository.save(comment);
         }else {
             Voting voteExist = votingOptional.get();
-            if(type == VoteType.UPVOTE){
+            if(type.equals(VoteType.UPVOTE)){
                 if(voteExist.getType() == VoteType.UPVOTE){
                     delete(voteExist.getId());
                     comment.setVote_count(comment.getVote_count() - 1);
-                }else if(voteExist.getType() == VoteType.DOWN_VOTE){
+                }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
                     voteExist.setType(VoteType.UPVOTE);
                     comment.setVote_count(upVoteCommentCount(comment) - 2);
                     voteRepository.save(voteExist);
                 }
-            } else if (type == VoteType.DOWN_VOTE) {
-                if(voteExist.getType() == VoteType.DOWN_VOTE){
+            } else if (type.equals(VoteType.DOWN_VOTE)) {
+                if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
                     delete(voteExist.getId());
                     comment.setVote_count(comment.getVote_count() + 1);
-                }else if(voteExist.getType() == VoteType.UPVOTE){
+                }else if(voteExist.getType().equals(VoteType.UPVOTE)){
                     voteExist.setType(VoteType.DOWN_VOTE);
                     comment.setVote_count(upVoteCommentCount(comment) - 2);
                     voteRepository.save(voteExist);
