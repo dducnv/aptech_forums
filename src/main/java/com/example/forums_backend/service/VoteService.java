@@ -93,7 +93,6 @@ public class VoteService {
                     voteRepository.save(voteExist);
                 }
             }
-
             postRepository.save(post);
         }
         return postService.detailsPost(post.getSlug());
@@ -123,7 +122,7 @@ public class VoteService {
                     comment.setVote_count(comment.getVote_count() - 1);
                 }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
                     voteExist.setType(VoteType.UPVOTE);
-                    comment.setVote_count(upVoteCommentCount(comment) - 2);
+                    comment.setVote_count(comment.getVote_count() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
@@ -132,11 +131,10 @@ public class VoteService {
                     comment.setVote_count(comment.getVote_count() + 1);
                 }else if(voteExist.getType().equals(VoteType.UPVOTE)){
                     voteExist.setType(VoteType.DOWN_VOTE);
-                    comment.setVote_count(upVoteCommentCount(comment) - 2);
+                    comment.setVote_count(comment.getVote_count() - 2);
                     voteRepository.save(voteExist);
                 }
             }
-
             commentRepository.save(comment);
         }
         return commentService.fromEntityCommentDto(comment,account);
