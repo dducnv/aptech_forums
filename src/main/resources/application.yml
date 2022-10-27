@@ -1,19 +1,18 @@
 spring:
   datasource:
-#    url: jdbc:mysql://localhost:3306/forum_aptech?createDatabaseIfNotExist=true
-#    username: root
-#    password:
-#     url: jdbc:mysql://root:EQRtI3AEKZYBc3D5bZAf@containers-us-west-98.railway.app:6778/railway
+    url: jdbc:mysql://34.87.38.9/forum_aptech?createDatabaseIfNotExist=true
+    username: root
+    password: Dduc_NV0712
+#     url: jdbc:mysql://appcuaduc:asia-southeast1:forums-db
 #     username: root
-#     password: EQRtI3AEKZYBc3D5bZAf
-       url: jdbc:mysql://ap-southeast.connect.psdb.cloud/forum_db?sslMode=VERIFY_IDENTITY
-       username: ldlblzo7mmju1qv54n8y
-       password: pscale_pw_fNjlvaX8AiTsgxC4ODKfTqcD599J7FdYWlMS4EUmiNE
-#     url: jdbc:postgresql://free-tier6.gcp-asia-southeast1.cockroachlabs.cloud:26257/forums_db?options=--cluster%3Dforest-markhor-3447&password=vgxtYL6tYwU4UG2ssbqgdw&sslmode=verify-full&user=ducnv
-#     username: ducnv
-#     password: vgxtYL6tYwU4UG2ssbqgdw
+#     password:
+#    url: jdbc:mysql://us-east.connect.psdb.cloud/forums_t2009m1_db?sslMode=VERIFY_IDENTITY
+#    username: ykx2en5o1rqd9e60arbt
+#    password: pscale_pw_dW1Cs3MsLqT2fVmdxz3hNAXqfXPsZGX0G0wrM5NbKTV
+#     url: jdbc:postgresql://free-tier8.aws-ap-southeast-1.cockroachlabs.cloud:26257/defaultdb?options=--cluster%3Dfancy-dragon-2874&password=qP6VlDJWhxsoThc7ttmW0g&sslmode=verify-full&user=dducnv
+#     username: dducnv
+#     password: qP6VlDJWhxsoThc7ttmW0g
 #     driverClassName: org.postgresql.Driver
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -32,10 +31,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-#          dialect: org.hibernate.dialect.PostgresSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   security:
     oauth2:
       client:

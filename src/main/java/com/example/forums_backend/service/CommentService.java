@@ -50,22 +50,24 @@ public class CommentService {
             Account account = accountService.getUserInfoData();
             Post post = postService.findByID(postId);
             Comment comment = new Comment();
+            if(commentReqDto.getReply_to() != null){
+                Comment findComment = findById(commentReqDto.getReply_to().getId());
+                comment.setParent(findComment);
+            }
             comment.setAccount(account);
             comment.setContent(commentReqDto.getContent());
             comment.setPost(post);
             commentRepository.save(comment);
-            if (commentReqDto.getReply_to() != null) {
-                Comment findComment = findById(commentReqDto.getReply_to().getId());
-                Set<Comment> commentSet = new HashSet<>();
-                commentSet.add(comment);
-                findComment.setReply_to(commentSet);
-                commentRepository.save(findComment);
-            }
             return fromEntityCommentDto(comment,account);
         } catch (Exception exception) {
             log.info("Comment error: " + exception.getMessage());
             throw new RuntimeException();
         }
+    }
+    public  CommentResDto findByIdToDto(Long id) throws AppException {
+        Account account = accountService.getUserInfoData();
+        Comment comment = findById(id);
+        return fromEntityCommentDto(comment,account);
     }
 
     public Comment findById(Long id) throws AppException {
@@ -96,6 +98,7 @@ public class CommentService {
         commentResDto.setContent(comment.getContent());
         commentResDto.setVoteCount(comment.getVote_count());
         commentResDto.setReply(replyComment);
+        commentResDto.setChildren(comment.getParent() != null);
         commentResDto.setVote(voting != null);
         commentResDto.setBookmark(bookmark != null);
         commentResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());

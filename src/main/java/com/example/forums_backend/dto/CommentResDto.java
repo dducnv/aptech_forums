@@ -21,5 +21,6 @@ public class CommentResDto {
     private boolean isBookmark;
     private VoteType voteType;
     private int voteCount;
+    private boolean isChildren;
     private List<CommentResDto> reply;
 }
