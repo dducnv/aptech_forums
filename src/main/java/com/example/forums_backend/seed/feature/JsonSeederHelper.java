@@ -1,7 +1,7 @@
 package com.example.forums_backend.seed.feature;
 
 import com.example.forums_backend.entity.Account;
-import com.example.forums_backend.security.config.repository.AccountRepository;
+import com.example.forums_backend.repository.AccountRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -85,7 +85,7 @@ public class JsonSeederHelper implements SeederHelper {
                         objValue = cell.getStringCellValue();
                         break;
                 }
-                if("id".equals(keys.get(cell.getColumnIndex()))) {
+                if ("id".equals(keys.get(cell.getColumnIndex()))) {
                     idValue = objValue;
                 }
                 if (idValue == null) {
