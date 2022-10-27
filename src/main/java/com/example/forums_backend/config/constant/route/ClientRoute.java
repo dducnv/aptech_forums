@@ -10,17 +10,17 @@ public class ClientRoute {
     public static final String POST_CLIENT_DETAILS_POST_PATH = "/post/details";
 
     public static final String GET_ALL_COMMENT_PATH       = "/comments";
-    public static final String FIND_COMMENTS_BY_POST_PATH = "post/{post_id}/comments";
+    public static final String FIND_COMMENTS_BY_POST_PATH = "/post/{post_id}/comments";
     public static final String COMMENT_POST_PATH          = "/post/{id}/comment";
     public static final String POST_UP_VOTE_CLIENT_PATH   = "/post/{id}/vote";
     public static final String COMMENT_VOTE_PATH          = "/comment/{id}/vote";
 
     //ANT MATCHES PATH
-    public static final String POST_COMMENTS_PATH_ANT_MATCHES = "/post/{id:\\d+}/comments";
+    public static final String POST_COMMENTS_PATH_ANT_MATCHES = "/post/\\d/comments";
     public static final String POST_DETAILS_PATH_ANT_MATCHES  = "/post/details";
-    public static final String COMMENT_POST_PATH_ANT_MATCHES  = "/post/{id:\\d+}/comment";
-    public static final String POST_VOTE_PATH_ANT_MATCHES     = "/post/{id:\\d+}/vote";
-    public static final String COMMENT_VOTE_PATH_ANT_MATCHES  = "/comment/{id:\\d+}/vote";
+    public static final String COMMENT_POST_PATH_ANT_MATCHES  = "/post/\\d/comment";
+    public static final String POST_VOTE_PATH_ANT_MATCHES     = "/post/\\d/vote";
+    public static final String COMMENT_VOTE_PATH_ANT_MATCHES  = "/comment/\\d/vote";
 
     //ROUTER ANT MATCHES
     public static final String POST_COMMENTS_ROUTE_ANT_MATCHES = PREFIX_CLIENT_ROUTE.concat(POST_COMMENTS_PATH_ANT_MATCHES);
