@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.*;
 import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,8 @@ import static com.example.forums_backend.config.constant.route.AuthRoute.*;
 @RequestMapping(PREFIX_AUTH_ROUTE)
 @RequiredArgsConstructor
 public class AuthController {
-    final AccountService accountService;
+    @Autowired
+     AccountService accountService;
 
     @RequestMapping(value = GET_OTP_PATH,produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
     public ResponseEntity<CheckAccount> getOtp(@RequestBody LoginEmailDto loginEmailDto){

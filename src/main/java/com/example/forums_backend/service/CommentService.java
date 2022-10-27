@@ -27,23 +27,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 //@Transactional
 public class CommentService {
-    CommentRepository commentRepository;
-    PostRepository postRepository;
-    AccountService accountService;
-    VoteRepository voteRepository;
-    PostService postService;
-
-    BookmarkRepository bookmarkRepository;
-
     @Autowired
-    public CommentService(CommentRepository commentRepository, AccountService accountService, PostService postService, PostRepository postRepository, VoteRepository voteRepository, BookmarkRepository bookmarkRepository) {
-        this.commentRepository = commentRepository;
-        this.accountService = accountService;
-        this.postService = postService;
-        this.postRepository = postRepository;
-        this.voteRepository = voteRepository;
-        this.bookmarkRepository = bookmarkRepository;
-    }
+    CommentRepository commentRepository;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    VoteRepository voteRepository;
+    @Autowired
+    PostService postService;
+    @Autowired
+    BookmarkRepository bookmarkRepository;
 
     public List<Comment> findAll() {
         return commentRepository.findAll();
@@ -96,6 +91,7 @@ public class CommentService {
             bookmark = bookmarkRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), currentUser.getId()).orElse(null);
         }
         List<CommentResDto> replyComment = comment.getReply_to().stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
+        commentResDto.setId(comment.getId());
         commentResDto.setAccount(comment.getAccount());
         commentResDto.setContent(comment.getContent());
         commentResDto.setVoteCount(comment.getVote_count());

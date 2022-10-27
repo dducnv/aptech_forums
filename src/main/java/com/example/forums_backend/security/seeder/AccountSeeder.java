@@ -1,4 +1,4 @@
-package com.example.forums_backend.seeder;
+package com.example.forums_backend.security.seeder;
 
 import com.example.forums_backend.dto.RegisterDto;
 import com.example.forums_backend.service.AccountService;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+
 public class AccountSeeder implements CommandLineRunner {
     List<RegisterDto> registerDtoList = new ArrayList<>();
     @Autowired

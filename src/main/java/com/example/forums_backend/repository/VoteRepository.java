@@ -14,4 +14,8 @@ public interface VoteRepository extends JpaRepository<Voting, Long> {
     Optional<Voting> findFirstByComment_IdAndAccount_Id(Long commentId, Long accountId);
 
     List<Voting> findVotingByTypeAndSubject(VoteType voteType, Subject subject);
+
+    List<Voting> findVotingByTypeAndSubjectAndPost_Id(VoteType voteType, Subject subject, Long id);
+
+    List<Voting> findVotingByTypeAndSubjectAndComment_Id(VoteType voteType, Subject subject, Long commentId);
 }

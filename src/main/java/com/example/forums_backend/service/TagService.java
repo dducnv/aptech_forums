@@ -24,16 +24,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class TagService {
-    AccountService accountService;
-    TagRepository tagRepository;
-    TagFollowingRepository tagFollowingRepository;
-
     @Autowired
-    public TagService(TagRepository tagRepository, TagFollowingRepository tagFollowingRepository, AccountService accountService) {
-        this.tagRepository = tagRepository;
-        this.tagFollowingRepository = tagFollowingRepository;
-        this.accountService = accountService;
-    }
+    AccountService accountService;
+    @Autowired
+    TagRepository tagRepository;
+    @Autowired
+    TagFollowingRepository tagFollowingRepository;
 
     public List<TagFollowResDto> findAll() {
         Account account = accountService.getUserInfoData();

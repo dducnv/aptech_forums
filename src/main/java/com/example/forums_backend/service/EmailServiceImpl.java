@@ -19,15 +19,12 @@ import java.io.File;
 @Slf4j
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+    @Autowired
     JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Autowired
-    public EmailServiceImpl(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
 
     public void sendSimpleMail(EmailDetails details) {
         MimeMessage mimeMessage

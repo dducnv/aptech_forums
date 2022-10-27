@@ -16,24 +16,18 @@ import org.springframework.stereotype.Controller;
 //comment websocket
 @Controller
 public class WebsocketController {
-    CommentService commentService;
-    VoteService voteService;
-
-    BookmarkService bookmarkService;
-    PostService postService;
-    SimpMessagingTemplate simpMessagingTemplate;
-
-    NotificationService notificationService;
-
     @Autowired
-    public WebsocketController(CommentService commentService, VoteService voteService, BookmarkService bookmarkService, SimpMessagingTemplate simpMessagingTemplate, PostService postService, NotificationService notificationService) {
-        this.commentService = commentService;
-        this.voteService = voteService;
-        this.bookmarkService = bookmarkService;
-        this.simpMessagingTemplate = simpMessagingTemplate;
-        this.postService = postService;
-        this.notificationService = notificationService;
-    }
+    CommentService commentService;
+    @Autowired
+    VoteService voteService;
+    @Autowired
+    BookmarkService bookmarkService;
+    @Autowired
+    PostService postService;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    NotificationService notificationService;
 
     @MessageMapping("/comment-res")
     public CommentResDto recMessage(@Payload CommentReqWsDto commentReqWsDto) throws AppException {

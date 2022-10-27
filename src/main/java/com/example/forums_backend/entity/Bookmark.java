@@ -21,11 +21,9 @@ public class Bookmark {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "account_id")
     private Account account;
-    @JsonIgnore
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "post_id")
     private Post post;
-    @JsonIgnore
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "comment_id")
     private Comment comment;

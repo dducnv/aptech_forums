@@ -16,12 +16,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class AccountManagerService {
+    @Autowired
     AccountRepository accountRepository;
 
-    @Autowired
-    public AccountManagerService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
 
     public List<Account> findAll() {
         return accountRepository.findAll();

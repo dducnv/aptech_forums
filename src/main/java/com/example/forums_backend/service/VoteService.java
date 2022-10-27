@@ -28,22 +28,18 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class VoteService {
-    VoteRepository voteRepository;
-    PostRepository postRepository;
-    CommentRepository commentRepository;
-    AccountService accountService;
-    PostService postService;
-    CommentService commentService;
-
     @Autowired
-    public VoteService(VoteRepository voteRepository, PostRepository postRepository, AccountService accountService, PostService postService, CommentService commentService, CommentRepository commentRepository) {
-        this.voteRepository = voteRepository;
-        this.postRepository = postRepository;
-        this.accountService = accountService;
-        this.postService = postService;
-        this.commentService = commentService;
-        this.commentRepository = commentRepository;
-    }
+    VoteRepository voteRepository;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    CommentRepository commentRepository;
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    PostService postService;
+    @Autowired
+    CommentService commentService;
 
     public VoteResDto vote(VoteDto voteDto) throws AppException {
         Account author = accountService.getUserInfoData();
@@ -54,7 +50,7 @@ public class VoteService {
             voteResDto.setVote_count(post.getVoteCount());
         } else if (voteDto.getSubject() == Subject.COMMENT) {
             CommentResDto comment = commentVote(voteDto.getSubject_id(), voteDto.getType(), author);
-            voteResDto.setVoteType(voteDto.getType());
+            voteResDto.setVoteType(comment.getVoteType());
             voteResDto.setVote_count(comment.getVoteCount());
         }
         return voteResDto;
@@ -63,97 +59,107 @@ public class VoteService {
     public PostResDto postVote(Long postId, VoteType type, Account account) throws AppException {
         Post post = postService.findByID(postId);
         Optional<Voting> votingOptional = voteRepository.findFirstByPost_IdAndAccount_Id(post.getId(), account.getId());
-        Voting voteSave = new Voting();
-        List<Voting> upVote = findVotingByType(VoteType.UPVOTE, Subject.POST);
-        if (votingOptional.isPresent()) {
-            Voting voting = votingOptional.get();
-            if (type == VoteType.UPVOTE) {
-                if (voting.getType() == VoteType.DOWN_VOTE) {
-                    voting.setType(VoteType.UPVOTE);
-                    post.setVote_count(upVote.size() + 1);
-                    voteRepository.save(voting);
-                } else if (voting.getType() == VoteType.UPVOTE) {
-                    delete(voting.getId());
-                    post.setVote_count(upVote.size() - 1);
-                }
-            } else if (type == VoteType.DOWN_VOTE) {
-                if (voting.getType() == VoteType.UPVOTE) {
-                    voting.setType(VoteType.DOWN_VOTE);
-                    post.setVote_count(upVote.size() - 1);
-                    voteRepository.save(voting);
-                } else if (voting.getType() == VoteType.DOWN_VOTE) {
-                    delete(voting.getId());
-                    post.setVote_count(upVote.size() + 1);
-                }
-            }
-            postRepository.save(post);
-        } else {
-            voteSave.setAccount(account);
-            voteSave.setSubject(Subject.POST);
+        if(!votingOptional.isPresent()){
+            Voting voteSave = new Voting();
             voteSave.setPost(post);
-            if (type == VoteType.UPVOTE) {
+            voteSave.setAccount(account);
+            if(type.equals(VoteType.UPVOTE)){
                 voteSave.setType(VoteType.UPVOTE);
-                post.setVote_count(upVote.size() + 1);
-            } else if (type == VoteType.DOWN_VOTE) {
+                post.setVote_count(post.getVote_count() + 1);
+            }else if(type.equals(VoteType.DOWN_VOTE)){
                 voteSave.setType(VoteType.DOWN_VOTE);
-                post.setVote_count(upVote.size() - 1);
+                post.setVote_count(post.getVote_count() - 1);
             }
             voteRepository.save(voteSave);
             postRepository.save(post);
+        }else {
+            Voting voteExist = votingOptional.get();
+            if(type.equals(VoteType.UPVOTE)){
+                if(voteExist.getType().equals(VoteType.UPVOTE)){
+                    delete(voteExist.getId());
+                    post.setVote_count(post.getVote_count() - 1);
+                }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                    voteExist.setType(VoteType.UPVOTE);
+                    post.setVote_count(post.getVote_count() + 2);
+                    voteRepository.save(voteExist);
+                }
+            } else if (type.equals(VoteType.DOWN_VOTE)) {
+                if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                    delete(voteExist.getId());
+                    post.setVote_count(post.getVote_count() + 1);
+                }else if(voteExist.getType().equals(VoteType.UPVOTE)){
+                    voteExist.setType(VoteType.DOWN_VOTE);
+                    post.setVote_count(post.getVote_count() - 2);
+                    voteRepository.save(voteExist);
+                }
+            }
+            postRepository.save(post);
         }
-        return postService.detailsPost(post.getId());
+        return postService.detailsPost(post.getSlug());
     }
 
     public CommentResDto commentVote(Long commentId, VoteType type, Account account) throws AppException {
         Comment comment = commentService.findById(commentId);
         Optional<Voting> votingOptional = voteRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), account.getId());
-        Voting voteSave = new Voting();
-        List<Voting> upVote = findVotingByType(VoteType.UPVOTE, Subject.COMMENT);
-        if (votingOptional.isPresent()) {
-            Voting voting = votingOptional.get();
-            if (type == VoteType.UPVOTE) {
-                if (voting.getType() == VoteType.DOWN_VOTE) {
-                    voting.setType(VoteType.UPVOTE);
-                    comment.setVote_count(upVote.size() + 1);
-                    voteRepository.save(voting);
-                } else if (voting.getType() == VoteType.UPVOTE) {
-                    delete(voting.getId());
-                    comment.setVote_count(upVote.size() - 1);
-                }
-            } else if (type == VoteType.DOWN_VOTE) {
-                if (voting.getType() == VoteType.UPVOTE) {
-                    voting.setType(VoteType.DOWN_VOTE);
-                    comment.setVote_count(upVote.size() - 1);
-                    voteRepository.save(voting);
-                } else if (voting.getType() == VoteType.DOWN_VOTE) {
-                    delete(voting.getId());
-                    comment.setVote_count(upVote.size() + 1);
-                }
-            }
-            commentRepository.save(comment);
-        } else {
-            voteSave.setAccount(account);
-            voteSave.setSubject(Subject.COMMENT);
+        if(!votingOptional.isPresent()){
+            Voting voteSave = new Voting();
             voteSave.setComment(comment);
-            if (type == VoteType.UPVOTE) {
+            voteSave.setAccount(account);
+            if(type.equals(VoteType.UPVOTE)){
                 voteSave.setType(VoteType.UPVOTE);
-                comment.setVote_count(upVote.size() + 1);
-            } else if (type == VoteType.DOWN_VOTE) {
+                comment.setVote_count(comment.getVote_count() + 1);
+            }else if(type.equals(VoteType.DOWN_VOTE)){
                 voteSave.setType(VoteType.DOWN_VOTE);
-                comment.setVote_count(upVote.size() - 1);
+                comment.setVote_count(comment.getVote_count() - 1);
             }
             voteRepository.save(voteSave);
             commentRepository.save(comment);
+        }else {
+            Voting voteExist = votingOptional.get();
+            if(type.equals(VoteType.UPVOTE)){
+                if(voteExist.getType() == VoteType.UPVOTE){
+                    delete(voteExist.getId());
+                    comment.setVote_count(comment.getVote_count() - 1);
+                }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                    voteExist.setType(VoteType.UPVOTE);
+                    comment.setVote_count(comment.getVote_count() + 2);
+                    voteRepository.save(voteExist);
+                }
+            } else if (type.equals(VoteType.DOWN_VOTE)) {
+                if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                    delete(voteExist.getId());
+                    comment.setVote_count(comment.getVote_count() + 1);
+                }else if(voteExist.getType().equals(VoteType.UPVOTE)){
+                    voteExist.setType(VoteType.DOWN_VOTE);
+                    comment.setVote_count(comment.getVote_count() - 2);
+                    voteRepository.save(voteExist);
+                }
+            }
+            commentRepository.save(comment);
         }
         return commentService.fromEntityCommentDto(comment,account);
+    }
+
+
+    public int upVotePostCount(Post post){
+        List<Voting> upVote = findVotingPostByType(VoteType.UPVOTE, Subject.POST,post.getId());
+        return upVote.size();
+    }
+
+    public int upVoteCommentCount(Comment comment){
+        List<Voting> upVote = findVotingCommentByType(VoteType.UPVOTE, Subject.COMMENT,comment.getId());
+        return upVote.size();
     }
 
     public void delete(Long id) {
         voteRepository.deleteById(id);
     }
 
-    public List<Voting> findVotingByType(VoteType voteType, Subject subject) {
-        return voteRepository.findVotingByTypeAndSubject(voteType, subject);
+    public List<Voting> findVotingPostByType(VoteType voteType, Subject subject, Long postId) {
+        return voteRepository.findVotingByTypeAndSubjectAndPost_Id(voteType, subject,postId);
+    }
+    public List<Voting> findVotingCommentByType(VoteType voteType, Subject subject, Long postId) {
+        return voteRepository.findVotingByTypeAndSubjectAndComment_Id(voteType, subject,postId);
     }
 
 }

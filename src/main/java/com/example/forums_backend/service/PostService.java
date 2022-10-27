@@ -27,20 +27,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class PostService {
-    PostRepository postRepository;
-
-    AccountService accountService;
-
-    VoteRepository voteRepository;
-    BookmarkRepository bookmarkRepository;
-
     @Autowired
-    public PostService(PostRepository postRepository, AccountService accountService, VoteRepository voteRepository, BookmarkRepository bookmarkRepository) {
-        this.postRepository = postRepository;
-        this.accountService = accountService;
-        this.voteRepository = voteRepository;
-        this.bookmarkRepository = bookmarkRepository;
-    }
+    PostRepository postRepository;
+    @Autowired
+    AccountService accountService;
+    @Autowired
+    VoteRepository voteRepository;
+    @Autowired
+    BookmarkRepository bookmarkRepository;
 
     public List<PostResDto> findAll() {
         Account currentUser = accountService.getUserInfoData();
@@ -48,7 +42,8 @@ public class PostService {
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
-    public boolean savePost(PostRequestDto postRequestDto) {
+    public PostResDto savePost(PostRequestDto postRequestDto) {
+        Account currentUser = accountService.getUserInfoData();
         Account author = accountService.getUserInfoData();
         Post postSave = new Post();
         String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-"+System.currentTimeMillis());
@@ -58,13 +53,13 @@ public class PostService {
         postSave.setTags(postRequestDto.getTags());
         postSave.setAuthor(author);
         postRepository.save(postSave);
-        return true;
+        return fromEntityPostDto(postSave,currentUser);
     }
 
-    public PostResDto detailsPost(Long id) throws AppException {
+    public PostResDto detailsPost(String slug) throws AppException {
         try {
             Account currentUser = accountService.getUserInfoData();
-            Optional<Post> optionalPost = postRepository.findById(id);
+            Optional<Post> optionalPost = postRepository.findFirstBySlug(slug);
             if (!optionalPost.isPresent()) {
                 throw new AppException("POST NOT FOUND!");
             }
@@ -83,6 +78,7 @@ public class PostService {
         }
         return optionalPost.get();
     }
+
 
     public PostResDto fromEntityPostDto(Post post, Account currentUser) {
         Voting voting = null;

@@ -36,8 +36,11 @@ public class PostController {
     }
 
     @RequestMapping(value = POST_CLIENT_DETAILS_POST_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getDetails(@PathVariable Long id) throws AppException {
-        return ResponseEntity.ok(postService.detailsPost(id));
+    public ResponseEntity<?> getDetails(@RequestParam("slug") String slug) throws AppException {
+        if(slug.isEmpty()){
+            return ResponseEntity.status(404).body("Param not found");
+        }
+        return ResponseEntity.ok(postService.detailsPost(slug));
     }
 
     @RequestMapping(value = POST_CLIENT_CREATE_POST_PATH, method = RequestMethod.POST)
