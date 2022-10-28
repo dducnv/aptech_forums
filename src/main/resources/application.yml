@@ -3,6 +3,9 @@ spring:
     url: jdbc:mysql://34.87.38.9/forum_aptech?createDatabaseIfNotExist=true
     username: root
     password: Dduc_NV0712
+#     url: jdbc:mysql://localhost:3306/forum_aptech?createDatabaseIfNotExist=true
+#     username: root
+#     password:
 #     url: jdbc:mysql://appcuaduc:asia-southeast1:forums-db
 #     username: root
 #     password:

@@ -39,11 +39,8 @@ public class CommentController {
     public ResponseEntity<?> getAllComment() {
         return ResponseEntity.ok(commentService.findAll());
     }
-
-    ;
-
     @RequestMapping(value = COMMENT_POST_PATH, method = RequestMethod.POST)
-    public ResponseEntity<?> getAll(@PathVariable Long id, @RequestBody CommentReqDto commentReqDto) {
+    public ResponseEntity<?> commentPost(@PathVariable Long id, @RequestBody CommentReqDto commentReqDto) {
         try {
             return ResponseEntity.ok(commentService.saveComment(id, commentReqDto));
         } catch (Exception exception) {

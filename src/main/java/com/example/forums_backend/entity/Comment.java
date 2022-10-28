@@ -25,6 +25,7 @@ public class Comment {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+    @Column(columnDefinition = "text")
     private String content;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
