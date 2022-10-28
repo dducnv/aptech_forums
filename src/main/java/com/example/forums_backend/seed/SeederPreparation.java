@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * </p>
  */
 //@Profile("test")
-@Component
+//@Component
 public class SeederPreparation implements CommandLineRunner {
     /**
      * Chuyển qualifier theo tên @Component mới tạo.

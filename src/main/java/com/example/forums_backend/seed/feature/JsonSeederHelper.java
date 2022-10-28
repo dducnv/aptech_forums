@@ -27,7 +27,7 @@ import java.util.List;
  * Đọc nội dung file excel, parse kiểu json để tránh việc ép kiểu nhiều trường, giảm việc cho dev.
  */
 //@Profile("dev")
-@Component("jsonSeeder")
+//@Component("jsonSeeder")
 @RequiredArgsConstructor
 public class JsonSeederHelper implements SeederHelper {
 
