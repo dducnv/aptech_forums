@@ -1,7 +1,7 @@
 package com.example.forums_backend.utils;
 
 import com.example.forums_backend.entity.Account;
-import com.example.forums_backend.security.config.repository.AccountRepository;
+import com.example.forums_backend.repository.AccountRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

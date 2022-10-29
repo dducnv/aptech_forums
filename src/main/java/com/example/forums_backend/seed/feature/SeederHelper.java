@@ -28,4 +28,5 @@ import java.io.IOException;
 @Component
 public interface SeederHelper {
     void readManuallyFromResources() throws IOException;
+    void readManuallyFromResources1() throws IOException;
 }
