@@ -36,7 +36,7 @@ public class SeederPreparation implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("Prepare seed data...");
         seederHelper.readManuallyFromResources();
-        seederHelper.readManuallyFromResources1();
+//        seederHelper.readManuallyFromResources1();
         System.out.println("Action success!");
     }
 }

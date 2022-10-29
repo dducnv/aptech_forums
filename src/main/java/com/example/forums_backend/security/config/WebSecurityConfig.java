@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.example.forums_backend.config.constant.route.AccountRoute.PREFIX_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 import static com.example.forums_backend.config.constant.route.AuthRoute.LOGIN_ROUTE;
 import static com.example.forums_backend.config.constant.route.AuthRoute.PREFIX_AUTH_ROUTE;
 import static com.example.forums_backend.config.constant.route.ClientRoute.*;
@@ -73,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //route quyền truy cập dành cho admin
         http
                 .authorizeRequests()
-                .antMatchers("/api/admin-role/**")
+                .antMatchers("/api/admin/**")
                 .hasAnyAuthority("ADMIN");
         http
                 .oauth2Login()
@@ -100,10 +101,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
