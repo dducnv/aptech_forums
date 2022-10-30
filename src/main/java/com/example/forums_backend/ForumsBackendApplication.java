@@ -14,7 +14,7 @@ public class ForumsBackendApplication {
     @PostConstruct
     public void init(){
         // Setting Spring Boot SetTimeZone
-        TimeZone.setDefault(TimeZone.getTimeZone("ICT"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
     }
     public static void main(String[] args) {
         SpringApplication.run(ForumsBackendApplication.class, args);
