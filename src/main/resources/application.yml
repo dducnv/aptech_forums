@@ -1,4 +1,6 @@
 spring:
+  jackson:
+    time-zone: Vietnam/Ho_Chi_Minh
   datasource:
     url: jdbc:mysql://34.87.38.9/forum_aptech?createDatabaseIfNotExist=true
     username: root
