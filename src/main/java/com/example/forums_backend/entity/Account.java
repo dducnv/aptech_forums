@@ -1,6 +1,7 @@
 package com.example.forums_backend.entity;
 
 import com.example.forums_backend.entity.my_enum.AuthProvider;
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -56,4 +57,5 @@ public class Account {
     Set<TagFollowing> tagFollowings = new HashSet<>(); // null
     @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
     Set<UserContact> userContacts = new HashSet<>(); //null
+    private StatusEnum status;
 }

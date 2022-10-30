@@ -6,6 +6,7 @@ import com.example.forums_backend.entity.Bookmark;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.dto.PostRequestDto;
 import com.example.forums_backend.entity.Voting;
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.PostRepository;
@@ -52,6 +53,7 @@ public class PostService {
         postSave.setContent(postRequestDto.getContent());
         postSave.setTags(postRequestDto.getTags());
         postSave.setAuthor(author);
+        postSave.setStatus(StatusEnum.ACTIVE);
         postRepository.save(postSave);
         return fromEntityPostDto(postSave,currentUser);
     }

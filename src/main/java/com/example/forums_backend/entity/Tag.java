@@ -24,7 +24,10 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String icon;
     private String name; //not null
+    @Column(columnDefinition = "text")
+    private String description;
     @Column(columnDefinition = "int(11) default 0")
     private int follow_count; // 0
     @JsonIgnore

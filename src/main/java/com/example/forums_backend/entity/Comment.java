@@ -1,9 +1,13 @@
 package com.example.forums_backend.entity;
 
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,4 +41,9 @@ public class Comment {
     Set<Voting> voting = new HashSet<>();
     @OneToMany(mappedBy = "comment",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     Set<Bookmark> bookmarks = new HashSet<>();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+    private StatusEnum status;
 }

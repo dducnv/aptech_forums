@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.*;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.EmailDetails;
 import com.example.forums_backend.entity.my_enum.AuthProvider;
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.utils.GeneratingPassword;
@@ -139,6 +140,7 @@ public class AccountService implements UserDetailsService {
                 .email(accountRegisterDto.getEmail())
                 .username(username)
                 .email_verify(false)
+                .status(StatusEnum.ACTIVE)
                 .fpt_member(isFptMember)
                 .provider(AuthProvider.local)
                 .role(isAdmin ? "ADMIN" : "USER")

@@ -1,5 +1,6 @@
 package com.example.forums_backend.entity;
 
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -53,4 +54,5 @@ public class Post {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    private StatusEnum status;
 }

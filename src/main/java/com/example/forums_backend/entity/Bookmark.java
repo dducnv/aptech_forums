@@ -3,8 +3,11 @@ package com.example.forums_backend.entity;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,4 +32,8 @@ public class Bookmark {
     private Comment comment;
     @Enumerated(EnumType.ORDINAL)
     private Subject subject;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

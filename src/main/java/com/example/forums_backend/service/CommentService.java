@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.CommentReqDto;
 import com.example.forums_backend.dto.CommentResDto;
 import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.entity.*;
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.BookmarkRepository;
@@ -57,6 +58,7 @@ public class CommentService {
             comment.setAccount(account);
             comment.setContent(commentReqDto.getContent());
             comment.setPost(post);
+            comment.setStatus(StatusEnum.ACTIVE);
             commentRepository.save(comment);
             return fromEntityCommentDto(comment,account);
         } catch (Exception exception) {
@@ -102,6 +104,7 @@ public class CommentService {
         commentResDto.setVote(voting != null);
         commentResDto.setBookmark(bookmark != null);
         commentResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());
+        commentResDto.setCreatedAt(comment.getCreatedAt());
         return commentResDto;
     }
 }

@@ -3,8 +3,11 @@ package com.example.forums_backend.entity;
 import com.example.forums_backend.entity.my_enum.ContactType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,4 +27,8 @@ public class UserContact {
     @JoinColumn(name = "account_id")
     @JsonIgnore
     private Account account;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

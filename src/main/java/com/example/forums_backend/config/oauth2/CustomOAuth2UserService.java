@@ -4,6 +4,7 @@ import com.example.forums_backend.config.oauth2.user.OAuth2UserInfo;
 import com.example.forums_backend.config.oauth2.user.OAuth2UserInfoFactory;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.my_enum.AuthProvider;
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.exception.OAuth2AuthenticationProcessingException;
 import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.utils.SlugGenerating;
@@ -93,6 +94,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setUsername(username);
+        user.setStatus(StatusEnum.ACTIVE);
         user.setFpt_member(isFptMember);
         user.setEmail_verify(true);
         user.setImageUrl(oAuth2UserInfo.getImageUrl());

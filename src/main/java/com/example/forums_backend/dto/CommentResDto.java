@@ -5,6 +5,7 @@ import com.example.forums_backend.entity.Comment;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,5 +23,6 @@ public class CommentResDto {
     private VoteType voteType;
     private int voteCount;
     private boolean isChildren;
+    private LocalDateTime createdAt;
     private List<CommentResDto> reply;
 }

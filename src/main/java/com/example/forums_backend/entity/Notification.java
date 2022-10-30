@@ -3,8 +3,12 @@ package com.example.forums_backend.entity;
 import com.example.forums_backend.entity.my_enum.NotificationStatus;
 import com.example.forums_backend.entity.my_enum.NotificationType;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static com.example.forums_backend.config.constant.notification.ContentConstant.*;
 
@@ -27,7 +31,10 @@ public class Notification {
     private Account receiver;
     private NotificationType type;
     private NotificationStatus status;
-
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public void setNotificationContent(NotificationType notificationType){
         switch (notificationType){
