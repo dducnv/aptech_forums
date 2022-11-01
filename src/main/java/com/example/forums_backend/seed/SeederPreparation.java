@@ -37,6 +37,8 @@ public class SeederPreparation implements CommandLineRunner {
         System.out.println("Prepare seed data...");
         seederHelper.readManuallyFromResources();
         seederHelper.readManuallyFromResources1();
+        seederHelper.readManuallyFromResources3();
+        //seederHelper.readManuallyFromResources2();
         System.out.println("Action success!");
     }
 }
