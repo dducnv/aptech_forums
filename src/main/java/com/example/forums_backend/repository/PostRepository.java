@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface PostRepository  extends JpaRepository<Post, Long> {
     Optional<Post> findFirstBySlug(String slug);
+
+    Optional<Post> findByIdAndAuthor_Id(Long id, Long author_id);
 }

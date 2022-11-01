@@ -60,12 +60,19 @@ public class PostController {
             return ResponseEntity.status(400).body("Hệ thống gặp vấn đề");
         }
     }
-
-    @RequestMapping(value = "/post/{id}/bookmark", method = RequestMethod.POST)
+    @RequestMapping(value = POST_CLIENT_BOOKMARK_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> postBookmark(@PathVariable Long id) throws AppException {
         BookmarkReqDto bookmarkReqDto = new BookmarkReqDto();
         bookmarkReqDto.setSubject_id(id);
         bookmarkReqDto.setSubject(Subject.POST);
         return ResponseEntity.status(200).body(bookmarkService.Bookmark(bookmarkReqDto));
+    }
+    @RequestMapping(value = POST_CLIENT_UPDATE_PATH, method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMyPost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) throws  AppException{
+        return ResponseEntity.ok(postService.updateMyPost(id,postRequestDto));
+    }
+    @RequestMapping(value = POST_CLIENT_DELETE_PATH, method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteMyPost(@PathVariable Long id) throws  AppException{
+        return ResponseEntity.ok(postService.deleteMyPost(id));
     }
 }

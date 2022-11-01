@@ -1,13 +1,13 @@
 package com.example.forums_backend.config.constant.route;
 
 public class AccountRoute {
-    public static final String PREFIX_ACCOUNT_ROUTE = "/api/account";
+    public static final String PREFIX_ACCOUNT_ROUTE = "/api";
+    public static final String DELETE_PATH = "/delete-profile";
+    public static final String UPDATE_PATH = "/update-profile";
 
-    public static final String GET_ALL_PATH = "/get-all";
-    public static final String UPDATE_PATH = "/update/\\d";
-    public static final String DELETE_PATH = "/delete/\\d";
-
-    public static final String GET_ALL_ACCOUNT_ROUTE = PREFIX_ACCOUNT_ROUTE.concat(GET_ALL_PATH);
+    public static final String USER_INFO_BY_USERNAME = "/user/{username}/info";
+    public static final String USER_INFO_BY_USERNAME_PATH_ANT_MATCHES = "/user/\\w/info";
+    public static final String USER_INFO_BY_USERNAME_ROUTE = PREFIX_ACCOUNT_ROUTE.concat(USER_INFO_BY_USERNAME_PATH_ANT_MATCHES);
     public static final String UPDATE_ACCOUNT_ROUTE = PREFIX_ACCOUNT_ROUTE.concat(UPDATE_PATH);
     public static final String DELETE_ACCOUNT_ROUTE = PREFIX_ACCOUNT_ROUTE.concat(DELETE_PATH);
 }

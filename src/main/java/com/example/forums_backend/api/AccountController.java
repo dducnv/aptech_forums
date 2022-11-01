@@ -1,7 +1,10 @@
 package com.example.forums_backend.api;
 
+import com.example.forums_backend.dto.UpdateInfoDto;
 import com.example.forums_backend.entity.Account;
+import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.service.AccountManagerService;
+import com.example.forums_backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +18,26 @@ import static com.example.forums_backend.config.constant.route.AccountRoute.*;
 public class AccountController {
     @Autowired
     AccountManagerService accountManagerService;
-
-    @RequestMapping(value = GET_ALL_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(accountManagerService.findAll());
-    }
+    @Autowired
+    AccountService accountService;
 
     @RequestMapping(value = UPDATE_PATH, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<Account> update(@RequestBody Account account, @PathVariable Long id) {
-        return ResponseEntity.ok(accountManagerService.update(account, id));
+    public ResponseEntity<?> update(@RequestBody UpdateInfoDto updateInfoDto) {
+        return ResponseEntity.ok(accountService.updateInfoDto(updateInfoDto));
     }
 
     @RequestMapping(value = DELETE_PATH, method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Long id){
-        accountManagerService.delete(id);
-        return ResponseEntity.ok("Deleted");
+    public ResponseEntity<?> deleteMyProfile(){
+        return ResponseEntity.ok(accountService.deleteProfile());
+    }
+
+    @RequestMapping(value = USER_INFO_BY_USERNAME, method = RequestMethod.GET)
+    public ResponseEntity<?> findUserInfoByUsername(@PathVariable String username) throws AppException {
+        try {
+            return ResponseEntity.ok(accountService.findUserInfoByUsername(username));
+        }catch (AppException exception){
+            return ResponseEntity.status(404).body("USER NOT FOUND!");
+        }
+
     }
 }

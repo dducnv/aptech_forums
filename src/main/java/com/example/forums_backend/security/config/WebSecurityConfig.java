@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.example.forums_backend.config.constant.route.AccountRoute.PREFIX_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.constant.route.AccountRoute.USER_INFO_BY_USERNAME_ROUTE;
 import static com.example.forums_backend.config.constant.route.AuthRoute.LOGIN_ROUTE;
 import static com.example.forums_backend.config.constant.route.AuthRoute.PREFIX_AUTH_ROUTE;
 import static com.example.forums_backend.config.constant.route.ClientRoute.*;
@@ -55,7 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         POSTS_CLIENT_ROUTE.concat("/**"),
                         TAG_CLIENT_ROUTE.concat("/**"),
                         POST_COMMENTS_ROUTE_ANT_MATCHES.concat("/**"),
-                        POST_DETAILS_ROUTE_ANT_MATCHES.concat("/**")
+                        POST_DETAILS_ROUTE_ANT_MATCHES.concat("/**"),
+                        USER_INFO_BY_USERNAME_ROUTE.concat("/**"),
+                        USER_BADGE_PATH_ANT_MATCHES.concat("/**"),
+                        DETAILS_COMMENT_ANT_MATCHES.concat("/**"),
+                        USER_CONTACT_PATH_ANT_MATCHES.concat("/**")
                 )
                 .permitAll();
         //route quyền truy cập danh cho user đã đang nhập

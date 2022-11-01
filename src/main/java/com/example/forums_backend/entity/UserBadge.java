@@ -1,5 +1,6 @@
 package com.example.forums_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,6 +21,7 @@ public class UserBadge {
     private Long id;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "badge_id")

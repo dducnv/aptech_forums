@@ -3,11 +3,9 @@ package com.example.forums_backend.service;
 import com.example.forums_backend.dto.CommentResDto;
 import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.dto.VoteResDto;
-import com.example.forums_backend.entity.Account;
-import com.example.forums_backend.entity.Comment;
-import com.example.forums_backend.entity.Post;
-import com.example.forums_backend.entity.Voting;
+import com.example.forums_backend.entity.*;
 import com.example.forums_backend.dto.VoteDto;
+import com.example.forums_backend.entity.my_enum.NotificationType;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
@@ -30,6 +28,8 @@ import java.util.Optional;
 public class VoteService {
     @Autowired
     VoteRepository voteRepository;
+    @Autowired
+    NotificationService notificationService;
     @Autowired
     PostRepository postRepository;
     @Autowired
@@ -59,13 +59,19 @@ public class VoteService {
     public PostResDto postVote(Long postId, VoteType type, Account account) throws AppException {
         Post post = postService.findByID(postId);
         Optional<Voting> votingOptional = voteRepository.findFirstByPost_IdAndAccount_Id(post.getId(), account.getId());
+        Notification notification = new Notification();
+        notification.setReceiver(post.getAuthor());
+        notification.setInteractive_user(account);
+        notification.setRedirect_url("/bai-dang/".concat(post.getSlug()));
         if(!votingOptional.isPresent()){
             Voting voteSave = new Voting();
             voteSave.setPost(post);
             voteSave.setAccount(account);
             if(type.equals(VoteType.UPVOTE)){
+                notification.setType(NotificationType.UPVOTE);
                 voteSave.setType(VoteType.UPVOTE);
                 post.setVote_count(post.getVote_count() + 1);
+                notificationService.saveNotification(notification);
             }else if(type.equals(VoteType.DOWN_VOTE)){
                 voteSave.setType(VoteType.DOWN_VOTE);
                 post.setVote_count(post.getVote_count() - 1);
@@ -101,13 +107,19 @@ public class VoteService {
     public CommentResDto commentVote(Long commentId, VoteType type, Account account) throws AppException {
         Comment comment = commentService.findById(commentId);
         Optional<Voting> votingOptional = voteRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), account.getId());
+        Notification notification = new Notification();
+        notification.setReceiver(comment.getAccount());
+        notification.setInteractive_user(account);
+        notification.setRedirect_url("/binh-luan/".concat(comment.getId().toString()));
         if(!votingOptional.isPresent()){
             Voting voteSave = new Voting();
             voteSave.setComment(comment);
             voteSave.setAccount(account);
             if(type.equals(VoteType.UPVOTE)){
+                notification.setType(NotificationType.UPVOTE_COMMENT);
                 voteSave.setType(VoteType.UPVOTE);
                 comment.setVote_count(comment.getVote_count() + 1);
+                notificationService.saveNotification(notification);
             }else if(type.equals(VoteType.DOWN_VOTE)){
                 voteSave.setType(VoteType.DOWN_VOTE);
                 comment.setVote_count(comment.getVote_count() - 1);
@@ -122,6 +134,7 @@ public class VoteService {
                     comment.setVote_count(comment.getVote_count() - 1);
                 }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
                     voteExist.setType(VoteType.UPVOTE);
+                    notification.setType(NotificationType.UPVOTE_COMMENT);
                     comment.setVote_count(comment.getVote_count() + 2);
                     voteRepository.save(voteExist);
                 }
@@ -140,26 +153,7 @@ public class VoteService {
         return commentService.fromEntityCommentDto(comment,account);
     }
 
-
-    public int upVotePostCount(Post post){
-        List<Voting> upVote = findVotingPostByType(VoteType.UPVOTE, Subject.POST,post.getId());
-        return upVote.size();
-    }
-
-    public int upVoteCommentCount(Comment comment){
-        List<Voting> upVote = findVotingCommentByType(VoteType.UPVOTE, Subject.COMMENT,comment.getId());
-        return upVote.size();
-    }
-
     public void delete(Long id) {
         voteRepository.deleteById(id);
     }
-
-    public List<Voting> findVotingPostByType(VoteType voteType, Subject subject, Long postId) {
-        return voteRepository.findVotingByTypeAndSubjectAndPost_Id(voteType, subject,postId);
-    }
-    public List<Voting> findVotingCommentByType(VoteType voteType, Subject subject, Long postId) {
-        return voteRepository.findVotingByTypeAndSubjectAndComment_Id(voteType, subject,postId);
-    }
-
 }

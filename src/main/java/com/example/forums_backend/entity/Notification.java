@@ -41,6 +41,9 @@ public class Notification {
             case UPVOTE:
                 this.content = UPVOTE_POST_CONTENT_NOTIFY;
                 break;
+            case DOWN_VOTE:
+                this.content = DOWN_VOTE_POST_CONTENT_NOTIFY;
+                break;
             case COMMENT:
                 this.content = COMMENT_POST_CONTENT_NOTIFY;
                 break;
@@ -49,6 +52,9 @@ public class Notification {
                 break;
             case UPVOTE_COMMENT:
                 this.content = UPVOTE_COMMENT_CONTENT_NOTIFY;
+                break;
+            case DOWN_VOTE_COMMENT:
+                this.content = DOWN_VOTE_COMMENT_CONTENT_NOTIFY;
                 break;
             case UNDEFINED:
                 break;

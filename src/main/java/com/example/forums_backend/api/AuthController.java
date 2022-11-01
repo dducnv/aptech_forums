@@ -40,7 +40,7 @@ public class AuthController {
 
     @RequestMapping(value = USER_INFO_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> userInfo(){
-        return ResponseEntity.ok(accountService.getUserBaseInfo());
+        return ResponseEntity.ok(accountService.myInfo());
     }
 
 }

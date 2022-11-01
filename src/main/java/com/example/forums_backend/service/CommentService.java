@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.CommentReqDto;
 import com.example.forums_backend.dto.CommentResDto;
 import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.entity.*;
+import com.example.forums_backend.entity.my_enum.NotificationType;
 import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
@@ -31,6 +32,8 @@ public class CommentService {
     @Autowired
     CommentRepository commentRepository;
     @Autowired
+    NotificationService notificationService;
+    @Autowired
     PostRepository postRepository;
     @Autowired
     AccountService accountService;
@@ -51,14 +54,21 @@ public class CommentService {
             Account account = accountService.getUserInfoData();
             Post post = postService.findByID(postId);
             Comment comment = new Comment();
+            Notification notification = new Notification();
+            notification.setReceiver(post.getAuthor());
+            notification.setInteractive_user(account);
+            notification.setType(NotificationType.COMMENT);
             if(commentReqDto.getReply_to() != null){
+                notification.setType(NotificationType.REPLY_COMMENT);
                 Comment findComment = findById(commentReqDto.getReply_to().getId());
                 comment.setParent(findComment);
+                notification.setRedirect_url("/binh-luan/".concat(findComment.getId().toString()));
             }
             comment.setAccount(account);
             comment.setContent(commentReqDto.getContent());
             comment.setPost(post);
             comment.setStatus(StatusEnum.ACTIVE);
+            notificationService.saveNotification(notification);
             commentRepository.save(comment);
             return fromEntityCommentDto(comment,account);
         } catch (Exception exception) {
@@ -79,13 +89,11 @@ public class CommentService {
         }
         return optionalComment.get();
     }
-
     public List<CommentResDto> findCommentByPost_Id(Long postId) {
         Account currentUser = accountService.getUserInfoData();
         List<Comment> commentList = commentRepository.findCommentByPost_Id(postId);
         return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
     }
-
     public CommentResDto fromEntityCommentDto(Comment comment, Account currentUser) {
         Voting voting = null;
         Bookmark bookmark = null;

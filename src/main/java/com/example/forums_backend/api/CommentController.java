@@ -67,4 +67,8 @@ public class CommentController {
         bookmarkReqDto.setSubject(Subject.COMMENT);
         return ResponseEntity.status(200).body(bookmarkService.Bookmark(bookmarkReqDto));
     }
+    @RequestMapping(value = DETAILS_COMMENT_PATH, method = RequestMethod.POST)
+    public ResponseEntity<?> findCommentById(@PathVariable Long id) throws AppException {
+        return ResponseEntity.ok(commentService.findByIdToDto(id));
+    }
 }
