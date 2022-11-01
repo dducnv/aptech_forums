@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.dto.TagFollowReqDto;
 import com.example.forums_backend.dto.TagFollowResDto;
 import com.example.forums_backend.entity.Account;
+import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
 import com.example.forums_backend.entity.TagFollowing;
 import com.example.forums_backend.exception.AppException;
@@ -73,5 +74,16 @@ public class TagService {
         tagFollowResDto.setTag_follow_count(tag.getFollow_count());
         tagFollowResDto.setFollow(tagFollowingOptional != null);
         return tagFollowResDto;
+    }
+
+    public Tag update(Tag tag, Long id) {
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+        Tag tagModal = optionalTag.get();
+        tagModal.setName(tag.getName());
+        return tagRepository.save(tagModal);
+    }
+
+    public void delete(Long id){
+        tagRepository.deleteById(id);
     }
 }

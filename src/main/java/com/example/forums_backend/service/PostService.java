@@ -79,6 +79,12 @@ public class PostService {
         return optionalPost.get();
     }
 
+    public Post update(Post post, Long id) {
+        Optional<Post> optionalPost = postRepository.findById(id);
+        Post postModal = optionalPost.get();
+        postModal.setTitle(post.getTitle());
+        return postRepository.save(postModal);
+    }
 
     public PostResDto fromEntityPostDto(Post post, Account currentUser) {
         Voting voting = null;
@@ -102,5 +108,8 @@ public class PostService {
         postResDto.setBookmark(bookmark != null);
         postResDto.setCreatedAt(post.getCreatedAt());
         return postResDto;
+    }
+    public void delete(Long id){
+        postRepository.deleteById(id);
     }
 }
