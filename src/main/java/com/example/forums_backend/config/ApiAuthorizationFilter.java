@@ -24,12 +24,15 @@ import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 
 public class ApiAuthorizationFilter extends OncePerRequestFilter {
     private static final String[] IGNORE_PATHS = {
+            "/",
             LOGIN_ROUTE,
             REGISTER_ROUTE,
             GET_OTP_ROUTE,
             LOGIN_WITH_EMAIL_ROUTE,
             USER_INFO_BY_USERNAME_ROUTE,
             USER_BADGE_ROUTE,
+            USER_COMMENTS_ROUTE_ANT_MATCHES,
+            USER_POSTS_ROUTE_ANT_MATCHES,
             DETAILS_COMMENT_ROUTE,
             USER_CONTACT_POST_ROUTE,
             POSTS_CLIENT_ROUTE,

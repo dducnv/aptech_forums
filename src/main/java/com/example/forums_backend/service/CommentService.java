@@ -48,7 +48,20 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-//    @Transactional(rollbackFor = AppException.class)
+    public List<CommentResDto> myComments() {
+        Account currentUser = accountService.getUserInfoData();
+        List<Comment> commentList = commentRepository.findCommentByAccount_Id(currentUser.getId());
+        return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
+    }
+
+    public List<CommentResDto> userComments(String username){
+        Account currentUser = accountService.getUserInfoData();
+        Account account = accountService.findByUsername(username);
+        List<Comment> commentList = commentRepository.findCommentByAccount_Id(account.getId());
+        return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
+    }
+
+    //    @Transactional(rollbackFor = AppException.class)
     public CommentResDto saveComment(Long postId, CommentReqDto commentReqDto) {
         try {
             Account account = accountService.getUserInfoData();
@@ -58,7 +71,7 @@ public class CommentService {
             notification.setReceiver(post.getAuthor());
             notification.setInteractive_user(account);
             notification.setType(NotificationType.COMMENT);
-            if(commentReqDto.getReply_to() != null){
+            if (commentReqDto.getReply_to() != null) {
                 notification.setType(NotificationType.REPLY_COMMENT);
                 Comment findComment = findById(commentReqDto.getReply_to().getId());
                 comment.setParent(findComment);
@@ -70,18 +83,37 @@ public class CommentService {
             comment.setStatus(StatusEnum.ACTIVE);
             notificationService.saveNotification(notification);
             commentRepository.save(comment);
-            return fromEntityCommentDto(comment,account);
+            return fromEntityCommentDto(comment, account);
         } catch (Exception exception) {
             log.info("Comment error: " + exception.getMessage());
             throw new RuntimeException();
         }
     }
-    public  CommentResDto findByIdToDto(Long id) throws AppException {
+
+    public CommentResDto findByIdToDto(Long id) throws AppException {
         Account account = accountService.getUserInfoData();
         Comment comment = findById(id);
-        return fromEntityCommentDto(comment,account);
+        return fromEntityCommentDto(comment, account);
     }
-
+    public CommentResDto updateMyComment(Long commentId, CommentReqDto commentReqDto) throws AppException{
+        Account currentUser = accountService.getUserInfoData();
+        Comment comment = findById(commentId);
+        if (comment.getAccount().equals(currentUser)){
+            comment.setContent(commentReqDto.getContent());
+            commentRepository.save(comment);
+            return fromEntityCommentDto(comment,currentUser);
+        }
+        return null;
+    }
+    public boolean deleteMyComment(Long commentId) throws AppException {
+        Account currentUser = accountService.getUserInfoData();
+        Comment comment = findById(commentId);
+        if(comment.getAccount().equals(currentUser)){
+            commentRepository.deleteById(comment.getId());
+            return true;
+        }
+        return false;
+    }
     public Comment findById(Long id) throws AppException {
         Optional<Comment> optionalComment = commentRepository.findById(id);
         if (!optionalComment.isPresent()) {
@@ -89,11 +121,14 @@ public class CommentService {
         }
         return optionalComment.get();
     }
+
     public List<CommentResDto> findCommentByPost_Id(Long postId) {
         Account currentUser = accountService.getUserInfoData();
         List<Comment> commentList = commentRepository.findCommentByPost_Id(postId);
         return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
     }
+
+
     public CommentResDto fromEntityCommentDto(Comment comment, Account currentUser) {
         Voting voting = null;
         Bookmark bookmark = null;
@@ -111,6 +146,7 @@ public class CommentService {
         commentResDto.setChildren(comment.getParent() != null);
         commentResDto.setVote(voting != null);
         commentResDto.setBookmark(bookmark != null);
+        commentResDto.setMyComment(comment.getAccount() == currentUser);
         commentResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());
         commentResDto.setCreatedAt(comment.getCreatedAt());
         return commentResDto;

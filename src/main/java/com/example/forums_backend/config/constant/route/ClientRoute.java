@@ -6,6 +6,8 @@ public class ClientRoute {
     //posts router
     //PATH MAPPING CONTROLLER
     public static final String POSTS_CLIENT_PATH             = "/posts";
+    public static final String MY_POSTS_CLIENT_PATH          = "/my-posts";
+    public static final String USER_POSTS_CLIENT_PATH        = "/user/{username}/posts";
     public static final String POST_CLIENT_CREATE_POST_PATH  = "/post/new";
     public static final String POST_CLIENT_DETAILS_POST_PATH = "/post/details";
 
@@ -14,6 +16,8 @@ public class ClientRoute {
     public static final String POST_CLIENT_UPDATE_PATH = "/post/{id}/delete";
 
     public static final String GET_ALL_COMMENT_PATH       = "/comments";
+    public static final String MY_COMMENTS_PATH           = "/my-comments";
+    public static final String USER_COMMENTS_PATH         = "/user/{username}/comments";
     public static final String FIND_COMMENTS_BY_POST_PATH = "/post/{post_id}/comments";
     public static final String COMMENT_POST_PATH          = "/post/{id}/comment";
     public static final String POST_UP_VOTE_CLIENT_PATH   = "/post/{id}/vote";
@@ -27,8 +31,12 @@ public class ClientRoute {
     public static final String POST_VOTE_PATH_ANT_MATCHES     = "/post/\\d/vote";
     public static final String COMMENT_VOTE_PATH_ANT_MATCHES  = "/comment/\\d/vote";
     public static final String DETAILS_COMMENT_ANT_MATCHES = "/comment/\\d";
+    public static final String USER_COMMENTS_PATH_ANT_MATCHES = "/user/\\d/comments";
+    public static final String USER_POSTS_PATH_ANT_MATCHES = "/user/\\d/posts";
 
     //ROUTER ANT MATCHES
+    public static final String USER_COMMENTS_ROUTE_ANT_MATCHES = PREFIX_CLIENT_ROUTE.concat(USER_COMMENTS_PATH_ANT_MATCHES);
+    public static final String USER_POSTS_ROUTE_ANT_MATCHES = PREFIX_CLIENT_ROUTE.concat(USER_POSTS_PATH_ANT_MATCHES);
     public static final String POST_COMMENTS_ROUTE_ANT_MATCHES = PREFIX_CLIENT_ROUTE.concat(POST_COMMENTS_PATH_ANT_MATCHES);
     public static final String POST_DETAILS_ROUTE_ANT_MATCHES  = PREFIX_CLIENT_ROUTE.concat(POST_DETAILS_PATH_ANT_MATCHES);
     public static final String COMMENT_POST_ROUTE_ANT_MATCHES  = PREFIX_CLIENT_ROUTE.concat(COMMENT_POST_PATH_ANT_MATCHES);

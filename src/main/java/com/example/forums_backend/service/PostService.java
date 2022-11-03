@@ -43,11 +43,25 @@ public class PostService {
         List<Post> postList = postRepository.findAll();
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
+
+    public List<PostResDto> myPosts() {
+        Account currentUser = accountService.getUserInfoData();
+        List<Post> postList = postRepository.findByAuthor_id(currentUser.getId());
+        return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
+    }
+
+    public List<PostResDto> userPosts(String username) {
+        Account currentUser = accountService.getUserInfoData();
+        Account account = accountService.findByUsername(username);
+        List<Post> postList = postRepository.findByAuthor_id(account.getId());
+        return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
+    }
+
     public PostResDto savePost(PostRequestDto postRequestDto) {
         Account currentUser = accountService.getUserInfoData();
         Account author = accountService.getUserInfoData();
         Post postSave = new Post();
-        String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-"+System.currentTimeMillis());
+        String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-" + System.currentTimeMillis());
         postSave.setTitle(postRequestDto.getTitle());
         postSave.setSlug(slugGenerate);
         postSave.setContent(postRequestDto.getContent());
@@ -55,32 +69,35 @@ public class PostService {
         postSave.setAuthor(author);
         postSave.setStatus(StatusEnum.ACTIVE);
         postRepository.save(postSave);
-        return fromEntityPostDto(postSave,currentUser);
+        return fromEntityPostDto(postSave, currentUser);
     }
-    public PostResDto updateMyPost(Long id,PostRequestDto postRequestDto) throws AppException {
+
+    public PostResDto updateMyPost(Long id, PostRequestDto postRequestDto) throws AppException {
         Account account = accountService.getUserInfoData();
         Optional<Post> postOptional = postRepository.findByIdAndAuthor_Id(id, account.getId());
-        if (!postOptional.isPresent()){
+        if (!postOptional.isPresent()) {
             throw new AppException("POST NOT FOUND!");
         }
         Post post = postOptional.get();
-        String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-"+System.currentTimeMillis());
+        String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-" + System.currentTimeMillis());
         post.setContent(postRequestDto.getContent());
         post.setTags(postRequestDto.getTags());
         post.setSlug(slugGenerate);
         postRepository.save(post);
-        return fromEntityPostDto(post,account);
+        return fromEntityPostDto(post, account);
     }
+
     public boolean deleteMyPost(Long id) throws AppException {
         Account account = accountService.getUserInfoData();
-        Optional<Post> postOptional = postRepository.findByIdAndAuthor_Id(id,account.getId());
-        if (!postOptional.isPresent()){
+        Optional<Post> postOptional = postRepository.findByIdAndAuthor_Id(id, account.getId());
+        if (!postOptional.isPresent()) {
             throw new AppException("POST NOT FOUND!");
         }
         Post post = postOptional.get();
         postRepository.deleteById(post.getId());
         return true;
     }
+
     public PostResDto detailsPost(String slug) throws AppException {
         try {
             Account currentUser = accountService.getUserInfoData();
@@ -95,6 +112,7 @@ public class PostService {
         }
         return null;
     }
+
     public Post findByID(Long id) throws AppException {
         Optional<Post> optionalPost = postRepository.findById(id);
         if (!optionalPost.isPresent()) {
@@ -102,13 +120,14 @@ public class PostService {
         }
         return optionalPost.get();
     }
+
     public PostResDto fromEntityPostDto(Post post, Account currentUser) {
         Voting voting = null;
         Bookmark bookmark = null;
         PostResDto postResDto = new PostResDto();
-        if(currentUser !=null){
+        if (currentUser != null) {
             voting = voteRepository.findFirstByPost_IdAndAccount_Id(post.getId(), currentUser.getId()).orElse(null);
-            bookmark = bookmarkRepository.findFirstByPost_IdAndAccount_Id(post.getId(),currentUser.getId()).orElse(null);
+            bookmark = bookmarkRepository.findFirstByPost_IdAndAccount_Id(post.getId(), currentUser.getId()).orElse(null);
         }
         postResDto.setId(post.getId());
         postResDto.setTitle(post.getTitle());

@@ -7,7 +7,6 @@ import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.exception.AccountException;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.AccountRepository;
-import com.example.forums_backend.repository.BadgeRepository;
 import com.example.forums_backend.repository.UserBadgeRepository;
 import com.example.forums_backend.repository.UserContactRepository;
 import com.example.forums_backend.utils.GeneratingPassword;
@@ -45,7 +44,7 @@ public class AccountService implements UserDetailsService {
     public static final Pattern STAFF_FPT_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Za-z0-9._%+-]+@fe.edu.vn$", Pattern.CASE_INSENSITIVE);
 
-    private static final String[] IS_ADMIN = {"dduc7th.dec@gmail.com", "ducnvth2008042@fpt.edu.vn","quangnhth2008059@fpt.edu.vn"};
+    private static final String[] IS_ADMIN = {"dduc7th.dec@gmail.com", "ducnvth2008042@fpt.edu.vn", "quangnhth2008059@fpt.edu.vn"};
 
     @Autowired
     AccountRepository accountRepository;
@@ -82,6 +81,7 @@ public class AccountService implements UserDetailsService {
                 .scope("basic_info")
                 .build();
     }
+
     public CheckAccount getOtp(LoginEmailDto loginEmailDto) {
         try {
             Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(loginEmailDto.getEmail()));
@@ -115,6 +115,7 @@ public class AccountService implements UserDetailsService {
         }
 
     }
+
     public RegisterDto register(RegisterDto accountRegisterDto) throws AccountException {
         Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(accountRegisterDto.getEmail()));
         if (account.isPresent()) {
@@ -149,38 +150,72 @@ public class AccountService implements UserDetailsService {
         return accountRegisterDto;
 
     }
-    public List<UserBadge> getListBadge(){
+
+    public List<UserBadge> getListBadge() {
         Account account = getUserInfoData();
         return getListUserBadge(account);
     }
 
-    public List<UserBadge> getListBadgeByUsername(String username){
+    public List<UserBadge> getListBadgeByUsername(String username) {
         Optional<Account> optionalAccount = accountRepository.findFirstByUsername(username);
-        if(!optionalAccount.isPresent()){
+        if (!optionalAccount.isPresent()) {
             throw new UsernameNotFoundException("User not found");
         }
         Account account = optionalAccount.get();
         return getListUserBadge(account);
     }
 
-    public List<UserBadge> getListUserBadge(Account account){
+    public List<UserBadge> getListUserBadge(Account account) {
         return userBadgeRepository.findByAccount_Id(account.getId());
     }
-    public List<UserContact> getUserContact(){
+
+    public UserContact updateContact(Long contactId, UserContact userContact){
+        Account account = getUserInfoData();
+        Optional<UserContact> userContactOptional = userContactRepository.findById(contactId);
+        if (userContactOptional.isPresent()) {
+            UserContact userContact1 = userContactOptional.get();
+            if (userContact1.getAccount().equals(account)) {
+                userContact1.setType(userContact.getType());
+                userContact1.setName(userContact.getName());
+                userContact1.setIcon(userContact.getIcon());
+                userContactRepository.save(userContact1);
+                return userContact;
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteContact(Long contactId) {
+        Account account = getUserInfoData();
+        Optional<UserContact> userContactOptional = userContactRepository.findById(contactId);
+        if (userContactOptional.isPresent()) {
+            UserContact userContact = userContactOptional.get();
+            if (userContact.getAccount().equals(account)) {
+                userContactRepository.deleteById(userContact.getId());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<UserContact> getUserContact() {
         Account account = getUserInfoData();
         return getListUserContact(account);
     }
-    public List<UserContact> getUserContactByUsername(String username){
+
+    public List<UserContact> getUserContactByUsername(String username) {
         Optional<Account> optionalAccount = accountRepository.findFirstByUsername(username);
-        if(!optionalAccount.isPresent()){
+        if (!optionalAccount.isPresent()) {
             throw new UsernameNotFoundException("User not found");
         }
         Account account = optionalAccount.get();
         return getListUserContact(account);
     }
-    public List<UserContact> getListUserContact(Account account){
+
+    public List<UserContact> getListUserContact(Account account) {
         return userContactRepository.findByAccount_Id(account.getId());
     }
+
     public UserInfoDto getUserBaseInfo() {
         Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
@@ -196,6 +231,7 @@ public class AccountService implements UserDetailsService {
                 .role(account.getRole())
                 .build();
     }
+
     public Account getUserInfoData() {
         Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userInfo != "anonymousUser") {
@@ -207,13 +243,14 @@ public class AccountService implements UserDetailsService {
         }
         return null;
     }
+
     public UserAllInfoDto findUserInfoByUsername(String username) throws AppException {
         Optional<Account> optionalAccount = accountRepository.findFirstByUsername(username);
-        if(!optionalAccount.isPresent()){
+        if (!optionalAccount.isPresent()) {
             throw new AppException("User Not Found!");
         }
         Account account = optionalAccount.get();
-        return  UserAllInfoDto.builder()
+        return UserAllInfoDto.builder()
                 .name(account.getName())
                 .username(account.getUsername())
                 .avatar(account.getImageUrl())
@@ -227,7 +264,8 @@ public class AccountService implements UserDetailsService {
                 .createdAt(account.getCreatedAt())
                 .build();
     }
-    public UserAllInfoDto myInfo(){
+
+    public UserAllInfoDto myInfo() {
         Account account = getUserInfoData();
         return UserAllInfoDto.builder()
                 .name(account.getName())
@@ -244,7 +282,8 @@ public class AccountService implements UserDetailsService {
                 .createdAt(account.getCreatedAt())
                 .build();
     }
-    public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto){
+
+    public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) {
         Account account = getUserInfoData();
         account.setUsername(updateInfoDto.getUsername());
         account.setImageUrl(updateInfoDto.getImageUrl());
@@ -253,19 +292,21 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
         return updateInfoDto;
     }
-    public boolean deleteProfile(){
+
+    public boolean deleteProfile() {
         Account account = getUserInfoData();
         accountRepository.deleteById(account.getId());
         return true;
     }
 
-    public Account findById(Long id){
+    public Account findById(Long id) {
         return accountRepository.findById(id).get();
     }
 
-    public Account findByUsername(String username){
+    public Account findByUsername(String username) {
         return accountRepository.findFirstByUsername(username).get();
     }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByEmail(email);

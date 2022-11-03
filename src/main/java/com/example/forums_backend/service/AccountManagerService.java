@@ -31,7 +31,7 @@ public class AccountManagerService {
         return accountRepository.save(accountModal);
     }
 
-    public void delete(Long id){
-       accountRepository.deleteById(id);
+    public void delete(Long id) {
+        accountRepository.deleteById(id);
     }
 }

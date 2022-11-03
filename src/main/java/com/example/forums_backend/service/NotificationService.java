@@ -18,12 +18,12 @@ public class NotificationService {
     @Autowired
     AccountService accountService;
 
-    public List<Notification> getAllNotification(){
+    public List<Notification> getAllNotification() {
         Account account = accountService.getUserInfoData();
         return notificationRepository.findNotificationByReceiver_Id(account.getId());
     }
 
-    public Notification saveNotification(Notification notification){
+    public Notification saveNotification(Notification notification) {
         Account accountSend = accountService.findByUsername(notification.getInteractive_user().getUsername());
         Account accountReceiver = accountService.findByUsername(notification.getReceiver().getUsername());
         Notification notificationSave = new Notification();

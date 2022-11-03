@@ -14,6 +14,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.File;
+
 @Service
 @Transactional
 @Slf4j
@@ -25,7 +26,6 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-
     public void sendSimpleMail(EmailDetails details) {
         MimeMessage mimeMessage
                 = javaMailSender.createMimeMessage();
@@ -35,11 +35,10 @@ public class EmailServiceImpl implements EmailService {
                     = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
             mimeMessageHelper.setTo(details.getRecipient());
-            mimeMessageHelper.setText(details.getMsgBody(),true);
+            mimeMessageHelper.setText(details.getMsgBody(), true);
             mimeMessageHelper.setSubject(details.getSubject());
             javaMailSender.send(mimeMessage);
-        }
-        catch (MessagingException e) {
+        } catch (MessagingException e) {
             log.info(String.valueOf(e));
         }
     }
@@ -54,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
                     = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
             mimeMessageHelper.setTo(details.getRecipient());
-            mimeMessageHelper.setText(details.getMsgBody(),true);
+            mimeMessageHelper.setText(details.getMsgBody(), true);
             mimeMessageHelper.setSubject(
                     details.getSubject());
             FileSystemResource file
@@ -64,8 +63,7 @@ public class EmailServiceImpl implements EmailService {
                     file.getFilename(), file);
             javaMailSender.send(mimeMessage);
             return "Mail sent Successfully";
-        }
-        catch (MessagingException e) {
+        } catch (MessagingException e) {
             return "Error while sending mail!!!";
         }
     }

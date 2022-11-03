@@ -63,37 +63,37 @@ public class VoteService {
         notification.setReceiver(post.getAuthor());
         notification.setInteractive_user(account);
         notification.setRedirect_url("/bai-dang/".concat(post.getSlug()));
-        if(!votingOptional.isPresent()){
+        if (!votingOptional.isPresent()) {
             Voting voteSave = new Voting();
             voteSave.setPost(post);
             voteSave.setAccount(account);
-            if(type.equals(VoteType.UPVOTE)){
+            if (type.equals(VoteType.UPVOTE)) {
                 notification.setType(NotificationType.UPVOTE);
                 voteSave.setType(VoteType.UPVOTE);
                 post.setVote_count(post.getVote_count() + 1);
                 notificationService.saveNotification(notification);
-            }else if(type.equals(VoteType.DOWN_VOTE)){
+            } else if (type.equals(VoteType.DOWN_VOTE)) {
                 voteSave.setType(VoteType.DOWN_VOTE);
                 post.setVote_count(post.getVote_count() - 1);
             }
             voteRepository.save(voteSave);
             postRepository.save(post);
-        }else {
+        } else {
             Voting voteExist = votingOptional.get();
-            if(type.equals(VoteType.UPVOTE)){
-                if(voteExist.getType().equals(VoteType.UPVOTE)){
+            if (type.equals(VoteType.UPVOTE)) {
+                if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     delete(voteExist.getId());
                     post.setVote_count(post.getVote_count() - 1);
-                }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                } else if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     voteExist.setType(VoteType.UPVOTE);
                     post.setVote_count(post.getVote_count() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
-                if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     delete(voteExist.getId());
                     post.setVote_count(post.getVote_count() + 1);
-                }else if(voteExist.getType().equals(VoteType.UPVOTE)){
+                } else if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     voteExist.setType(VoteType.DOWN_VOTE);
                     post.setVote_count(post.getVote_count() - 2);
                     voteRepository.save(voteExist);
@@ -111,38 +111,38 @@ public class VoteService {
         notification.setReceiver(comment.getAccount());
         notification.setInteractive_user(account);
         notification.setRedirect_url("/binh-luan/".concat(comment.getId().toString()));
-        if(!votingOptional.isPresent()){
+        if (!votingOptional.isPresent()) {
             Voting voteSave = new Voting();
             voteSave.setComment(comment);
             voteSave.setAccount(account);
-            if(type.equals(VoteType.UPVOTE)){
+            if (type.equals(VoteType.UPVOTE)) {
                 notification.setType(NotificationType.UPVOTE_COMMENT);
                 voteSave.setType(VoteType.UPVOTE);
                 comment.setVote_count(comment.getVote_count() + 1);
                 notificationService.saveNotification(notification);
-            }else if(type.equals(VoteType.DOWN_VOTE)){
+            } else if (type.equals(VoteType.DOWN_VOTE)) {
                 voteSave.setType(VoteType.DOWN_VOTE);
                 comment.setVote_count(comment.getVote_count() - 1);
             }
             voteRepository.save(voteSave);
             commentRepository.save(comment);
-        }else {
+        } else {
             Voting voteExist = votingOptional.get();
-            if(type.equals(VoteType.UPVOTE)){
-                if(voteExist.getType() == VoteType.UPVOTE){
+            if (type.equals(VoteType.UPVOTE)) {
+                if (voteExist.getType() == VoteType.UPVOTE) {
                     delete(voteExist.getId());
                     comment.setVote_count(comment.getVote_count() - 1);
-                }else if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                } else if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     voteExist.setType(VoteType.UPVOTE);
                     notification.setType(NotificationType.UPVOTE_COMMENT);
                     comment.setVote_count(comment.getVote_count() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
-                if(voteExist.getType().equals(VoteType.DOWN_VOTE)){
+                if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     delete(voteExist.getId());
                     comment.setVote_count(comment.getVote_count() + 1);
-                }else if(voteExist.getType().equals(VoteType.UPVOTE)){
+                } else if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     voteExist.setType(VoteType.DOWN_VOTE);
                     comment.setVote_count(comment.getVote_count() - 2);
                     voteRepository.save(voteExist);
@@ -150,7 +150,7 @@ public class VoteService {
             }
             commentRepository.save(comment);
         }
-        return commentService.fromEntityCommentDto(comment,account);
+        return commentService.fromEntityCommentDto(comment, account);
     }
 
     public void delete(Long id) {

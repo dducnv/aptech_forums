@@ -63,7 +63,7 @@ public class TagService {
 
     public TagFollowResDto fromEntityTagDto(Tag tag, Account currentUser) {
         TagFollowing tagFollowingOptional = null;
-        if(currentUser != null){
+        if (currentUser != null) {
             tagFollowingOptional = tagFollowingRepository.findFirstByTag_IdAndAccount_Id(tag.getId(), currentUser.getId()).orElse(null);
         }
         System.out.println(tagFollowingOptional);

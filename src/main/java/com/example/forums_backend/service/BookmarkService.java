@@ -31,7 +31,7 @@ public class BookmarkService {
     @Autowired
     AccountService accountService;
 
-    public List<Bookmark> BookmarkList(){
+    public List<Bookmark> BookmarkList() {
         Account account = accountService.getUserInfoData();
         return bookmarkRepository.findByAccount_Id(account.getId());
     }
@@ -39,10 +39,10 @@ public class BookmarkService {
     public boolean Bookmark(BookmarkReqDto bookmarkReqDto) throws AppException {
         Account author = accountService.getUserInfoData();
         if (bookmarkReqDto.getSubject() == Subject.POST) {
-           PostResDto postResDto = postBookmark(bookmarkReqDto.getSubject_id(),author);
-           return postResDto.isBookmark();
+            PostResDto postResDto = postBookmark(bookmarkReqDto.getSubject_id(), author);
+            return postResDto.isBookmark();
         } else if (bookmarkReqDto.getSubject() == Subject.COMMENT) {
-            CommentResDto commentResDto = commentBookmark(bookmarkReqDto.getSubject_id(),author);
+            CommentResDto commentResDto = commentBookmark(bookmarkReqDto.getSubject_id(), author);
             return commentResDto.isBookmark();
         }
         return false;
@@ -52,10 +52,10 @@ public class BookmarkService {
         Post post = postService.findByID(postId);
         Optional<Bookmark> bookmarkOptional = bookmarkRepository.findFirstByPost_IdAndAccount_Id(post.getId(), account.getId());
         Bookmark bookmark = new Bookmark();
-        if(bookmarkOptional.isPresent()){
-           Bookmark bookmarkGet = bookmarkOptional.get();
-           delete(bookmarkGet.getId());
-           return postService.detailsPost(post.getSlug());
+        if (bookmarkOptional.isPresent()) {
+            Bookmark bookmarkGet = bookmarkOptional.get();
+            delete(bookmarkGet.getId());
+            return postService.detailsPost(post.getSlug());
         }
         bookmark.setPost(post);
         bookmark.setAccount(account);
@@ -63,20 +63,21 @@ public class BookmarkService {
         bookmarkRepository.save(bookmark);
         return postService.detailsPost(post.getSlug());
     }
+
     public CommentResDto commentBookmark(Long commentId, Account account) throws AppException {
         Comment comment = commentService.findById(commentId);
         Optional<Bookmark> bookmarkOptional = bookmarkRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), account.getId());
         Bookmark bookmark = new Bookmark();
-        if(bookmarkOptional.isPresent()){
+        if (bookmarkOptional.isPresent()) {
             Bookmark bookmarkGet = bookmarkOptional.get();
             delete(bookmarkGet.getId());
-            return commentService.fromEntityCommentDto(comment,account);
+            return commentService.fromEntityCommentDto(comment, account);
         }
         bookmark.setComment(comment);
         bookmark.setAccount(account);
         bookmark.setSubject(Subject.POST);
         bookmarkRepository.save(bookmark);
-        return commentService.fromEntityCommentDto(comment,account);
+        return commentService.fromEntityCommentDto(comment, account);
     }
 
     public void delete(Long id) {

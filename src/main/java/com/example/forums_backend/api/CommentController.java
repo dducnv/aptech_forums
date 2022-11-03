@@ -34,7 +34,11 @@ public class CommentController {
     public ResponseEntity<?> findCommentsByPostId(@PathVariable Long post_id) {
         return ResponseEntity.ok(commentService.findCommentByPost_Id(post_id));
     }
-
+    @RequestMapping(value = MY_COMMENTS_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> myComments(){
+        return ResponseEntity.ok(commentService.myComments());
+    }
+    
     @RequestMapping(value = GET_ALL_COMMENT_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> getAllComment() {
         return ResponseEntity.ok(commentService.findAll());

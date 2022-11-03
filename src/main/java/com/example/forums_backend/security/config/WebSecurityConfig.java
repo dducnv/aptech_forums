@@ -51,6 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/",
+                        USER_COMMENTS_ROUTE_ANT_MATCHES.concat("/**"),
+                        USER_POSTS_ROUTE_ANT_MATCHES.concat("/**"),
                         PREFIX_AUTH_ROUTE.concat("/**"),
                         PREFIX_ACCOUNT_ROUTE.concat("/**"),
                         POSTS_CLIENT_ROUTE.concat("/**"),
@@ -73,7 +75,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         POST_CLIENT_CREATE_POST_ROUTE.concat("/**"),
                         TAG_FOLLOW_CLIENT_ROUTE.concat("/**")
                 )
-
                 .hasAnyAuthority("USER", "ADMIN");
         //route quyền truy cập dành cho admin
         http

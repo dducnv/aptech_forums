@@ -34,7 +34,15 @@ public class PostController {
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(postService.findAll());
     }
+    @RequestMapping(value = MY_POSTS_CLIENT_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> myPosts(){
+        return ResponseEntity.ok(postService.myPosts());
+    }
 
+    @RequestMapping(value = USER_POSTS_CLIENT_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> userPost(@PathVariable  String username){
+        return ResponseEntity.ok(postService.userPosts(username));
+    }
     @RequestMapping(value = POST_CLIENT_DETAILS_POST_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> getDetails(@RequestParam("slug") String slug) throws AppException {
         if(slug.isEmpty()){

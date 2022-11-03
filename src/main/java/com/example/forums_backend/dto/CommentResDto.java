@@ -23,6 +23,7 @@ public class CommentResDto {
     private VoteType voteType;
     private int voteCount;
     private boolean isChildren;
+    private boolean myComment;
     private LocalDateTime createdAt;
     private List<CommentResDto> reply;
 }

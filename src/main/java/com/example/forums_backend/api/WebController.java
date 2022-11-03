@@ -1,6 +1,7 @@
 package com.example.forums_backend.api;
 
 import com.example.forums_backend.entity.Account;
+import com.example.forums_backend.entity.UserContact;
 import com.example.forums_backend.service.AccountManagerService;
 import com.example.forums_backend.service.AccountService;
 import com.example.forums_backend.service.BookmarkService;
@@ -53,5 +54,13 @@ public class WebController {
     @RequestMapping(value = USER_BADGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> getMyUserBadges(@PathVariable String username){
         return ResponseEntity.ok(accountService.getListBadgeByUsername(username));
+    }
+    @RequestMapping(value = "/api/{id}/delete-contact", method = RequestMethod.GET)
+    public ResponseEntity<?> deleteContact(@PathVariable Long id){
+        return ResponseEntity.ok(accountService.deleteContact(id));
+    }
+    @RequestMapping(value = "/api/{id}/update-contact", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateContact(@PathVariable Long id, @RequestBody UserContact userContact){
+        return ResponseEntity.ok(accountService.updateContact(id,userContact));
     }
 }
