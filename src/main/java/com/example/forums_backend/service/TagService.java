@@ -13,9 +13,15 @@ import com.example.forums_backend.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.TagUtils;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +43,6 @@ public class TagService {
         List<Tag> tags = tagRepository.findAll();
         return tags.stream().map(it -> fromEntityTagDto(it, account)).collect(Collectors.toList());
     }
-
     public Tag save(Tag tag) {
         return tagRepository.save(tag);
     }

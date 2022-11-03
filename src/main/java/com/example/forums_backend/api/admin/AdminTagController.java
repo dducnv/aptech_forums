@@ -4,11 +4,21 @@ import com.example.forums_backend.dto.TagFollowReqDto;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
 import com.example.forums_backend.exception.AppException;
+import com.example.forums_backend.repository.TagRepository;
 import com.example.forums_backend.service.TagService;
 import lombok.RequiredArgsConstructor;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 
@@ -18,10 +28,8 @@ import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 public class AdminTagController {
     @Autowired
     TagService tagService;
-    @RequestMapping(value = TAG_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(tagService.findAll());
-    }
+    @Autowired
+    TagRepository repository;
     @RequestMapping(value = TAG_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createTag(@RequestBody Tag tag){
         return ResponseEntity.ok(tagService.save(tag));
@@ -34,5 +42,10 @@ public class AdminTagController {
     public ResponseEntity<?> delete(@PathVariable Long id){
         tagService.delete(id);
         return ResponseEntity.ok("Deleted");
+    }
+    @RequestMapping(value = TAG_PATH, method = RequestMethod.GET)
+    public Page<Tag> findPage(@RequestParam int page, @RequestParam int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findAll(pageRequest);
     }
 }
