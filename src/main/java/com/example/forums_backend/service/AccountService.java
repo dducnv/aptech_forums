@@ -257,7 +257,7 @@ public class AccountService implements UserDetailsService {
                 .build();
     }
 
-    public ProfileDto myInfo() {
+    public ProfileDto getMyProfile(){
         Account account = getUserInfoData();
         List<UserContact> userContacts = getUserContact();
         List<UserBadge> userBadges = getListBadge();
@@ -280,6 +280,25 @@ public class AccountService implements UserDetailsService {
                 .contacts(userContacts)
                 .badges(userBadges)
                 .build();
+    }
+
+    public UserAllInfoDto myInfo() {
+        Account account = getUserInfoData();
+        return UserAllInfoDto.builder()
+                .name(account.getName())
+                .username(account.getUsername())
+                .avatar(account.getImageUrl())
+                .skill(account.getSkill())
+                .reputation(account.getReputation())
+                .post_count(account.getPosts().size())
+                .comment_count(account.getComments().size())
+                .tag_flowing_count(account.getTagFollowings().size())
+                .role(account.getRole())
+                .badge_count(account.getUserBadge().size())
+                .email(account.getEmail())
+                .createdAt(account.getCreatedAt())
+                .build();
+
 
     }
 

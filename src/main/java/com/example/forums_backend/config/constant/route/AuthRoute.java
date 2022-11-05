@@ -8,6 +8,7 @@ public class AuthRoute {
     public static final String GET_OTP_PATH = "/login/get-otp";
     public static final String REGISTER_PATH = "/register";
     public static final String USER_INFO_PATH = "/me/info";
+    public static final String MY_PROFILE = "/my/profile";
 
     public static final String LOGIN_ROUTE = PREFIX_AUTH_ROUTE.concat(LOGIN_PATH);
     public static final String LOGIN_WITH_EMAIL_ROUTE = PREFIX_AUTH_ROUTE.concat(LOGIN_WITH_EMAIL_PATH);

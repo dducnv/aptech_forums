@@ -43,4 +43,9 @@ public class AuthController {
         return ResponseEntity.ok(accountService.myInfo());
     }
 
+    @RequestMapping(value = MY_PROFILE, method = RequestMethod.GET)
+    public ResponseEntity<?> myProfile(){
+        return ResponseEntity.ok(accountService.getMyProfile());
+    }
+
 }
