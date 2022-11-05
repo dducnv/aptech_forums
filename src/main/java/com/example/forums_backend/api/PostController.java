@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 
 @RestController
@@ -32,7 +34,7 @@ public class PostController {
     BookmarkService bookmarkService;
 
     @RequestMapping(value = POSTS_CLIENT_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestParam SortPost sort) {
+    public ResponseEntity<?> getAll(@RequestParam Optional<SortPost> sort) {
         return ResponseEntity.ok(postService.findAll(sort));
     }
     @RequestMapping(value = MY_POSTS_CLIENT_PATH, method = RequestMethod.GET)

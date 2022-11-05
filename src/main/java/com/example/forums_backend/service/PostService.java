@@ -40,7 +40,7 @@ public class PostService {
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    public List<PostResDto> findAll(SortPost sortPost) {
+    public List<PostResDto> findAll(Optional<SortPost> sortPost) {
         Account currentUser = accountService.getUserInfoData();
         if (currentUser != null) {
             return findAllPostByTagFollowing(currentUser, sortPost);
@@ -48,7 +48,7 @@ public class PostService {
         return getPostResSort(null, sortPost);
     }
 
-    public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
+    public List<PostResDto> findAllPostByTagFollowing(Account account, Optional<SortPost> sortPost) {
         List<Tag> tagFollowings = tagService.myTagFollowing();
         if (tagFollowings.isEmpty()) {
             return getPostResSort(account, sortPost);
@@ -60,7 +60,7 @@ public class PostService {
     }
 
     @NotNull
-    private List<PostResDto> getPostResSort(Account account, SortPost sortPost) {
+    private List<PostResDto> getPostResSort(Account account, Optional<SortPost> sortPost) {
         List<Post> postList = null;
         if (sortPost.equals(SortPost.hot)) {
         } else if (sortPost.equals(SortPost.created_desc)) {
