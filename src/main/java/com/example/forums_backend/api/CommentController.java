@@ -28,8 +28,6 @@ public class CommentController {
     @Autowired
     BookmarkService bookmarkService;
 
-
-
     @RequestMapping(value = FIND_COMMENTS_BY_POST_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> findCommentsByPostId(@PathVariable Long post_id) {
         return ResponseEntity.ok(commentService.findCommentByPost_Id(post_id));
@@ -38,10 +36,11 @@ public class CommentController {
     public ResponseEntity<?> myComments(){
         return ResponseEntity.ok(commentService.myComments());
     }
-    
-    @RequestMapping(value = GET_ALL_COMMENT_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAllComment() {
-        return ResponseEntity.ok(commentService.findAll());
+
+    @RequestMapping(value = USER_COMMENTS_PATH, method = RequestMethod.GET)
+
+    public ResponseEntity<?> userComment(@PathVariable String username){
+        return ResponseEntity.ok(commentService.userComments(username));
     }
     @RequestMapping(value = COMMENT_POST_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> commentPost(@PathVariable Long id, @RequestBody CommentReqDto commentReqDto) {

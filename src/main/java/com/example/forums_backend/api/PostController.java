@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.BookmarkReqDto;
 import com.example.forums_backend.dto.PostRequestDto;
 import com.example.forums_backend.dto.VoteDto;
 import com.example.forums_backend.dto.VoteRequestDto;
+import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
@@ -31,8 +32,8 @@ public class PostController {
     BookmarkService bookmarkService;
 
     @RequestMapping(value = POSTS_CLIENT_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(postService.findAll());
+    public ResponseEntity<?> getAll(@RequestParam SortPost sort) {
+        return ResponseEntity.ok(postService.findAll(sort));
     }
     @RequestMapping(value = MY_POSTS_CLIENT_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> myPosts(){
@@ -44,7 +45,7 @@ public class PostController {
         return ResponseEntity.ok(postService.userPosts(username));
     }
     @RequestMapping(value = POST_CLIENT_DETAILS_POST_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getDetails(@RequestParam("slug") String slug) throws AppException {
+    public ResponseEntity<?> getDetails(@PathVariable("slug") String slug) throws AppException {
         if(slug.isEmpty()){
             return ResponseEntity.status(404).body("Param not found");
         }

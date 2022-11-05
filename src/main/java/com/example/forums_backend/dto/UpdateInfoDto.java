@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class UpdateInfoDto {
     private String imageUrl; //null hoặc sử dụng link ảnh
     private String name;
+    private String bio;
     private String username;
     private String skill;
 }

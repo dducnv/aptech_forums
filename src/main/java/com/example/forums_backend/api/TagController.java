@@ -32,4 +32,9 @@ public class TagController {
     public ResponseEntity<?> followTag(@RequestBody TagFollowReqDto tagFollowReqDto) throws AppException {
         return ResponseEntity.ok(tagService.followTag(tagFollowReqDto));
     }
+    @RequestMapping(value = MY_TAG_FOLLOWING, method = RequestMethod.GET)
+
+    public ResponseEntity<?> myTagFollowing(){
+        return ResponseEntity.ok(tagService.myTagFollowing());
+    }
 }

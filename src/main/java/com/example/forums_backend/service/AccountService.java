@@ -169,7 +169,7 @@ public class AccountService implements UserDetailsService {
         return userBadgeRepository.findByAccount_Id(account.getId());
     }
 
-    public UserContact updateContact(Long contactId, UserContact userContact){
+    public UserContact updateContact(Long contactId, UserContact userContact) {
         Account account = getUserInfoData();
         Optional<UserContact> userContactOptional = userContactRepository.findById(contactId);
         if (userContactOptional.isPresent()) {
@@ -216,24 +216,9 @@ public class AccountService implements UserDetailsService {
         return userContactRepository.findByAccount_Id(account.getId());
     }
 
-    public UserInfoDto getUserBaseInfo() {
-        Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
-        if (!optionalAccount.isPresent()) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        Account account = optionalAccount.get();
-        return UserInfoDto.builder()
-                .avatar(account.getImageUrl())
-                .name(account.getName())
-                .email(account.getEmail())
-                .fpt_member(account.isFpt_member())
-                .role(account.getRole())
-                .build();
-    }
-
     public Account getUserInfoData() {
         Object userInfo = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(userInfo);
         if (userInfo != "anonymousUser") {
             Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findAccountByEmail(userInfo.toString()));
             if (!optionalAccount.isPresent()) {
@@ -244,13 +229,15 @@ public class AccountService implements UserDetailsService {
         return null;
     }
 
-    public UserAllInfoDto findUserInfoByUsername(String username) throws AppException {
+    public ProfileDto findUserInfoByUsername(String username) throws AppException {
         Optional<Account> optionalAccount = accountRepository.findFirstByUsername(username);
         if (!optionalAccount.isPresent()) {
             throw new AppException("User Not Found!");
         }
         Account account = optionalAccount.get();
-        return UserAllInfoDto.builder()
+        List<UserContact> userContacts = getUserContactByUsername(account.getUsername());
+        List<UserBadge> userBadges = getListBadgeByUsername(account.getUsername());
+        UserAllInfoDto userAllInfoDto = UserAllInfoDto.builder()
                 .name(account.getName())
                 .username(account.getUsername())
                 .avatar(account.getImageUrl())
@@ -263,11 +250,18 @@ public class AccountService implements UserDetailsService {
                 .role(account.getRole())
                 .createdAt(account.getCreatedAt())
                 .build();
+        return ProfileDto.builder()
+                .info(userAllInfoDto)
+                .contacts(userContacts)
+                .badges(userBadges)
+                .build();
     }
 
-    public UserAllInfoDto myInfo() {
+    public ProfileDto myInfo() {
         Account account = getUserInfoData();
-        return UserAllInfoDto.builder()
+        List<UserContact> userContacts = getUserContact();
+        List<UserBadge> userBadges = getListBadge();
+        UserAllInfoDto userAllInfoDto = UserAllInfoDto.builder()
                 .name(account.getName())
                 .username(account.getUsername())
                 .avatar(account.getImageUrl())
@@ -281,6 +275,12 @@ public class AccountService implements UserDetailsService {
                 .email(account.getEmail())
                 .createdAt(account.getCreatedAt())
                 .build();
+        return ProfileDto.builder()
+                .info(userAllInfoDto)
+                .contacts(userContacts)
+                .badges(userBadges)
+                .build();
+
     }
 
     public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) {
@@ -289,6 +289,7 @@ public class AccountService implements UserDetailsService {
         account.setImageUrl(updateInfoDto.getImageUrl());
         account.setName(updateInfoDto.getName());
         account.setSkill(updateInfoDto.getSkill());
+        account.setBio(updateInfoDto.getBio());
         accountRepository.save(account);
         return updateInfoDto;
     }
@@ -297,10 +298,6 @@ public class AccountService implements UserDetailsService {
         Account account = getUserInfoData();
         accountRepository.deleteById(account.getId());
         return true;
-    }
-
-    public Account findById(Long id) {
-        return accountRepository.findById(id).get();
     }
 
     public Account findByUsername(String username) {

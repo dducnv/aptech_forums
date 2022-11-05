@@ -1,11 +1,9 @@
 package com.example.forums_backend.service;
 
 import com.example.forums_backend.dto.PostResDto;
-import com.example.forums_backend.entity.Account;
-import com.example.forums_backend.entity.Bookmark;
-import com.example.forums_backend.entity.Post;
+import com.example.forums_backend.entity.*;
 import com.example.forums_backend.dto.PostRequestDto;
-import com.example.forums_backend.entity.Voting;
+import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
@@ -15,7 +13,9 @@ import com.example.forums_backend.repository.VoteRepository;
 import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,28 +32,57 @@ public class PostService {
     @Autowired
     PostRepository postRepository;
     @Autowired
+    TagService tagService;
+    @Autowired
     AccountService accountService;
     @Autowired
     VoteRepository voteRepository;
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    public List<PostResDto> findAll() {
+    public List<PostResDto> findAll(SortPost sortPost) {
         Account currentUser = accountService.getUserInfoData();
-        List<Post> postList = postRepository.findAll();
-        return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
+        if (currentUser != null) {
+            return findAllPostByTagFollowing(currentUser, sortPost);
+        }
+        return getPostResSort(null, sortPost);
+    }
+
+    public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
+        List<Tag> tagFollowings = tagService.myTagFollowing();
+        if (tagFollowings.isEmpty()) {
+            return getPostResSort(account, sortPost);
+        }
+        List<Post> postWithTagsFollowing = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return postWithTagsFollowing.stream()
+                .map(it -> fromEntityPostDto(it, account))
+                .collect(Collectors.toList());
+    }
+
+    @NotNull
+    private List<PostResDto> getPostResSort(Account account, SortPost sortPost) {
+        List<Post> postList = null;
+        if (sortPost.equals(SortPost.hot)) {
+        } else if (sortPost.equals(SortPost.created_desc)) {
+            postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        } else {
+            postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        }
+        return postList.stream()
+                .map(it -> fromEntityPostDto(it, account))
+                .collect(Collectors.toList());
     }
 
     public List<PostResDto> myPosts() {
         Account currentUser = accountService.getUserInfoData();
-        List<Post> postList = postRepository.findByAuthor_id(currentUser.getId());
+        List<Post> postList = postRepository.findByAuthor_id(currentUser.getId(),Sort.by(Sort.Direction.DESC,"createdAt"));
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
     public List<PostResDto> userPosts(String username) {
         Account currentUser = accountService.getUserInfoData();
         Account account = accountService.findByUsername(username);
-        List<Post> postList = postRepository.findByAuthor_id(account.getId());
+        List<Post> postList = postRepository.findByAuthor_id(account.getId(),Sort.by(Sort.Direction.DESC,"createdAt"));
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
@@ -122,12 +151,14 @@ public class PostService {
     }
 
     public PostResDto fromEntityPostDto(Post post, Account currentUser) {
+        boolean isMyPost = false;
         Voting voting = null;
         Bookmark bookmark = null;
         PostResDto postResDto = new PostResDto();
         if (currentUser != null) {
             voting = voteRepository.findFirstByPost_IdAndAccount_Id(post.getId(), currentUser.getId()).orElse(null);
             bookmark = bookmarkRepository.findFirstByPost_IdAndAccount_Id(post.getId(), currentUser.getId()).orElse(null);
+            isMyPost = Objects.equals(post.getAuthor().getId(), currentUser.getId());
         }
         postResDto.setId(post.getId());
         postResDto.setTitle(post.getTitle());
@@ -142,7 +173,7 @@ public class PostService {
         postResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());
         postResDto.setBookmark(bookmark != null);
         postResDto.setCreatedAt(post.getCreatedAt());
-        postResDto.setMyPost(Objects.equals(post.getAuthor().getId(), currentUser.getId()));
+        postResDto.setMyPost(isMyPost);
         return postResDto;
     }
 }

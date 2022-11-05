@@ -15,6 +15,7 @@ import com.example.forums_backend.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -124,11 +125,12 @@ public class CommentService {
 
     public List<CommentResDto> findCommentByPost_Id(Long postId) {
         Account currentUser = accountService.getUserInfoData();
-        List<Comment> commentList = commentRepository.findCommentByPost_Id(postId);
+        Sort sort = Sort.by(
+                Sort.Order.desc("vote_count"),
+                Sort.Order.desc("createdAt"));
+        List<Comment> commentList = commentRepository.findCommentByPost_Id(postId,sort);
         return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
     }
-
-
     public CommentResDto fromEntityCommentDto(Comment comment, Account currentUser) {
         Voting voting = null;
         Bookmark bookmark = null;

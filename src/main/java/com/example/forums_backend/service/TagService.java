@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,6 +62,15 @@ public class TagService {
         return fromEntityTagDto(tag, account);
     }
 
+    public List<Tag> myTagFollowing() {
+        Account account = accountService.getUserInfoData();
+        if(account != null) {
+            List<TagFollowing> tagFollowing = tagFollowingRepository.findByAccount_Id(account.getId());
+            return tagFollowing.stream().map(this::fromTagFollowingToTag).collect(Collectors.toList());
+        }
+        return new ArrayList<Tag>();
+    }
+
     public TagFollowResDto fromEntityTagDto(Tag tag, Account currentUser) {
         TagFollowing tagFollowingOptional = null;
         if (currentUser != null) {
@@ -73,5 +83,9 @@ public class TagService {
         tagFollowResDto.setTag_follow_count(tag.getFollow_count());
         tagFollowResDto.setFollow(tagFollowingOptional != null);
         return tagFollowResDto;
+    }
+
+    public Tag fromTagFollowingToTag(TagFollowing tagFollowing){
+        return tagFollowing.getTag();
     }
 }

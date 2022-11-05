@@ -25,6 +25,7 @@ public class Account {
     @Column(columnDefinition = "TEXT")
     private String imageUrl; //null hoặc sử dụng link ảnh
     private String name;//not null
+    private String bio;
     @JsonIgnore
     @Column(unique = true)
     private String email;// not null - unique

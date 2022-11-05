@@ -28,6 +28,8 @@ public class Tag {
     private String name; //not null
     @Column(columnDefinition = "text")
     private String description;
+    private boolean important;
+    private String color_bg;
     @Column(columnDefinition = "int(11) default 0")
     private int follow_count; // 0
     @JsonIgnore

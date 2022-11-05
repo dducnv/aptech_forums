@@ -15,6 +15,7 @@ public class UserAllInfoDto {
     private String email;
     private String username;//not null - unique
     private String skill;
+    private String bio;
     private int reputation; // default 0
     private String role; //USER - ADMIN
     private LocalDateTime createdAt; //null
