@@ -70,11 +70,11 @@ public class VoteService {
             if (type.equals(VoteType.UPVOTE)) {
                 notification.setType(NotificationType.UPVOTE);
                 voteSave.setType(VoteType.UPVOTE);
-                post.setVote_count(post.getVote_count() + 1);
+                post.setVoteCount(post.getVoteCount() + 1);
                 notificationService.saveNotification(notification);
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 voteSave.setType(VoteType.DOWN_VOTE);
-                post.setVote_count(post.getVote_count() - 1);
+                post.setVoteCount(post.getVoteCount() - 1);
             }
             voteRepository.save(voteSave);
             postRepository.save(post);
@@ -83,19 +83,19 @@ public class VoteService {
             if (type.equals(VoteType.UPVOTE)) {
                 if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     delete(voteExist.getId());
-                    post.setVote_count(post.getVote_count() - 1);
+                    post.setVoteCount(post.getVoteCount() - 1);
                 } else if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     voteExist.setType(VoteType.UPVOTE);
-                    post.setVote_count(post.getVote_count() + 2);
+                    post.setVoteCount(post.getVoteCount() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     delete(voteExist.getId());
-                    post.setVote_count(post.getVote_count() + 1);
+                    post.setVoteCount(post.getVoteCount() + 1);
                 } else if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     voteExist.setType(VoteType.DOWN_VOTE);
-                    post.setVote_count(post.getVote_count() - 2);
+                    post.setVoteCount(post.getVoteCount() - 2);
                     voteRepository.save(voteExist);
                 }
             }
@@ -118,11 +118,11 @@ public class VoteService {
             if (type.equals(VoteType.UPVOTE)) {
                 notification.setType(NotificationType.UPVOTE_COMMENT);
                 voteSave.setType(VoteType.UPVOTE);
-                comment.setVote_count(comment.getVote_count() + 1);
+                comment.setVoteCount(comment.getVoteCount() + 1);
                 notificationService.saveNotification(notification);
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 voteSave.setType(VoteType.DOWN_VOTE);
-                comment.setVote_count(comment.getVote_count() - 1);
+                comment.setVoteCount(comment.getVoteCount() - 1);
             }
             voteRepository.save(voteSave);
             commentRepository.save(comment);
@@ -131,20 +131,20 @@ public class VoteService {
             if (type.equals(VoteType.UPVOTE)) {
                 if (voteExist.getType() == VoteType.UPVOTE) {
                     delete(voteExist.getId());
-                    comment.setVote_count(comment.getVote_count() - 1);
+                    comment.setVoteCount(comment.getVoteCount() - 1);
                 } else if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     voteExist.setType(VoteType.UPVOTE);
                     notification.setType(NotificationType.UPVOTE_COMMENT);
-                    comment.setVote_count(comment.getVote_count() + 2);
+                    comment.setVoteCount(comment.getVoteCount() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     delete(voteExist.getId());
-                    comment.setVote_count(comment.getVote_count() + 1);
+                    comment.setVoteCount(comment.getVoteCount() + 1);
                 } else if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     voteExist.setType(VoteType.DOWN_VOTE);
-                    comment.setVote_count(comment.getVote_count() - 2);
+                    comment.setVoteCount(comment.getVoteCount() - 2);
                     voteRepository.save(voteExist);
                 }
             }

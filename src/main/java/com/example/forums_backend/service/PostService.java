@@ -165,7 +165,7 @@ public class PostService {
         postResDto.setSlug(post.getSlug());
         postResDto.setContent(post.getContent());
         postResDto.setAccount(post.getAuthor());
-        postResDto.setVoteCount(post.getVote_count());
+        postResDto.setVoteCount(post.getVoteCount()      );
         postResDto.setTags(post.getTags());
         postResDto.setCommentCount(post.getComment().size());
         postResDto.setBookmarkCount(post.getBookmarks().size());

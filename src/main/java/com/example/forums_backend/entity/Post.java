@@ -30,7 +30,7 @@ public class Post {
     @Column(columnDefinition = "text")
     private String content;
     @Column(columnDefinition = "int(11) default 0")
-    private int vote_count;
+    private int voteCount;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)
     private Account author;

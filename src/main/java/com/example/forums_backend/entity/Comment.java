@@ -36,7 +36,8 @@ public class Comment {
     private Comment parent;
     @OneToMany(mappedBy ="parent" ,cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     private Set<Comment> reply_to = new HashSet<Comment>();
-    private int vote_count = 0;
+    @Column(columnDefinition = "int(11) default 0")
+    private int voteCount;
     @OneToMany(mappedBy = "comment", cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     Set<Voting> voting = new HashSet<>();
     @OneToMany(mappedBy = "comment",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
