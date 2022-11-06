@@ -20,6 +20,7 @@ public class CommentResDto {
     private String content;
     private boolean isVote;
     private boolean isBookmark;
+    private PostResDto post;
     private VoteType voteType;
     private int voteCount;
     private boolean isChildren;

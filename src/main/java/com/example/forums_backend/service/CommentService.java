@@ -126,7 +126,6 @@ public class CommentService {
     public List<CommentResDto> findCommentByPost_Id(Long postId) {
         Account currentUser = accountService.getUserInfoData();
         Sort sort = Sort.by(
-                Sort.Order.desc("createdAt"),
                 Sort.Order.desc("voteCount"));
         List<Comment> commentList = commentRepository.findByPost_Id(postId,sort);
         return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
@@ -147,6 +146,7 @@ public class CommentService {
         commentResDto.setReply(replyComment);
         commentResDto.setChildren(comment.getParent() != null);
         commentResDto.setVote(voting != null);
+        commentResDto.setPost(postService.fromEntityPostDto(comment.getPost(),currentUser));
         commentResDto.setBookmark(bookmark != null);
         commentResDto.setMyComment(comment.getAccount() == currentUser);
         commentResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());
