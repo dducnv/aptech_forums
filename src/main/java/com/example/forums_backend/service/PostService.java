@@ -40,38 +40,32 @@ public class PostService {
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    public List<PostResDto> findAll(Optional<SortPost> sortPost) {
+    public List<PostResDto> findAll(SortPost sortPost) {
         Account currentUser = accountService.getUserInfoData();
         if (currentUser != null) {
             return findAllPostByTagFollowing(currentUser, sortPost);
         }
-        return getPostResSort(null, sortPost);
-    }
-
-    public List<PostResDto> findAllPostByTagFollowing(Account account, Optional<SortPost> sortPost) {
-        List<Tag> tagFollowings = tagService.myTagFollowing();
-        if (tagFollowings.isEmpty()) {
-            return getPostResSort(account, sortPost);
-        }
-        List<Post> postWithTagsFollowing = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return postWithTagsFollowing.stream()
-                .map(it -> fromEntityPostDto(it, account))
+        List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        return postList.stream()
+                .map(it -> fromEntityPostDto(it, null))
                 .collect(Collectors.toList());
     }
 
-    @NotNull
-    private List<PostResDto> getPostResSort(Account account, Optional<SortPost> sortPost) {
-        List<Post> postList = null;
-        if (sortPost.equals(SortPost.hot)) {
-        } else if (sortPost.equals(SortPost.created_desc)) {
-            postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-        } else {
-            postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+    public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
+        List<Tag> tagFollowings = tagService.myTagFollowing();
+        if (tagFollowings.isEmpty()) {
+            List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            return postList.stream()
+                    .map(it -> fromEntityPostDto(it, account))
+                    .collect(Collectors.toList());
         }
+        List<Post> postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
         return postList.stream()
                 .map(it -> fromEntityPostDto(it, account))
                 .collect(Collectors.toList());
     }
+
+
 
     public List<PostResDto> myPosts() {
         Account currentUser = accountService.getUserInfoData();

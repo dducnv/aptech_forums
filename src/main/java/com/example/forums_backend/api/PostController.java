@@ -34,7 +34,8 @@ public class PostController {
     BookmarkService bookmarkService;
 
     @RequestMapping(value = POSTS_CLIENT_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestParam Optional<SortPost> sort) {
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort) {
+        System.out.println(sort);
         return ResponseEntity.ok(postService.findAll(sort));
     }
     @RequestMapping(value = MY_POSTS_CLIENT_PATH, method = RequestMethod.GET)
