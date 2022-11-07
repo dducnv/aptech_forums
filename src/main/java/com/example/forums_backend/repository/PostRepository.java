@@ -19,5 +19,5 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
 
     List<Post> findByAuthor_id(Long id, Sort sort);
     List<Post> findByTagsIn(Collection<Tag> tags, Sort sort);
-
+    List<Post> findAllByOrderByVoteCountDescBookmarksDescCommentDescCommentAsc();
 }

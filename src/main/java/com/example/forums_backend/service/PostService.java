@@ -45,8 +45,9 @@ public class PostService {
         if (currentUser != null) {
             return findAllPostByTagFollowing(currentUser, sortPost);
         }
-        List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         return postList.stream()
+                .distinct()
                 .map(it -> fromEntityPostDto(it, null))
                 .collect(Collectors.toList());
     }
@@ -54,13 +55,16 @@ public class PostService {
     public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
         List<Tag> tagFollowings = tagService.myTagFollowing();
         if (tagFollowings.isEmpty()) {
-            List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
             return postList.stream()
+                    .distinct()
                     .map(it -> fromEntityPostDto(it, account))
                     .collect(Collectors.toList());
         }
-        List<Post> postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
+        final List<Post> postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
+        System.out.println(postList.size());
         return postList.stream()
+                .distinct()
                 .map(it -> fromEntityPostDto(it, account))
                 .collect(Collectors.toList());
     }
