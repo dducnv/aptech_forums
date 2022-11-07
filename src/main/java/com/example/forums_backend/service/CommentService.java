@@ -76,13 +76,19 @@ public class CommentService {
                 notification.setType(NotificationType.REPLY_COMMENT);
                 Comment findComment = findById(commentReqDto.getReply_to().getId());
                 comment.setParent(findComment);
+                notification.setReceiver(findComment.getAccount());
                 notification.setRedirect_url("/binh-luan/".concat(findComment.getId().toString()));
+                if(!account.equals(findComment.getAccount()) && comment.getParent() != null){
+                    notificationService.saveNotification(notification);
+                }
             }
             comment.setAccount(account);
             comment.setContent(commentReqDto.getContent());
             comment.setPost(post);
             comment.setStatus(StatusEnum.ACTIVE);
-            notificationService.saveNotification(notification);
+            if(!account.equals(post.getAuthor()) && comment.getParent() == null){
+                notificationService.saveNotification(notification);
+            }
             commentRepository.save(comment);
             return fromEntityCommentDto(comment, account);
         } catch (Exception exception) {

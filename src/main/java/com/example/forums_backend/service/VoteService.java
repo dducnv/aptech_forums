@@ -71,7 +71,9 @@ public class VoteService {
                 notification.setType(NotificationType.UPVOTE);
                 voteSave.setType(VoteType.UPVOTE);
                 post.setVoteCount(post.getVoteCount() + 1);
-                notificationService.saveNotification(notification);
+                if(!account.equals(post.getAuthor())){
+                    notificationService.saveNotification(notification);
+                }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 voteSave.setType(VoteType.DOWN_VOTE);
                 post.setVoteCount(post.getVoteCount() - 1);
@@ -119,7 +121,9 @@ public class VoteService {
                 notification.setType(NotificationType.UPVOTE_COMMENT);
                 voteSave.setType(VoteType.UPVOTE);
                 comment.setVoteCount(comment.getVoteCount() + 1);
-                notificationService.saveNotification(notification);
+                if(!account.equals(comment.getAccount())){
+                    notificationService.saveNotification(notification);
+                }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 voteSave.setType(VoteType.DOWN_VOTE);
                 comment.setVoteCount(comment.getVoteCount() - 1);
