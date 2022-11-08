@@ -7,6 +7,7 @@ import com.example.forums_backend.dto.VoteRequestDto;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
+import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
@@ -21,6 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 
 @RestController
@@ -31,6 +34,10 @@ public class AdminPostController {
     PostService postService;
     @Autowired
     PostRepository repository;
+    @RequestMapping(value = POST_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort){
+        return ResponseEntity.ok(postService.findAll(sort));
+    }
 
     @RequestMapping(value = POST_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createPost(@RequestBody PostRequestDto postRequestDto) {
@@ -47,9 +54,9 @@ public class AdminPostController {
         return ResponseEntity.ok("Deleted");
     }
 
-    @RequestMapping(value = POST_PATH, method = RequestMethod.GET)
-    public Page<Post> findPage(@RequestParam int page, @RequestParam int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findAll(pageRequest);
-    }
+//    @RequestMapping(value = POST_PATH, method = RequestMethod.GET)
+//    public Page<Post> findPage(@RequestParam int page, @RequestParam int size) {
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//        return repository.findAll(pageRequest);
+//    }
 }

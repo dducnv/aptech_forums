@@ -28,8 +28,10 @@ import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 public class AdminTagController {
     @Autowired
     TagService tagService;
-    @Autowired
-    TagRepository repository;
+    @RequestMapping(value = TAG_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> getAll(){
+        return ResponseEntity.ok(tagService.findAll());
+    }
     @RequestMapping(value = TAG_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createTag(@RequestBody Tag tag){
         return ResponseEntity.ok(tagService.save(tag));
@@ -43,9 +45,9 @@ public class AdminTagController {
         tagService.delete(id);
         return ResponseEntity.ok("Deleted");
     }
-    @RequestMapping(value = TAG_PATH, method = RequestMethod.GET)
-    public Page<Tag> findPage(@RequestParam int page, @RequestParam int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findAll(pageRequest);
-    }
+//    @RequestMapping(value = TAG_PATH, method = RequestMethod.GET)
+//    public Page<Tag> findPage(@RequestParam int page, @RequestParam int size) {
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//        return repository.findAll(pageRequest);
+//    }
 }
