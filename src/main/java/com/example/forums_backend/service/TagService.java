@@ -89,6 +89,7 @@ public class TagService {
         tagFollowResDto.setName(tag.getName());
         tagFollowResDto.setTag_follow_count(tag.getFollow_count());
         tagFollowResDto.setFollow(tagFollowingOptional != null);
+        tagFollowResDto.setPosts_use(tag.getPosts().size());
         return tagFollowResDto;
     }
 

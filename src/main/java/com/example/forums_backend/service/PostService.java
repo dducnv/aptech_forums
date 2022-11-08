@@ -42,8 +42,21 @@ public class PostService {
 
     public List<PostResDto> findAll(SortPost sortPost) {
         Account currentUser = accountService.getUserInfoData();
-        if (currentUser != null) {
-            return findAllPostByTagFollowing(currentUser, sortPost);
+        if(sortPost.equals(SortPost.hot)){
+            final  List<Post> postList = postRepository.findAllPopular();
+            return postList.stream()
+                    .distinct()
+                    .map(it -> fromEntityPostDto(it, currentUser))
+                    .collect(Collectors.toList());
+        } else if (sortPost.equals(SortPost.created_desc)) {
+            final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            return postList.stream()
+                    .distinct()
+                    .map(it -> fromEntityPostDto(it, currentUser))
+                    .collect(Collectors.toList());
+        }
+        if(currentUser != null){
+            return  findAllPostByTagFollowing(currentUser,sortPost);
         }
         final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         return postList.stream()
@@ -62,7 +75,6 @@ public class PostService {
                     .collect(Collectors.toList());
         }
         final List<Post> postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
-        System.out.println(postList.size());
         return postList.stream()
                 .distinct()
                 .map(it -> fromEntityPostDto(it, account))

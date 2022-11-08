@@ -14,4 +14,5 @@ public class TagFollowResDto {
     private String name;
     private int tag_follow_count;
     private boolean isFollow;
+    private int posts_use;
 }

@@ -1,5 +1,6 @@
 package com.example.forums_backend.dto;
 
+import com.example.forums_backend.entity.my_enum.StatusEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +24,5 @@ public class UserAllInfoDto {
     private int comment_count;
     private int tag_flowing_count;
     private int badge_count;
+    private StatusEnum statusEnum;
 }

@@ -74,4 +74,12 @@ public class CommentController {
     public ResponseEntity<?> findCommentById(@PathVariable Long id) throws AppException {
         return ResponseEntity.ok(commentService.findByIdToDto(id));
     }
+    @RequestMapping(value = DELETE_MY_COMMENT, method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteMyComment(@PathVariable Long id) throws AppException {
+        return ResponseEntity.ok(commentService.deleteMyComment(id));
+    }
+    @RequestMapping(value = UPDATE_MY_COMMENT, method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMyComment(@PathVariable Long id,@RequestBody CommentReqDto commentReqDto)throws AppException{
+        return ResponseEntity.ok(commentService.updateMyComment(id,commentReqDto));
+    }
 }

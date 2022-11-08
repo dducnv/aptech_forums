@@ -4,6 +4,7 @@ import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -19,5 +20,6 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
 
     List<Post> findByAuthor_id(Long id, Sort sort);
     List<Post> findByTagsIn(Collection<Tag> tags, Sort sort);
-    List<Post> findAllByOrderByVoteCountDescBookmarksDescCommentDescCommentAsc();
+    @Query("select p from Post p order by p.comment.size + p.bookmarks.size + p.voteCount desc")
+    List<Post> findAllPopular();
 }

@@ -23,6 +23,8 @@ public class ClientRoute {
     public static final String POST_UP_VOTE_CLIENT_PATH   = "/post/{id}/vote";
     public static final String COMMENT_VOTE_PATH          = "/comment/{id}/vote";
     public static final String DETAILS_COMMENT_PATH = "/comment/{id}";
+    public static final String DELETE_MY_COMMENT = "/comment/{id}/delete";
+    public static final String UPDATE_MY_COMMENT = "/comment/{id}/update";
 
     //ANT MATCHES PATH
     public static final String POST_COMMENTS_PATH_ANT_MATCHES = "/post/\\S*/comments";
