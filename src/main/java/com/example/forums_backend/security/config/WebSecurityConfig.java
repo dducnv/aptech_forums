@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.example.forums_backend.config.constant.route.AccountRoute.PREFIX_ACCOUNT_ROUTE;
+import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 import static com.example.forums_backend.config.constant.route.AccountRoute.USER_INFO_BY_USERNAME_ROUTE;
 import static com.example.forums_backend.config.constant.route.AuthRoute.LOGIN_ROUTE;
 import static com.example.forums_backend.config.constant.route.AuthRoute.PREFIX_AUTH_ROUTE;
@@ -51,18 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/",
-                        USER_COMMENTS_ROUTE_ANT_MATCHES.concat("/**"),
-                        USER_POSTS_ROUTE_ANT_MATCHES.concat("/**"),
                         PREFIX_AUTH_ROUTE.concat("/**"),
                         PREFIX_ACCOUNT_ROUTE.concat("/**"),
                         POSTS_CLIENT_ROUTE.concat("/**"),
                         TAG_CLIENT_ROUTE.concat("/**"),
                         POST_COMMENTS_ROUTE_ANT_MATCHES.concat("/**"),
-                        POST_DETAILS_ROUTE_ANT_MATCHES.concat("/**"),
-                        USER_INFO_BY_USERNAME_ROUTE.concat("/**"),
-                        USER_BADGE_PATH_ANT_MATCHES.concat("/**"),
-                        DETAILS_COMMENT_ANT_MATCHES.concat("/**"),
-                        USER_CONTACT_PATH_ANT_MATCHES.concat("/**")
+                        POST_DETAILS_ROUTE_ANT_MATCHES.concat("/**")
                 )
                 .permitAll();
         //route quyền truy cập danh cho user đã đang nhập
@@ -79,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //route quyền truy cập dành cho admin
         http
                 .authorizeRequests()
-                .antMatchers("/api/admin-role/**")
+                .antMatchers("/api/admin/**")
                 .hasAnyAuthority("ADMIN");
         http
                 .oauth2Login()
@@ -106,10 +101,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);

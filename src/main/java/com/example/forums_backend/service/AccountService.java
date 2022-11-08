@@ -322,6 +322,15 @@ public class AccountService implements UserDetailsService {
     }
 
     public Account findByUsername(String username) {
+    public boolean adminCheck(){
+        Account account = getUserInfoData();
+        if(account.getRole() == "ADMIN"){
+            return true;
+        }
+        return false;
+    }
+
+    public Account findByUsername(String username){
         return accountRepository.findFirstByUsername(username).get();
     }
 

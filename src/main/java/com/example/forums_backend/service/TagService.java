@@ -4,6 +4,7 @@ import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.dto.TagFollowReqDto;
 import com.example.forums_backend.dto.TagFollowResDto;
 import com.example.forums_backend.entity.Account;
+import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
 import com.example.forums_backend.entity.TagFollowing;
 import com.example.forums_backend.exception.AppException;
@@ -12,10 +13,16 @@ import com.example.forums_backend.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.TagUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,5 +94,16 @@ public class TagService {
 
     public Tag fromTagFollowingToTag(TagFollowing tagFollowing){
         return tagFollowing.getTag();
+    }
+
+    public Tag update(Tag tag, Long id) {
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+        Tag tagModal = optionalTag.get();
+        tagModal.setName(tag.getName());
+        return tagRepository.save(tagModal);
+    }
+
+    public void delete(Long id){
+        tagRepository.deleteById(id);
     }
 }
