@@ -38,13 +38,12 @@ public class AdminPostController {
     }
 
     @RequestMapping(value = POST_PATH_WITH_ID, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<Post> update(@RequestBody Post post, @PathVariable Long id) {
-        return ResponseEntity.ok(postService.update(post, id));
+    public ResponseEntity<?> update(@RequestBody Post post, @PathVariable Long id) {
+        return ResponseEntity.ok(" ");
     }
 
     @RequestMapping(value = POST_PATH_WITH_ID, method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id){
-        postService.delete(id);
         return ResponseEntity.ok("Deleted");
     }
 

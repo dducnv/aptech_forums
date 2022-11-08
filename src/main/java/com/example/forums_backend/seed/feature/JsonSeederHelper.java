@@ -1,7 +1,8 @@
 package com.example.forums_backend.seed.feature;
 
 import com.example.forums_backend.entity.Account;
-import com.example.forums_backend.security.config.repository.AccountRepository;
+import com.example.forums_backend.entity.Product;
+import com.example.forums_backend.repository.AccountRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -27,7 +28,7 @@ import java.util.List;
  * Đọc nội dung file excel, parse kiểu json để tránh việc ép kiểu nhiều trường, giảm việc cho dev.
  */
 //@Profile("dev")
-@Component("jsonSeeder")
+//@Component("jsonSeeder")
 @RequiredArgsConstructor
 public class JsonSeederHelper implements SeederHelper {
 
@@ -182,6 +183,6 @@ public class JsonSeederHelper implements SeederHelper {
 //        System.out.println(gson.toJson(products));
         workbook.close();
         // Lưu thông tin vào database.
-        productRepository.saveAll(products);
+
     }
 }
