@@ -43,6 +43,7 @@ public class AccountManagerService {
     }
     public UserAllInfoDto fromEntityAccountDto(Account account){
         return UserAllInfoDto.builder()
+                .id(account.getId())
                 .name(account.getName())
                 .username(account.getUsername())
                 .email(account.getEmail())

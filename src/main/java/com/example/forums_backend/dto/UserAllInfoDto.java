@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class UserAllInfoDto {
+    private Long id;
     private String avatar; //null hoặc sử dụng link ảnh
     private String name;//not null
     private String email;
