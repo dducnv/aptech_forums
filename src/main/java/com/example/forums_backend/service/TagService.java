@@ -10,6 +10,7 @@ import com.example.forums_backend.entity.TagFollowing;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.TagFollowingRepository;
 import com.example.forums_backend.repository.TagRepository;
+import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,15 @@ public class TagService {
     }
 
     public Tag save(Tag tag) {
-        return tagRepository.save(tag);
+        Tag tagSave = new Tag();
+        String slugGenerate = SlugGenerating.toSlug(tag.getName());
+        tagSave.setName(tag.getName());
+        tagSave.setIcon(tag.getIcon());
+        tagSave.setColor_bg(tag.getColor_bg());
+        tagSave.setImportant(tag.isImportant());
+        tagSave.setDescription(tag.getDescription());
+        tagSave.setSlug(slugGenerate);
+        return tagRepository.save(tagSave);
     }
 
     public TagFollowResDto followTag(TagFollowReqDto tagFollowReqDto) throws AppException {
@@ -83,13 +92,16 @@ public class TagService {
         if (currentUser != null) {
             tagFollowingOptional = tagFollowingRepository.findFirstByTag_IdAndAccount_Id(tag.getId(), currentUser.getId()).orElse(null);
         }
-        System.out.println(tagFollowingOptional);
         TagFollowResDto tagFollowResDto = new TagFollowResDto();
         tagFollowResDto.setId(tag.getId());
         tagFollowResDto.setName(tag.getName());
+        tagFollowResDto.setIcon(tag.getIcon());
         tagFollowResDto.setTag_follow_count(tag.getFollow_count());
         tagFollowResDto.setFollow(tagFollowingOptional != null);
         tagFollowResDto.setPosts_use(tag.getPosts().size());
+        tagFollowResDto.setDesc(tag.getDescription());
+        tagFollowResDto.setColor_bg(tag.getColor_bg());
+        tagFollowResDto.setImportant(tagFollowResDto.isImportant());
         return tagFollowResDto;
     }
 

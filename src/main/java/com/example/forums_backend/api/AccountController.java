@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static com.example.forums_backend.config.constant.route.AccountRoute.*;
 
 @RestController
@@ -22,7 +24,7 @@ public class AccountController {
     AccountService accountService;
 
     @RequestMapping(value = UPDATE_PATH, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<?> update(@RequestBody UpdateInfoDto updateInfoDto) {
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateInfoDto updateInfoDto) throws AppException {
         return ResponseEntity.ok(accountService.updateInfoDto(updateInfoDto));
     }
 

@@ -37,6 +37,10 @@ public class PostController {
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort) {
         return ResponseEntity.ok(postService.findAll(sort));
     }
+    @RequestMapping(value = POSTS_NOT_SORT_CLIENT_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> getAllNotSort(){
+        return ResponseEntity.ok(postService.findAllNotSort());
+    }
     @RequestMapping(value = MY_POSTS_CLIENT_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> myPosts(){
         return ResponseEntity.ok(postService.myPosts());

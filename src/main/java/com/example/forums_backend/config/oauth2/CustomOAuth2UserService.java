@@ -88,7 +88,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         Account user = new Account();
         String username = SlugGenerating.toUsername(oAuth2UserInfo.getName());
-
+        if(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()) == AuthProvider.github){
+            user.setGithub_username(oAuth2UserInfo.getUsername());
+        }
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setName(oAuth2UserInfo.getName());

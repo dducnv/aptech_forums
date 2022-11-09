@@ -38,7 +38,8 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             POSTS_CLIENT_ROUTE,
             TAG_CLIENT_ROUTE,
             POST_COMMENTS_ROUTE_ANT_MATCHES,
-            POST_DETAILS_ROUTE_ANT_MATCHES
+            POST_DETAILS_ROUTE_ANT_MATCHES,
+            POSTS_NOT_SORT_CLIENT_ROUTE
     };
 
     @Override

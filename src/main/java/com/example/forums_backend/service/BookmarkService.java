@@ -33,7 +33,7 @@ public class BookmarkService {
 
     public List<Bookmark> BookmarkList() {
         Account account = accountService.getUserInfoData();
-        return bookmarkRepository.findByAccount_Id(account.getId());
+        return bookmarkRepository.findAllByAccount_Id(account.getId());
     }
 
     public boolean Bookmark(BookmarkReqDto bookmarkReqDto) throws AppException {

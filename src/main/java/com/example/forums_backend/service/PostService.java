@@ -64,7 +64,14 @@ public class PostService {
                 .map(it -> fromEntityPostDto(it, null))
                 .collect(Collectors.toList());
     }
-
+    public List<PostResDto> findAllNotSort(){
+        Account currentUser = accountService.getUserInfoData();
+        List<Post> postList = postRepository.findAll();
+        return postList.stream()
+                .distinct()
+                .map(it -> fromEntityPostDto(it, currentUser))
+                .collect(Collectors.toList());
+    }
     public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
         List<Tag> tagFollowings = tagService.myTagFollowing();
         if (tagFollowings.isEmpty()) {

@@ -39,6 +39,7 @@ public class Account {
     private String skill;
     @Column(columnDefinition = "int(11) default 0")
     private int reputation; // default 0
+    private String github_username;
     @Enumerated(EnumType.STRING)
     private AuthProvider provider; // enum
     private String providerId;// null khi là local

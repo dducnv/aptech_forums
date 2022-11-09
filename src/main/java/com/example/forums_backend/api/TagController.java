@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 
 @RestController
@@ -25,7 +27,7 @@ public class TagController {
         return ResponseEntity.ok(tagService.findAll());
     }
     @RequestMapping(value = TAG_CLIENT_PATH, method = RequestMethod.POST)
-    public ResponseEntity<?> createTag(@RequestBody Tag tag){
+    public ResponseEntity<?> createTag(@RequestBody @Valid Tag tag){
         return ResponseEntity.ok(tagService.save(tag));
     }
     @RequestMapping(value = TAG_FOLLOW_CLIENT_PATH, method = RequestMethod.POST)

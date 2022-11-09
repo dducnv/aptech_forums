@@ -1,7 +1,9 @@
 package com.example.forums_backend.dto;
 
 import lombok.*;
-    import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.UniqueElements;
+
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -13,5 +15,6 @@ public class RegisterDto {
     @NotBlank
     private String name;
     @Email(message = "invalid email address")
+    @UniqueElements
     private String email;
 }

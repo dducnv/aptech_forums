@@ -3,6 +3,7 @@ package com.example.forums_backend.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
@@ -15,4 +16,5 @@ public class UpdateInfoDto {
     private String bio;
     private String username;
     private String skill;
+    private String github_username;
 }
