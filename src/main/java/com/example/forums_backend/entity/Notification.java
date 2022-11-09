@@ -18,7 +18,7 @@ import static com.example.forums_backend.config.constant.notification.ContentCon
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "motifications")
+@Table(name = "notifications")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

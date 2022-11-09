@@ -36,7 +36,7 @@ public class AdminPostController {
     PostRepository repository;
     @RequestMapping(value = POST_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort){
-        return ResponseEntity.ok(postService.findAll(sort));
+        return ResponseEntity.ok(repository.findAll());
     }
 
     @RequestMapping(value = POST_PATH, method = RequestMethod.POST)
