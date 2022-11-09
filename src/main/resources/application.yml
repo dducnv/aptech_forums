@@ -55,8 +55,9 @@ spring:
             clientSecret: b361c098f56d45e7df4149c1cce6639b65eaac89
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
-              - user:email
-              - read:user
+              - email
+              - user
+              - profile
         provider:
           facebook:
             authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
