@@ -4,7 +4,6 @@ import com.example.forums_backend.seed.feature.SeederHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
  * </p>
  */
 //@Profile("test")
-//@Component
+@Component
 public class SeederPreparation implements CommandLineRunner {
     /**
      * Chuyển qualifier theo tên @Component mới tạo.
@@ -37,6 +36,7 @@ public class SeederPreparation implements CommandLineRunner {
         System.out.println("Prepare seed data...");
         seederHelper.readManuallyFromResources();
 //        seederHelper.readManuallyFromResources1();
+        seederHelper.readManuallyFromResources2();
         System.out.println("Action success!");
     }
 }
