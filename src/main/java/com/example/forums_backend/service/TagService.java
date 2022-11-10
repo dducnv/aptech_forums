@@ -95,6 +95,7 @@ public class TagService {
         TagFollowResDto tagFollowResDto = new TagFollowResDto();
         tagFollowResDto.setId(tag.getId());
         tagFollowResDto.setName(tag.getName());
+        tagFollowResDto.setSlug(tag.getSlug());
         tagFollowResDto.setIcon(tag.getIcon());
         tagFollowResDto.setTag_follow_count(tag.getFollow_count());
         tagFollowResDto.setFollow(tagFollowingOptional != null);
