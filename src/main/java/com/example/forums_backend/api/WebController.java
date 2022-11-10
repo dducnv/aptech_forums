@@ -2,6 +2,7 @@ package com.example.forums_backend.api;
 
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.UserContact;
+import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.service.AccountManagerService;
 import com.example.forums_backend.service.AccountService;
 import com.example.forums_backend.service.BookmarkService;
@@ -35,6 +36,10 @@ public class WebController {
         return ResponseEntity.ok(notificationService.getAllNotification());
     }
 
+    @RequestMapping(value = "/api/{id}/send-notification", method = RequestMethod.GET)
+    public ResponseEntity<?> sendNotify(@PathVariable Long id) throws AppException {
+        return ResponseEntity.ok(notificationService.seenNotification(id));
+    }
     @RequestMapping(value = "/api/my-bookmarks", method = RequestMethod.GET)
     public ResponseEntity<?> getBookmarks(){
         return ResponseEntity.ok(bookmarkService.BookmarkList());

@@ -72,6 +72,7 @@ public class CommentService {
             notification.setReceiver(post.getAuthor());
             notification.setInteractive_user(account);
             notification.setType(NotificationType.COMMENT);
+
             if (commentReqDto.getReply_to() != null) {
                 notification.setType(NotificationType.REPLY_COMMENT);
                 Comment findComment = findById(commentReqDto.getReply_to().getId());

@@ -4,11 +4,13 @@ import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Notification;
 import com.example.forums_backend.entity.my_enum.NotificationStatus;
 import com.example.forums_backend.entity.my_enum.NotificationType;
+import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotificationService {
@@ -31,9 +33,21 @@ public class NotificationService {
         notificationSave.setReceiver(accountReceiver);
         notificationSave.setRedirect_url(notification.getRedirect_url());
         notificationSave.setType(NotificationType.getNotificationType(notification.getType().getValue()));
-        notificationSave.setStatus(NotificationStatus.getNotificationStatus(notification.getType().getValue()));
+        notificationSave.setStatus(NotificationStatus.NOT_SEEN);
         notificationSave.setNotificationContent(notification.getType());
         notificationRepository.save(notificationSave);
         return notificationSave;
+    }
+
+    public boolean seenNotification(Long id) throws AppException {
+        Account account =  accountService.getUserInfoData();
+        Optional<Notification> notificationOptional = notificationRepository.findFirstByIdAndReceiver_Id(id,account.getId());
+        if(!notificationOptional.isPresent()){
+            throw new AppException("COMMENT NOT FOUND!");
+        }
+        Notification notification = notificationOptional.get();
+        notification.setStatus(NotificationStatus.SEEN);
+        notificationRepository.save(notification);
+        return true;
     }
 }
