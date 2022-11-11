@@ -3,10 +3,7 @@ package com.example.forums_backend.api;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.UserContact;
 import com.example.forums_backend.exception.AppException;
-import com.example.forums_backend.service.AccountManagerService;
-import com.example.forums_backend.service.AccountService;
-import com.example.forums_backend.service.BookmarkService;
-import com.example.forums_backend.service.NotificationService;
+import com.example.forums_backend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,8 @@ public class WebController {
     BookmarkService bookmarkService;
     @Autowired
     AccountService accountService;
+    @Autowired
+    SearchService searchService;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void home(HttpServletResponse httpServletResponse) throws IOException {
          httpServletResponse.sendRedirect("https://forums-demo.vercel.app/");
@@ -67,5 +66,9 @@ public class WebController {
     @RequestMapping(value = "/api/{id}/update-contact", method = RequestMethod.PUT)
     public ResponseEntity<?> updateContact(@PathVariable Long id, @RequestBody UserContact userContact){
         return ResponseEntity.ok(accountService.updateContact(id,userContact));
+    }
+    @RequestMapping(value = "/api/filter/{slug}/posts-by-tag")
+    public ResponseEntity<?> postsByTag(@PathVariable String slug) throws AppException {
+        return ResponseEntity.ok(searchService.filterPostByTag(slug));
     }
 }

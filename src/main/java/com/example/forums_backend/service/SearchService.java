@@ -1,6 +1,8 @@
 package com.example.forums_backend.service;
 
 import com.example.forums_backend.dto.PostResDto;
+import com.example.forums_backend.dto.PostsByTagDto;
+import com.example.forums_backend.dto.TagFollowResDto;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,19 +35,25 @@ public class SearchService {
     PostService postService;
     @Autowired
     AccountService accountService;
-
-    public List<PostResDto> filterPostByTag(String slug) throws AppException {
+    @Autowired
+    TagService tagService;
+    public PostsByTagDto filterPostByTag(String slug) throws AppException {
         Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
         if(!tagOptional.isPresent()){
             throw new AppException("TAG NOT FOUND");
         }
         Account currentUser = accountService.getUserInfoData();
-        Tag tag = tagOptional.get();
-        List<Post> postList = postRepository.findByTagsIn((Collection<Tag>) tag, Sort.by(Sort.Direction.DESC,"createdAt"));
-        return postList.stream()
+        Tag  tag = tagOptional.get();
+        TagFollowResDto tagFollowResDto = tagService.fromEntityTagDto(tag,currentUser);
+        List<Post> postList = postRepository.findByTagsIn(Collections.singleton(tag), Sort.by(Sort.Direction.DESC,"createdAt"));
+        List<PostResDto> postResDtoList =  postList.stream()
                 .distinct()
                 .map(it -> postService.fromEntityPostDto(it, currentUser))
                 .collect(Collectors.toList());
+        return PostsByTagDto.builder()
+                .tag_details(tagFollowResDto)
+                .posts(postResDtoList)
+                .build();
     }
 
     public void searchByKeyword(String keyword){

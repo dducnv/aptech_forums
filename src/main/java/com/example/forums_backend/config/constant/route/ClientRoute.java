@@ -54,6 +54,8 @@ public class ClientRoute {
     public static final String TAG_FOLLOW_CLIENT_PATH  = "/tag/follow";
     public static final String MY_TAG_FOLLOWING = "/my/tags-following";
 
+    public static final String POSTS_BY_TAG_ANT_MATCHES = "/filter/\\S*/posts-by-tag";
+    public static final String POSTS_BY_TAG_ROUTE = PREFIX_CLIENT_ROUTE.concat(POSTS_BY_TAG_ANT_MATCHES);
     public static final String TAG_CLIENT_ROUTE = PREFIX_CLIENT_ROUTE.concat(TAG_CLIENT_PATH);
     public static final String TAG_FOLLOW_CLIENT_ROUTE = PREFIX_CLIENT_ROUTE.concat(TAG_FOLLOW_CLIENT_PATH);
 
