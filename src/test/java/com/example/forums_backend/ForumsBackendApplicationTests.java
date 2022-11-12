@@ -25,7 +25,7 @@ class ForumsBackendApplicationTests {
 
     @Test
     void getToken() {
-        Long id  = Long.valueOf(1);
+        Long id  = Long.valueOf(3);
         Optional<Account> accountOptional = accountRepository.findById(id);
         if(accountOptional.isPresent()){
             Account account = accountOptional.get();
