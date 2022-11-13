@@ -66,7 +66,6 @@ public class CommentService {
         try {
             Account account = accountService.getUserInfoData();
             Post post = postService.findByID(postId);
-            Account findAuthor = accountService.findByUsername(post.getAuthor().getUsername());
             Comment comment = new Comment();
             Notification notification = new Notification();
             notification.setReceiver(post.getAuthor());
@@ -79,21 +78,20 @@ public class CommentService {
             Comment commentResult = commentRepository.save(comment);
             notification.setRedirect_url("/bai-dang/".concat(post.getSlug() + "#" + "comment-" + commentResult.getId()));
             if (!account.equals(post.getAuthor()) && comment.getParent() == null) {
-                findAuthor.setReputation(findAuthor.getReputation() + 25);
+                account.setReputation(account.getReputation() + 25);
                 notificationService.saveNotification(notification);
             }
             if (commentReqDto.getReply_to() != null) {
-                findAuthor.setReputation(findAuthor.getReputation() + 5);
+                account.setReputation(account.getReputation() + 5);
                 notification.setType(NotificationType.REPLY_COMMENT);
                 Comment findComment = findById(commentReqDto.getReply_to().getId());
                 comment.setParent(findComment);
                 notification.setReceiver(findComment.getAccount());
                 if (!account.equals(findComment.getAccount()) && comment.getParent() != null) {
-
                     notificationService.saveNotification(notification);
                 }
             }
-            accountRepository.save(findAuthor);
+            accountRepository.save(account);
             return fromEntityCommentDto(comment, account);
         } catch (Exception exception) {
             log.info("Comment error: " + exception.getMessage());
