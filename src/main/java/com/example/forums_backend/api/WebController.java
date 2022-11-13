@@ -26,10 +26,10 @@ public class WebController {
     AccountService accountService;
     @Autowired
     SearchService searchService;
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public void home(HttpServletResponse httpServletResponse) throws IOException {
-         httpServletResponse.sendRedirect("https://forums-demo.vercel.app/");
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.GET)
+//    public void home(HttpServletResponse httpServletResponse) throws IOException {
+//         httpServletResponse.sendRedirect("https://forums-demo.vercel.app/");
+//    }
     @RequestMapping(value = "/api/notifications", method = RequestMethod.GET)
     public ResponseEntity<?> getAllNotification(){
         return ResponseEntity.ok(notificationService.getAllNotification());
