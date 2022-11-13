@@ -15,6 +15,7 @@ import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +31,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,6 +61,10 @@ public class AccountService implements UserDetailsService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    public List<Account> usersFamous(){
+        List<Account> accountList = accountRepository.findAll(Sort.by(Sort.Direction.DESC,"reputation"));
+        return accountList.stream().limit(5).collect(Collectors.toList());
+    }
     public CredentialDto loginWithOTP(LoginDto loginDto) throws AccountException {
         Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(loginDto.getEmail()));
         if (!account.isPresent()) {

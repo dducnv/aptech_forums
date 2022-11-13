@@ -7,6 +7,7 @@ import com.example.forums_backend.entity.*;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
+import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.repository.BookmarkRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class BookmarkService {
 
     @Autowired
     AccountService accountService;
+
 
     public List<Bookmark> BookmarkList() {
         Account account = accountService.getUserInfoData();

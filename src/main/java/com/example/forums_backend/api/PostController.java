@@ -32,10 +32,10 @@ public class PostController {
     @Autowired
     BookmarkService bookmarkService;
 
-//    @RequestMapping(value = POSTS_CLIENT_PATH, method = RequestMethod.GET)
-//    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort) {
-//        return ResponseEntity.ok(postService.findAll(sort));
-//    }
+    @RequestMapping(value = "/posts/popular", method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(postService.findPostsPopular());
+    }
 
     @RequestMapping(value = POSTS_CLIENT_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> getAllPganati(@RequestParam(defaultValue = "none") SortPost sort,

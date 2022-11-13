@@ -25,6 +25,7 @@ public class Account {
     @Column(columnDefinition = "TEXT")
     private String imageUrl; //null hoặc sử dụng link ảnh
     private String name;//not null
+    @JsonIgnore
     private String bio;
     @JsonIgnore
     @Column(unique = true)
@@ -39,9 +40,12 @@ public class Account {
     private String skill;
     @Column(columnDefinition = "int(11) default 0")
     private int reputation; // default 0
+    @JsonIgnore
     private String github_username;
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private AuthProvider provider; // enum
+    @JsonIgnore
     private String providerId;// null khi là local
     @JsonIgnore
     private String one_time_password; // null

@@ -40,7 +40,10 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             POST_COMMENTS_ROUTE_ANT_MATCHES,
             POST_DETAILS_ROUTE_ANT_MATCHES,
             POSTS_NOT_SORT_CLIENT_ROUTE,
-            POSTS_BY_TAG_ROUTE
+            POSTS_BY_TAG_ROUTE,
+            "/api/tags/popular",
+            "/api/posts/popular",
+            "/api/users/famous"
     };
 
     @Override

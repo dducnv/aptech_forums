@@ -9,6 +9,7 @@ import com.example.forums_backend.entity.my_enum.NotificationType;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
+import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.repository.CommentRepository;
 import com.example.forums_backend.repository.PostRepository;
 import com.example.forums_backend.repository.VoteRepository;
@@ -40,6 +41,8 @@ public class VoteService {
     PostService postService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    AccountRepository accountRepository;
 
     public VoteResDto vote(VoteDto voteDto) throws AppException {
         Account author = accountService.getUserInfoData();
@@ -58,6 +61,7 @@ public class VoteService {
 
     public PostResDto postVote(Long postId, VoteType type, Account account) throws AppException {
         Post post = postService.findByID(postId);
+        Account findAuthor = accountService.findByUsername(post.getAuthor().getUsername());
         Optional<Voting> votingOptional = voteRepository.findFirstByPost_IdAndAccount_Id(post.getId(), account.getId());
         Notification notification = new Notification();
         notification.setReceiver(post.getAuthor());
@@ -72,35 +76,56 @@ public class VoteService {
                 voteSave.setType(VoteType.UPVOTE);
                 post.setVoteCount(post.getVoteCount() + 1);
                 if(!account.equals(post.getAuthor())){
+                    findAuthor.setReputation(findAuthor.getReputation() + 3);
                     notificationService.saveNotification(notification);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
+                if(!account.equals(post.getAuthor()) && findAuthor.getReputation() >= 3) {
+                    findAuthor.setReputation(findAuthor.getReputation() - 3);
+                }
                 voteSave.setType(VoteType.DOWN_VOTE);
                 post.setVoteCount(post.getVoteCount() - 1);
             }
+            accountRepository.save(findAuthor);
             voteRepository.save(voteSave);
             postRepository.save(post);
         } else {
             Voting voteExist = votingOptional.get();
             if (type.equals(VoteType.UPVOTE)) {
                 if (voteExist.getType().equals(VoteType.UPVOTE)) {
+                    if(!account.equals(post.getAuthor()) && findAuthor.getReputation() >= 3 && account.getReputation() >=3) {
+                        account.setReputation(account.getReputation() - 3);
+                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                    }
                     delete(voteExist.getId());
                     post.setVoteCount(post.getVoteCount() - 1);
                 } else if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
+                    if(!account.equals(post.getAuthor())) {
+                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                    }
                     voteExist.setType(VoteType.UPVOTE);
                     post.setVoteCount(post.getVoteCount() + 2);
                     voteRepository.save(voteExist);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
+                    if(!account.equals(post.getAuthor()) && findAuthor.getReputation() >= 3 && account.getReputation() >=3) {
+                        account.setReputation(account.getReputation() - 3);
+                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                    }
                     delete(voteExist.getId());
                     post.setVoteCount(post.getVoteCount() + 1);
                 } else if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     voteExist.setType(VoteType.DOWN_VOTE);
+                    if(!account.equals(post.getAuthor()) && findAuthor.getReputation() >= 3) {
+                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                    }
                     post.setVoteCount(post.getVoteCount() - 2);
                     voteRepository.save(voteExist);
                 }
             }
+            accountRepository.save(findAuthor);
+            accountRepository.save(account);
             postRepository.save(post);
         }
         return postService.detailsPost(post.getSlug());
@@ -108,11 +133,12 @@ public class VoteService {
 
     public CommentResDto commentVote(Long commentId, VoteType type, Account account) throws AppException {
         Comment comment = commentService.findById(commentId);
+        Account findAuthor = accountService.findByUsername(comment.getAccount().getUsername());
         Optional<Voting> votingOptional = voteRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), account.getId());
         Notification notification = new Notification();
         notification.setReceiver(comment.getAccount());
         notification.setInteractive_user(account);
-        notification.setRedirect_url("/binh-luan/".concat(comment.getId().toString()));
+        notification.setRedirect_url("/bai-dang/".concat(comment.getPost().getSlug()+"#"+"comment-"+comment.getId()));
         if (!votingOptional.isPresent()) {
             Voting voteSave = new Voting();
             voteSave.setComment(comment);
@@ -122,21 +148,33 @@ public class VoteService {
                 voteSave.setType(VoteType.UPVOTE);
                 comment.setVoteCount(comment.getVoteCount() + 1);
                 if(!account.equals(comment.getAccount())){
+                    findAuthor.setReputation(findAuthor.getReputation() + 3);
                     notificationService.saveNotification(notification);
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
+                if(!account.equals(comment.getAccount()) && findAuthor.getReputation() >= 3){
+                    findAuthor.setReputation(findAuthor.getReputation() - 3);
+                }
                 voteSave.setType(VoteType.DOWN_VOTE);
                 comment.setVoteCount(comment.getVoteCount() - 1);
             }
+            accountRepository.save(findAuthor);
             voteRepository.save(voteSave);
             commentRepository.save(comment);
         } else {
             Voting voteExist = votingOptional.get();
             if (type.equals(VoteType.UPVOTE)) {
                 if (voteExist.getType() == VoteType.UPVOTE) {
+                    if(!account.equals(comment.getAccount()) && findAuthor.getReputation() >= 3 && account.getReputation() >= 3){
+                        account.setReputation(account.getReputation() - 3);
+                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                    }
                     delete(voteExist.getId());
                     comment.setVoteCount(comment.getVoteCount() - 1);
                 } else if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
+                    if(!account.equals(comment.getAccount())){
+                        findAuthor.setReputation(findAuthor.getReputation() + 3);
+                    }
                     voteExist.setType(VoteType.UPVOTE);
                     notification.setType(NotificationType.UPVOTE_COMMENT);
                     comment.setVoteCount(comment.getVoteCount() + 2);
@@ -144,14 +182,23 @@ public class VoteService {
                 }
             } else if (type.equals(VoteType.DOWN_VOTE)) {
                 if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
+                    if(!account.equals(comment.getAccount()) && findAuthor.getReputation() >= 3 && account.getReputation() >= 3){
+                        account.setReputation(account.getReputation() - 3);
+                        findAuthor.setReputation(findAuthor.getReputation() + 3);
+                    }
                     delete(voteExist.getId());
                     comment.setVoteCount(comment.getVoteCount() + 1);
                 } else if (voteExist.getType().equals(VoteType.UPVOTE)) {
+                    if(!account.equals(comment.getAccount()) && findAuthor.getReputation() >= 3){
+                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                    }
                     voteExist.setType(VoteType.DOWN_VOTE);
                     comment.setVoteCount(comment.getVoteCount() - 2);
                     voteRepository.save(voteExist);
                 }
             }
+            accountRepository.save(account);
+            accountRepository.save(findAuthor);
             commentRepository.save(comment);
         }
         return commentService.fromEntityCommentDto(comment, account);

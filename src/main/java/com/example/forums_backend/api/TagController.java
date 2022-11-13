@@ -26,6 +26,11 @@ public class TagController {
     public ResponseEntity<?> getAll(){
         return ResponseEntity.ok(tagService.findAll());
     }
+
+    @RequestMapping(value = "/tags/popular", method = RequestMethod.GET)
+    public ResponseEntity<?> getTagsPopular(){
+        return ResponseEntity.ok(tagService.tagsPopular());
+    }
     @RequestMapping(value = TAG_CLIENT_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createTag(@RequestBody @Valid Tag tag){
         return ResponseEntity.ok(tagService.save(tag));

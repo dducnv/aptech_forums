@@ -42,8 +42,13 @@ public class TagService {
 
     public List<TagFollowResDto> findAll() {
         Account account = accountService.getUserInfoData();
-        List<Tag> tags = tagRepository.findAll();
+        List<Tag> tags = tagRepository.findTagsPopular();
         return tags.stream().map(it -> fromEntityTagDto(it, account)).collect(Collectors.toList());
+    }
+    public List<TagFollowResDto> tagsPopular(){
+        Account account = accountService.getUserInfoData();
+        List<Tag> tagsPopular = tagRepository.findTagsPopular();
+        return tagsPopular.stream().limit(5).map(it -> fromEntityTagDto(it, account)).collect(Collectors.toList());
     }
 
     public Tag save(Tag tag) {

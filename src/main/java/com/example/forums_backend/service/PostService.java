@@ -41,29 +41,10 @@ public class PostService {
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    public List<PostResDto> findAll(SortPost sortPost) {
+    public List<PostResDto> findPostsPopular() {
         Account currentUser = accountService.getUserInfoData();
-        if(sortPost.equals(SortPost.hot)){
-            final  List<Post> postList = postRepository.findAllPopular();
-            return postList.stream()
-                    .distinct()
-                    .map(it -> fromEntityPostDto(it, currentUser))
-                    .collect(Collectors.toList());
-        } else if (sortPost.equals(SortPost.created_desc)) {
-            final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-            return postList.stream()
-                    .distinct()
-                    .map(it -> fromEntityPostDto(it, currentUser))
-                    .collect(Collectors.toList());
-        }
-        if(currentUser != null){
-            return  findAllPostByTagFollowing(currentUser,sortPost);
-        }
-        final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-        return postList.stream()
-                .distinct()
-                .map(it -> fromEntityPostDto(it, null))
-                .collect(Collectors.toList());
+        List<Post> postList = postRepository.findAllPopular();
+       return postList.stream().limit(5).map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
     public Page<PostResDto> findAllPaginate(SortPost sortPost, Pageable pageable) {
@@ -148,6 +129,7 @@ public class PostService {
         postSave.setTags(postRequestDto.getTags());
         postSave.setAuthor(author);
         postSave.setStatus(StatusEnum.ACTIVE);
+        author.setReputation(author.getReputation()+ 15);
         postRepository.save(postSave);
         return fromEntityPostDto(postSave, currentUser);
     }

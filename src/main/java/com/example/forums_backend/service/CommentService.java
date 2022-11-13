@@ -8,10 +8,7 @@ import com.example.forums_backend.entity.my_enum.NotificationType;
 import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
-import com.example.forums_backend.repository.BookmarkRepository;
-import com.example.forums_backend.repository.CommentRepository;
-import com.example.forums_backend.repository.PostRepository;
-import com.example.forums_backend.repository.VoteRepository;
+import com.example.forums_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,8 @@ public class CommentService {
     PostService postService;
     @Autowired
     BookmarkRepository bookmarkRepository;
+    @Autowired
+    AccountRepository accountRepository;
 
     public List<Comment> findAll() {
         return commentRepository.findAll();
@@ -55,7 +54,7 @@ public class CommentService {
         return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
     }
 
-    public List<CommentResDto> userComments(String username){
+    public List<CommentResDto> userComments(String username) {
         Account currentUser = accountService.getUserInfoData();
         Account account = accountService.findByUsername(username);
         List<Comment> commentList = commentRepository.findCommentByAccount_Id(account.getId());
@@ -67,6 +66,7 @@ public class CommentService {
         try {
             Account account = accountService.getUserInfoData();
             Post post = postService.findByID(postId);
+            Account findAuthor = accountService.findByUsername(post.getAuthor().getUsername());
             Comment comment = new Comment();
             Notification notification = new Notification();
             notification.setReceiver(post.getAuthor());
@@ -77,19 +77,23 @@ public class CommentService {
             comment.setPost(post);
             comment.setStatus(StatusEnum.ACTIVE);
             Comment commentResult = commentRepository.save(comment);
-            notification.setRedirect_url("/bai-dang/".concat(post.getSlug()+"#"+"comment-"+commentResult.getId()));
-            if(!account.equals(post.getAuthor()) && comment.getParent() == null){
+            notification.setRedirect_url("/bai-dang/".concat(post.getSlug() + "#" + "comment-" + commentResult.getId()));
+            if (!account.equals(post.getAuthor()) && comment.getParent() == null) {
+                findAuthor.setReputation(findAuthor.getReputation() + 25);
                 notificationService.saveNotification(notification);
             }
             if (commentReqDto.getReply_to() != null) {
+                findAuthor.setReputation(findAuthor.getReputation() + 5);
                 notification.setType(NotificationType.REPLY_COMMENT);
                 Comment findComment = findById(commentReqDto.getReply_to().getId());
                 comment.setParent(findComment);
                 notification.setReceiver(findComment.getAccount());
-                if(!account.equals(findComment.getAccount()) && comment.getParent() != null){
+                if (!account.equals(findComment.getAccount()) && comment.getParent() != null) {
+
                     notificationService.saveNotification(notification);
                 }
             }
+            accountRepository.save(findAuthor);
             return fromEntityCommentDto(comment, account);
         } catch (Exception exception) {
             log.info("Comment error: " + exception.getMessage());
@@ -102,25 +106,28 @@ public class CommentService {
         Comment comment = findById(id);
         return fromEntityCommentDto(comment, account);
     }
-    public CommentResDto updateMyComment(Long commentId, CommentReqDto commentReqDto) throws AppException{
+
+    public CommentResDto updateMyComment(Long commentId, CommentReqDto commentReqDto) throws AppException {
         Account currentUser = accountService.getUserInfoData();
         Comment comment = findById(commentId);
-        if (comment.getAccount().equals(currentUser)){
+        if (comment.getAccount().equals(currentUser)) {
             comment.setContent(commentReqDto.getContent());
             commentRepository.save(comment);
-            return fromEntityCommentDto(comment,currentUser);
+            return fromEntityCommentDto(comment, currentUser);
         }
         return null;
     }
+
     public boolean deleteMyComment(Long commentId) throws AppException {
         Account currentUser = accountService.getUserInfoData();
         Comment comment = findById(commentId);
-        if(comment.getAccount().equals(currentUser)){
+        if (comment.getAccount().equals(currentUser)) {
             commentRepository.deleteById(comment.getId());
             return true;
         }
         return false;
     }
+
     public Comment findById(Long id) throws AppException {
         Optional<Comment> optionalComment = commentRepository.findById(id);
         if (!optionalComment.isPresent()) {
@@ -133,9 +140,10 @@ public class CommentService {
         Account currentUser = accountService.getUserInfoData();
         Sort sort = Sort.by(
                 Sort.Order.desc("voteCount"));
-        List<Comment> commentList = commentRepository.findByPost_Id(postId,sort);
+        List<Comment> commentList = commentRepository.findByPost_Id(postId, sort);
         return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
     }
+
     public CommentResDto fromEntityCommentDto(Comment comment, Account currentUser) {
         Voting voting = null;
         Bookmark bookmark = null;
@@ -148,11 +156,11 @@ public class CommentService {
         commentResDto.setId(comment.getId());
         commentResDto.setAccount(comment.getAccount());
         commentResDto.setContent(comment.getContent());
-        commentResDto.setVoteCount(comment.getVoteCount() );
+        commentResDto.setVoteCount(comment.getVoteCount());
         commentResDto.setReply(replyComment);
         commentResDto.setChildren(comment.getParent() != null);
         commentResDto.setVote(voting != null);
-        commentResDto.setPost(postService.fromEntityPostDto(comment.getPost(),currentUser));
+        commentResDto.setPost(postService.fromEntityPostDto(comment.getPost(), currentUser));
         commentResDto.setBookmark(bookmark != null);
         commentResDto.setMyComment(comment.getAccount() == currentUser);
         commentResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());

@@ -22,6 +22,10 @@ public class AccountController {
     AccountManagerService accountManagerService;
     @Autowired
     AccountService accountService;
+    @RequestMapping(value = "/users/famous", method = RequestMethod.GET)
+    public ResponseEntity<?> getUsersFamous()  {
+        return ResponseEntity.ok(accountService.usersFamous());
+    }
 
     @RequestMapping(value = UPDATE_PATH, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
     public ResponseEntity<?> update(@RequestBody @Valid UpdateInfoDto updateInfoDto) throws AppException {
