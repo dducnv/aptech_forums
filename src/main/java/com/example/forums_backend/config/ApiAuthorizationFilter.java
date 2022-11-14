@@ -43,7 +43,8 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             POSTS_BY_TAG_ROUTE,
             "/api/tags/popular",
             "/api/posts/popular",
-            "/api/users/famous"
+            "/api/users/famous",
+            "/api/post/search"
     };
 
     @Override

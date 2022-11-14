@@ -1,11 +1,13 @@
 package com.example.forums_backend.service;
 
 import com.example.forums_backend.dto.PostResDto;
+import com.example.forums_backend.dto.PostSearchDto;
 import com.example.forums_backend.dto.PostsByTagDto;
 import com.example.forums_backend.dto.TagFollowResDto;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
+import com.example.forums_backend.entity.TagFollowing;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.PostRepository;
 import com.example.forums_backend.repository.TagRepository;
@@ -37,6 +39,7 @@ public class SearchService {
     AccountService accountService;
     @Autowired
     TagService tagService;
+
     public PostsByTagDto filterPostByTag(String slug) throws AppException {
         Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
         if(!tagOptional.isPresent()){
@@ -56,9 +59,20 @@ public class SearchService {
                 .build();
     }
 
-    public void searchByKeyword(String keyword){
-
+    public List<PostSearchDto> searchByKeyword(String keyword,int limit){
+        List<Post> postListSearch = postRepository.searchAllPopular(keyword);
+        return postListSearch.stream().distinct().limit(limit).map(this::fromTagFollowingToTag).collect(Collectors.toList());
     }
 
+
+    public PostSearchDto fromTagFollowingToTag(Post post){
+        PostSearchDto postSearchDto = new PostSearchDto();
+        postSearchDto.setTitle(post.getTitle());
+        postSearchDto.setSlug(post.getSlug());
+        postSearchDto.setComment_count(post.getComment().size());
+        postSearchDto.setVote_count(post.getVoteCount());
+        postSearchDto.setBookmark_count(post.getBookmarks().size());
+        return postSearchDto;
+    }
 }
 
