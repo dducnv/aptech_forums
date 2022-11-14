@@ -72,6 +72,7 @@ public class SearchService {
         postSearchDto.setComment_count(post.getComment().size());
         postSearchDto.setVote_count(post.getVoteCount());
         postSearchDto.setBookmark_count(post.getBookmarks().size());
+        postSearchDto.setCreatedAt(post.getCreatedAt());
         return postSearchDto;
     }
 }

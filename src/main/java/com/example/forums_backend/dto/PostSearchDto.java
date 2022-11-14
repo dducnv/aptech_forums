@@ -2,6 +2,8 @@ package com.example.forums_backend.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @Builder
@@ -13,4 +15,5 @@ public class PostSearchDto {
     private int comment_count;
     private int vote_count;
     private int bookmark_count;
+    private LocalDateTime createdAt;
 }
