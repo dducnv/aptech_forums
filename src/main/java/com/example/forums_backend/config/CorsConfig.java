@@ -16,8 +16,7 @@ public class CorsConfig {
            @Override
            public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
                registry.addMapping("/**")
-                       .allowedOrigins(allowedOrigin)
-                       .allowedOrigins("https://itcomm.onrender.com/")
+                       .allowedOrigins("*")
                        .allowedMethods("GET", "POST", "PUT", "DELETE")
                        .allowedHeaders("*")
                        .allowCredentials(true);
