@@ -316,7 +316,7 @@ public class AccountService implements UserDetailsService {
     public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) throws AppException {
         Account account = getUserInfoData();
         ProfileDto accountUsername = findUserInfoByUsername(updateInfoDto.getUsername());
-        if(accountUsername.getInfo().getEmail() != null){
+        if(accountUsername.getInfo().getEmail() != null && !Objects.equals(updateInfoDto.getUsername(), account.getUsername())){
             throw new AppException("USERNAME IS USED");
         }
         account.setUsername(updateInfoDto.getUsername());
