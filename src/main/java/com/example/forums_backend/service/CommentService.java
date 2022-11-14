@@ -48,10 +48,10 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-    public List<CommentResDto> myComments() {
+    public List<CommentResDto> myComments(int limit) {
         Account currentUser = accountService.getUserInfoData();
         List<Comment> commentList = commentRepository.findCommentByAccount_Id(currentUser.getId());
-        return commentList.stream().map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
+        return commentList.stream().limit(limit).map(it -> fromEntityCommentDto(it, currentUser)).collect(Collectors.toList());
     }
 
     public List<CommentResDto> userComments(String username) {

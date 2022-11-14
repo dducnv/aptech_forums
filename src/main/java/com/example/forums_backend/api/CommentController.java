@@ -33,8 +33,8 @@ public class CommentController {
         return ResponseEntity.ok(commentService.findCommentByPost_Id(post_id));
     }
     @RequestMapping(value = MY_COMMENTS_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> myComments(){
-        return ResponseEntity.ok(commentService.myComments());
+    public ResponseEntity<?> myComments(@RequestParam(name = "limit", defaultValue = "5") int limit){
+        return ResponseEntity.ok(commentService.myComments(limit));
     }
 
     @RequestMapping(value = USER_COMMENTS_PATH, method = RequestMethod.GET)
