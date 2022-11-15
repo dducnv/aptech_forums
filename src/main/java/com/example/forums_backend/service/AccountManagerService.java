@@ -1,5 +1,6 @@
 package com.example.forums_backend.service;
 
+import com.example.forums_backend.dto.AccountUpdateDto;
 import com.example.forums_backend.dto.UserAllInfoDto;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.repository.AccountRepository;
@@ -30,7 +31,7 @@ public class AccountManagerService {
                 .collect(Collectors.toList());
     }
 
-    public Account update(Account account, Long id) {
+    public Account update(AccountUpdateDto account, Long id) {
         Optional<Account> optionalAccount = accountRepository.findById(id);
         Account accountModal = optionalAccount.get();
         accountModal.setRole(account.getRole());
