@@ -1,9 +1,6 @@
 package com.example.forums_backend.api;
 
-import com.example.forums_backend.dto.BookmarkReqDto;
-import com.example.forums_backend.dto.PostRequestDto;
-import com.example.forums_backend.dto.VoteDto;
-import com.example.forums_backend.dto.VoteRequestDto;
+import com.example.forums_backend.dto.*;
 import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
@@ -13,6 +10,8 @@ import com.example.forums_backend.service.PostService;
 import com.example.forums_backend.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +32,27 @@ public class PostController {
     @Autowired
     BookmarkService bookmarkService;
 
+    @RequestMapping(value = "/posts/popular", method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(postService.findPostsPopular());
+    }
+
     @RequestMapping(value = POSTS_CLIENT_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort) {
-        return ResponseEntity.ok(postService.findAll(sort));
+    public ResponseEntity<?> getAllPganati(@RequestParam(defaultValue = "none") SortPost sort,
+                                           @RequestParam(defaultValue = "1") Optional<Integer> page,
+                                           @RequestParam(defaultValue = "5") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(51);
+
+        Page<PostResDto> dtoData = postService.findAllPaginate(sort,
+                PageRequest.of(currentPage - 1, pageSize));
+
+        return ResponseEntity.ok(dtoData);
+    }
+
+    @RequestMapping(value = POSTS_NOT_SORT_CLIENT_PATH, method = RequestMethod.GET)
+    public ResponseEntity<?> getAllNotSort(){
+        return ResponseEntity.ok(postService.findAllNotSort());
     }
     @RequestMapping(value = MY_POSTS_CLIENT_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> myPosts(){

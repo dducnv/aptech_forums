@@ -2,6 +2,7 @@ package com.example.forums_backend.config.constant.route;
 
 public class AdminRoute {
     public static final String PREFIX_ADMIN_ROUTE = "/api/admin";
+    public static final String DASHBOARD_COUNT_TOTAL = "/dashboard/total";
     public static final String ACCOUNT_PATH = "/accounts";
     public static final String ACCOUNT_PATH_WITH_ID = "/accounts/{id}";
     public static final String POST_PATH = "/posts";

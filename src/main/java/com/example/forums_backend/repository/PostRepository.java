@@ -22,4 +22,7 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
     List<Post> findByTagsIn(Collection<Tag> tags, Sort sort);
     @Query("select p from Post p order by p.comment.size + p.bookmarks.size + p.voteCount desc")
     List<Post> findAllPopular();
+    @Query("select p from Post p where p.title like concat('%',:query,'%')  order by p.comment.size + p.bookmarks.size + p.voteCount desc")
+    List<Post> searchAllPopular(String query);
+
 }

@@ -12,7 +12,12 @@ import lombok.Setter;
 public class TagFollowResDto {
     private Long id;
     private String name;
+    private String slug;
+    private String icon;
     private int tag_follow_count;
     private boolean isFollow;
     private int posts_use;
+    private String desc;
+    private boolean important;
+    private String color_bg;
 }

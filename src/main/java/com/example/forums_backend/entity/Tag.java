@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +27,8 @@ public class Tag {
     private Long id;
     private String icon;
     private String name; //not null
+    @Column(unique = true)
+    private String slug;
     @Column(columnDefinition = "text")
     private String description;
     private boolean important;

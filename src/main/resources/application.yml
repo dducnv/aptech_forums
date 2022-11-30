@@ -2,12 +2,13 @@ spring:
   jackson:
     time-zone: Asia/Ho_Chi_Minh
   datasource:
-#    url: jdbc:mysql://34.87.38.9/forum_aptech?createDatabaseIfNotExist=true
-#    username: root
-#    password: Dduc_NV0712
-     url: jdbc:mysql://localhost:3306/forum_aptech?createDatabaseIfNotExist=true
-     username: root
-     password:
+    url: jdbc:mysql://34.87.38.9/forum_aptech?createDatabaseIfNotExist=true
+#    url: jdbc:mysql://google/forum_aptech?cloudSqlInstance=appcuaduc:asia-southeast1:forums-db&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=root&password=Dduc_NV0712
+    username: root
+    password: Dduc_NV0712
+#     url: jdbc:mysql://localhost:3306/forum_aptech?createDatabaseIfNotExist=true
+#     username: root
+#     password:
 #     url: jdbc:mysql://appcuaduc:asia-southeast1:forums-db
 #     username: root
 #     password:
@@ -55,8 +56,9 @@ spring:
             clientSecret: b361c098f56d45e7df4149c1cce6639b65eaac89
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
-              - user:email
-              - read:user
+              - email
+              - user
+              - profile
         provider:
           facebook:
             authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
@@ -69,14 +71,15 @@ app:
     tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
     tokenExpirationMsec: 864000000
   cors:
-    allowedOrigins: http://localhost:3000,http://localhost:8080
+    allowedOrigins: http://localhost:3000,http://localhost:8080,https://it-forums.vercel.app,https://itcomm.onrender.com/
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - https://forums-demo.vercel.app/oauth2/redirect
+      - https://itcomm.onrender.com/oauth2/redirect
+      - https://it-forums.vercel.app/oauth2/redirect
       - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect

@@ -1,6 +1,7 @@
 package com.example.forums_backend.api.admin;
 
-import com.example.forums_backend.dto.UpdateAccountDto;
+import com.example.forums_backend.dto.AccountUpdateDto;
+import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.service.AccountManagerService;
 import com.example.forums_backend.service.AccountService;
@@ -33,8 +34,8 @@ public class AccountManageController {
         return ResponseEntity.ok(accountManagerService.findAll());
     }
 
-    @RequestMapping(value = ACCOUNT_PATH_WITH_ID, produces = "application/json", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<?> update(@RequestBody UpdateAccountDto account, @PathVariable Long id) {
+    @RequestMapping(value = ACCOUNT_PATH_WITH_ID, method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@RequestBody AccountUpdateDto account, @PathVariable Long id) {
         boolean isAdmin = accountService.adminCheck();
         if(!isAdmin){
             return ResponseEntity.status(403).body("Ban chưa được cấp quyền...");

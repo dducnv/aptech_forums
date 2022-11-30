@@ -15,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,31 +41,52 @@ public class PostService {
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    public List<PostResDto> findAll(SortPost sortPost) {
+    public List<PostResDto> findPostsPopular() {
         Account currentUser = accountService.getUserInfoData();
-        if(sortPost.equals(SortPost.hot)){
-            final  List<Post> postList = postRepository.findAllPopular();
-            return postList.stream()
-                    .distinct()
-                    .map(it -> fromEntityPostDto(it, currentUser))
-                    .collect(Collectors.toList());
-        } else if (sortPost.equals(SortPost.created_desc)) {
-            final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-            return postList.stream()
-                    .distinct()
-                    .map(it -> fromEntityPostDto(it, currentUser))
-                    .collect(Collectors.toList());
-        }
-        if(currentUser != null){
-            return  findAllPostByTagFollowing(currentUser,sortPost);
-        }
-        final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-        return postList.stream()
-                .distinct()
-                .map(it -> fromEntityPostDto(it, null))
-                .collect(Collectors.toList());
+        List<Post> postList = postRepository.findAllPopular();
+       return postList.stream().limit(5).map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
+    public Page<PostResDto> findAllPaginate(SortPost sortPost, Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        Account currentUser = accountService.getUserInfoData();
+        List<Tag> tagFollowings = tagService.myTagFollowing();
+        List<Post> postList = null;
+        if(sortPost.equals(SortPost.hot)) {
+            postList = postRepository.findAllPopular();
+        }else if(sortPost.equals(SortPost.relevant) && !tagFollowings.isEmpty() && currentUser != null){
+            postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
+        } else {
+            postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        }
+        List<PostResDto>  dtoList = postList.stream()
+                .distinct()
+                .map(it -> fromEntityPostDto(it, currentUser))
+                .collect(Collectors.toList());
+
+        List<PostResDto> postListData;
+        if(dtoList.size() < startItem) {
+            postListData = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, dtoList.size());
+            postListData = dtoList.subList(startItem, toIndex);
+        }
+
+        Page<PostResDto> postPage = new PageImpl<PostResDto>(postListData,
+                PageRequest.of(currentPage, pageSize), dtoList.size());
+        return postPage;
+    }
+
+    public List<PostResDto> findAllNotSort(){
+        Account currentUser = accountService.getUserInfoData();
+        List<Post> postList = postRepository.findAll();
+        return postList.stream()
+                .distinct()
+                .map(it -> fromEntityPostDto(it, currentUser))
+                .collect(Collectors.toList());
+    }
     public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
         List<Tag> tagFollowings = tagService.myTagFollowing();
         if (tagFollowings.isEmpty()) {
@@ -107,6 +129,7 @@ public class PostService {
         postSave.setTags(postRequestDto.getTags());
         postSave.setAuthor(author);
         postSave.setStatus(StatusEnum.ACTIVE);
+        author.setReputation(author.getReputation()+ 15);
         postRepository.save(postSave);
         return fromEntityPostDto(postSave, currentUser);
     }

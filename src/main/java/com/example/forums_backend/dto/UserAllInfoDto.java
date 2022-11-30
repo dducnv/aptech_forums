@@ -18,6 +18,7 @@ public class UserAllInfoDto {
     private String username;//not null - unique
     private String skill;
     private String bio;
+    private String github_username;
     private int reputation; // default 0
     private String role; //USER - ADMIN
     private LocalDateTime createdAt; //null

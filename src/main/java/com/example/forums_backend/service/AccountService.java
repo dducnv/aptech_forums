@@ -15,6 +15,7 @@ import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,6 +31,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,6 +61,10 @@ public class AccountService implements UserDetailsService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    public List<Account> usersFamous(){
+        List<Account> accountList = accountRepository.findAll(Sort.by(Sort.Direction.DESC,"reputation"));
+        return accountList.stream().limit(5).collect(Collectors.toList());
+    }
     public CredentialDto loginWithOTP(LoginDto loginDto) throws AccountException {
         Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(loginDto.getEmail()));
         if (!account.isPresent()) {
@@ -243,6 +249,7 @@ public class AccountService implements UserDetailsService {
                 .avatar(account.getImageUrl())
                 .skill(account.getSkill())
                 .reputation(account.getReputation())
+                .github_username(account.getGithub_username())
                 .post_count(account.getPosts().size())
                 .comment_count(account.getComments().size())
                 .tag_flowing_count(account.getTagFollowings().size())
@@ -269,6 +276,7 @@ public class AccountService implements UserDetailsService {
                 .skill(account.getSkill())
                 .reputation(account.getReputation())
                 .post_count(account.getPosts().size())
+                .github_username(account.getGithub_username())
                 .comment_count(account.getComments().size())
                 .tag_flowing_count(account.getTagFollowings().size())
                 .role(account.getRole())
@@ -294,6 +302,7 @@ public class AccountService implements UserDetailsService {
                 .reputation(account.getReputation())
                 .post_count(account.getPosts().size())
                 .comment_count(account.getComments().size())
+                .github_username(account.getGithub_username())
                 .tag_flowing_count(account.getTagFollowings().size())
                 .role(account.getRole())
                 .badge_count(account.getUserBadge().size())
@@ -304,13 +313,18 @@ public class AccountService implements UserDetailsService {
 
     }
 
-    public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) {
+    public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) throws AppException {
         Account account = getUserInfoData();
+        ProfileDto accountUsername = findUserInfoByUsername(updateInfoDto.getUsername());
+        if(accountUsername.getInfo().getEmail() != null && !Objects.equals(updateInfoDto.getUsername(), account.getUsername())){
+            throw new AppException("USERNAME IS USED");
+        }
         account.setUsername(updateInfoDto.getUsername());
         account.setImageUrl(updateInfoDto.getImageUrl());
         account.setName(updateInfoDto.getName());
         account.setSkill(updateInfoDto.getSkill());
         account.setBio(updateInfoDto.getBio());
+        account.setGithub_username(updateInfoDto.getGithub_username());
         accountRepository.save(account);
         return updateInfoDto;
     }

@@ -6,6 +6,7 @@ public class ClientRoute {
     //posts router
     //PATH MAPPING CONTROLLER
     public static final String POSTS_CLIENT_PATH             = "/posts";
+    public static final String POSTS_NOT_SORT_CLIENT_PATH    = "/posts/list";
     public static final String MY_POSTS_CLIENT_PATH          = "/my/posts";
     public static final String USER_POSTS_CLIENT_PATH        = "/user/{username}/posts";
     public static final String POST_CLIENT_CREATE_POST_PATH  = "/post/new";
@@ -45,6 +46,7 @@ public class ClientRoute {
     public static final String POST_VOTE_ROUTE_ANT_MATCHES     = PREFIX_CLIENT_ROUTE.concat(POST_VOTE_PATH_ANT_MATCHES);
     public static final String COMMENT_VOTE_ROUTE_ANT_MATCHES  = PREFIX_CLIENT_ROUTE.concat(COMMENT_VOTE_PATH_ANT_MATCHES);
     public static final String POSTS_CLIENT_ROUTE              = PREFIX_CLIENT_ROUTE.concat(POSTS_CLIENT_PATH);
+    public static final String POSTS_NOT_SORT_CLIENT_ROUTE     = PREFIX_CLIENT_ROUTE.concat(POSTS_NOT_SORT_CLIENT_PATH);
     public static final String POST_CLIENT_CREATE_POST_ROUTE   = PREFIX_CLIENT_ROUTE.concat(POST_CLIENT_CREATE_POST_PATH);
     public static final String DETAILS_COMMENT_ROUTE = PREFIX_CLIENT_ROUTE.concat(DETAILS_COMMENT_ANT_MATCHES);
     //tags router
@@ -52,6 +54,8 @@ public class ClientRoute {
     public static final String TAG_FOLLOW_CLIENT_PATH  = "/tag/follow";
     public static final String MY_TAG_FOLLOWING = "/my/tags-following";
 
+    public static final String POSTS_BY_TAG_ANT_MATCHES = "/filter/\\S*/posts-by-tag";
+    public static final String POSTS_BY_TAG_ROUTE = PREFIX_CLIENT_ROUTE.concat(POSTS_BY_TAG_ANT_MATCHES);
     public static final String TAG_CLIENT_ROUTE = PREFIX_CLIENT_ROUTE.concat(TAG_CLIENT_PATH);
     public static final String TAG_FOLLOW_CLIENT_ROUTE = PREFIX_CLIENT_ROUTE.concat(TAG_FOLLOW_CLIENT_PATH);
 

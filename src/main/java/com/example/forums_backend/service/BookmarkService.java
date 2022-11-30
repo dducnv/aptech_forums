@@ -1,12 +1,14 @@
 package com.example.forums_backend.service;
 
 import com.example.forums_backend.dto.BookmarkReqDto;
+import com.example.forums_backend.dto.BookmarkResDto;
 import com.example.forums_backend.dto.CommentResDto;
 import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.entity.*;
 import com.example.forums_backend.entity.my_enum.Subject;
 import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
+import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.repository.BookmarkRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -31,9 +34,11 @@ public class BookmarkService {
     @Autowired
     AccountService accountService;
 
-    public List<Bookmark> BookmarkList() {
+
+    public List<BookmarkResDto> BookmarkList() {
         Account account = accountService.getUserInfoData();
-        return bookmarkRepository.findByAccount_Id(account.getId());
+        List<Bookmark> bookmarkList = bookmarkRepository.findAllByAccount_Id(account.getId());
+        return bookmarkList.stream().distinct().map(this::toDto).collect(Collectors.toList());
     }
 
     public boolean Bookmark(BookmarkReqDto bookmarkReqDto) throws AppException {
@@ -79,7 +84,24 @@ public class BookmarkService {
         bookmarkRepository.save(bookmark);
         return commentService.fromEntityCommentDto(comment, account);
     }
-
+    public BookmarkResDto toDto(Bookmark bookmark){
+        String content = null;
+        String url_redirect = null;
+        if(bookmark.getSubject().equals(Subject.COMMENT)){
+            content = bookmark.getComment().getContent();
+            url_redirect = "/bai-dang/".concat(bookmark.getComment().getPost().getSlug()+"#comment-"+bookmark.getComment().getId());
+        }else {
+            content = bookmark.getPost().getTitle();
+            url_redirect = "/bai-dang/".concat(bookmark.getPost().getSlug());
+        }
+        return BookmarkResDto.builder()
+                .id(bookmark.getId())
+                .subject(bookmark.getSubject())
+                .content(content)
+                .createdAt(bookmark.getCreatedAt())
+                .url_redirect(url_redirect)
+                .build();
+    }
     public void delete(Long id) {
         bookmarkRepository.deleteById(id);
     }
