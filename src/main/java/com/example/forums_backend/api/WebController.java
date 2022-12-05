@@ -31,9 +31,9 @@ public class WebController {
 //    public void home(HttpServletResponse httpServletResponse) throws IOException {
 //         httpServletResponse.sendRedirect("https://forums-demo.vercel.app/");
 //    }
-    @RequestMapping(value = "/api/post/search", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllNotification(@RequestParam(name = "q", defaultValue = "") String query, @RequestParam(name = "limit", defaultValue = "5") int limit) {
-        return ResponseEntity.ok(searchService.searchByKeyword(query, limit));
+    @RequestMapping(value = "/api/search", method = RequestMethod.GET)
+    public ResponseEntity<?> serachData(@RequestParam(name = "q", defaultValue = "") String query, @RequestParam(name = "type", defaultValue = "post") String type, @RequestParam(name = "limit", defaultValue = "5") int limit) {
+        return ResponseEntity.ok(searchService.searchByKeyword(query, type, limit));
     }
 
     @RequestMapping(value = "/api/notifications", method = RequestMethod.GET)

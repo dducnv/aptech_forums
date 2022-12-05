@@ -44,7 +44,7 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             "/api/tags/popular",
             "/api/posts/popular",
             "/api/users/famous",
-            "/api/post/search"
+            "/api/search"
     };
 
     @Override
