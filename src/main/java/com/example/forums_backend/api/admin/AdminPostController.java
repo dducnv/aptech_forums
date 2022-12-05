@@ -32,12 +32,10 @@ import static com.example.forums_backend.config.constant.route.AdminRoute.*;
 public class AdminPostController {
     @Autowired
     PostService postService;
-    @Autowired
-    PostRepository repository;
-    @RequestMapping(value = POST_PATH, method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort){
-        return ResponseEntity.ok(repository.findAll());
-    }
+//    @RequestMapping(value = POST_PATH, method = RequestMethod.GET)
+//    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "none") SortPost sort){
+//        return ResponseEntity.ok(repository.findAll());
+//    }
 
     @RequestMapping(value = POST_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createPost(@RequestBody PostRequestDto postRequestDto) {
@@ -51,6 +49,7 @@ public class AdminPostController {
 
     @RequestMapping(value = POST_PATH_WITH_ID, method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Long id){
+        postService.deletePost(id);
         return ResponseEntity.ok("Deleted");
     }
 

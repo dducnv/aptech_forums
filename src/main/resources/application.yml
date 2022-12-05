@@ -46,15 +46,15 @@ spring:
         registration:
           google:
             clientId: 572511665932-lam11rsjg0f9hlfmjkc5mri9ndm33u2a.apps.googleusercontent.com
-            clientSecret: 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
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            clientSecret: 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
+            redirectUri: "https://appcuaduc.as.r.appspot.com/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           github:
             clientId: 31c2e8628954c21966c1
             clientSecret: b361c098f56d45e7df4149c1cce6639b65eaac89
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirectUri: "https://appcuaduc.as.r.appspot.com/oauth2/callback/{registrationId}"
             scope:
               - email
               - user
@@ -66,20 +66,22 @@ spring:
             userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 allowed:
   origin: http://localhost:3000
+
 app:
   auth:
     tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
     tokenExpirationMsec: 864000000
   cors:
-    allowedOrigins: http://localhost:3000,http://localhost:8080,https://it-forums.vercel.app,https://itcomm.onrender.com/
+    allowedOrigins: http://localhost:3000,http://localhost:8080,https://itcomm.onrender.com/,https://www.itforum.site/
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - https://itcomm.onrender.com/oauth2/redirect
-      - https://it-forums.vercel.app/oauth2/redirect
-      - http://localhost:3000/oauth2/redirect
+      - https://www.itforum.site/api/oauth2/redirect
+      - https://itcomm.onrender.com/api/oauth2/redirect
+      - https://it-forums.vercel.app/api/oauth2/redirect
+      - http://localhost:3000/api/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -43,12 +45,15 @@ public class Post {
     Set<Tag> tags = new HashSet<>();
     @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Voting> voting = new HashSet<>();
     @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Comment> comment = new HashSet<>();
     @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Bookmark> bookmarks = new HashSet<>();
     @CreationTimestamp
     private LocalDateTime createdAt;

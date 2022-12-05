@@ -1,5 +1,6 @@
 package com.example.forums_backend.service;
 
+import com.example.forums_backend.dto.CommentResDto;
 import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.entity.*;
 import com.example.forums_backend.dto.PostRequestDto;
@@ -13,8 +14,8 @@ import com.example.forums_backend.repository.VoteRepository;
 import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +37,16 @@ public class PostService {
     TagService tagService;
     @Autowired
     AccountService accountService;
+    CommentService commentService;
     @Autowired
     VoteRepository voteRepository;
     @Autowired
     BookmarkRepository bookmarkRepository;
+
+    @Autowired
+    public PostService(@Lazy  CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     public List<PostResDto> findPostsPopular() {
         Account currentUser = accountService.getUserInfoData();
@@ -142,6 +149,7 @@ public class PostService {
         }
         Post post = postOptional.get();
         String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-" + System.currentTimeMillis());
+        post.setTitle(postRequestDto.getTitle() );
         post.setContent(postRequestDto.getContent());
         post.setTags(postRequestDto.getTags());
         post.setSlug(slugGenerate);
@@ -173,6 +181,9 @@ public class PostService {
             log.info(exception.getMessage());
         }
         return null;
+    }
+    public void deletePost(Long id){
+        postRepository.deleteById(id);
     }
 
     public Post findByID(Long id) throws AppException {

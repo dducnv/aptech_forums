@@ -80,7 +80,7 @@ public class BookmarkService {
         }
         bookmark.setComment(comment);
         bookmark.setAccount(account);
-        bookmark.setSubject(Subject.POST);
+        bookmark.setSubject(Subject.COMMENT);
         bookmarkRepository.save(bookmark);
         return commentService.fromEntityCommentDto(comment, account);
     }

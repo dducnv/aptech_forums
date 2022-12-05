@@ -4,6 +4,8 @@ import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -35,12 +37,15 @@ public class Comment {
     @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     private Comment parent;
     @OneToMany(mappedBy ="parent" ,cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Comment> reply_to = new HashSet<Comment>();
     @Column(columnDefinition = "int(11) default 0")
     private int voteCount;
     @OneToMany(mappedBy = "comment", cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Voting> voting = new HashSet<>();
     @OneToMany(mappedBy = "comment",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Bookmark> bookmarks = new HashSet<>();
     @CreationTimestamp
     private LocalDateTime createdAt;
