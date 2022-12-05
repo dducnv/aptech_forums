@@ -32,8 +32,6 @@ public class CommentService {
     @Autowired
     NotificationService notificationService;
     @Autowired
-    PostRepository postRepository;
-    @Autowired
     AccountService accountService;
     @Autowired
     VoteRepository voteRepository;
@@ -120,10 +118,15 @@ public class CommentService {
         Account currentUser = accountService.getUserInfoData();
         Comment comment = findById(commentId);
         if (comment.getAccount().equals(currentUser)) {
-            commentRepository.deleteById(comment.getId());
-            return true;
+            return  deleteComment(comment.getId());
         }
         return false;
+    }
+
+    public boolean deleteComment(Long id) throws AppException {
+        Comment comment = findById(id);
+        commentRepository.deleteById(comment.getId());
+        return true;
     }
 
     public Comment findById(Long id) throws AppException {

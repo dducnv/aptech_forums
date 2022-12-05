@@ -61,9 +61,9 @@ public class AccountService implements UserDetailsService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    public List<Account> usersFamous(){
+    public List<UserAllInfoDto> usersFamous(){
         List<Account> accountList = accountRepository.findAll(Sort.by(Sort.Direction.DESC,"reputation"));
-        return accountList.stream().limit(5).collect(Collectors.toList());
+        return accountList.stream().limit(5).map(this::toDto).collect(Collectors.toList());
     }
     public CredentialDto loginWithOTP(LoginDto loginDto) throws AccountException {
         Optional<Account> account = Optional.ofNullable(accountRepository.findAccountByEmail(loginDto.getEmail()));
@@ -311,6 +311,16 @@ public class AccountService implements UserDetailsService {
                 .build();
 
 
+    }
+    public UserAllInfoDto toDto(Account account){
+        return UserAllInfoDto.builder()
+                .name(account.getName())
+                .avatar(account.getImageUrl())
+                .username(account.getUsername())
+                .reputation(account.getReputation())
+                .post_count(account.getPosts().size())
+                .comment_count(account.getComments().size())
+                .build();
     }
 
     public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) throws AppException {

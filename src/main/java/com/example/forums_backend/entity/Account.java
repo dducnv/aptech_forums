@@ -5,6 +5,8 @@ import com.example.forums_backend.entity.my_enum.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -62,15 +64,19 @@ public class Account {
     private LocalDateTime updatedAt; //null
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Post> posts = new HashSet<>(); //null
     @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Comment> comments  = new HashSet<>(); //null
     @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<TagFollowing> tagFollowings = new HashSet<>(); // null
     @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Set<UserContact> userContacts = new HashSet<>(); //null
     @OneToMany
     @JsonIgnore

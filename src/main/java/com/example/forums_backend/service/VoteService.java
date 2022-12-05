@@ -95,7 +95,7 @@ public class VoteService {
                 if (voteExist.getType().equals(VoteType.UPVOTE)) {
                     if(!account.equals(post.getAuthor()) && findAuthor.getReputation() >= 3 && account.getReputation() >=3) {
                         account.setReputation(account.getReputation() - 3);
-                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                        findAuthor.setReputation(findAuthor.getReputation() + 3);
                     }
                     delete(voteExist.getId());
                     post.setVoteCount(post.getVoteCount() - 1);
@@ -111,7 +111,7 @@ public class VoteService {
                 if (voteExist.getType().equals(VoteType.DOWN_VOTE)) {
                     if(!account.equals(post.getAuthor()) && findAuthor.getReputation() >= 3 && account.getReputation() >=3) {
                         account.setReputation(account.getReputation() - 3);
-                        findAuthor.setReputation(findAuthor.getReputation() - 3);
+                        findAuthor.setReputation(findAuthor.getReputation() + 3);
                     }
                     delete(voteExist.getId());
                     post.setVoteCount(post.getVoteCount() + 1);

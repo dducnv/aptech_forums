@@ -13,8 +13,8 @@ public class ClientRoute {
     public static final String POST_CLIENT_DETAILS_POST_PATH = "/post/{slug}/details";
 
     public static final String POST_CLIENT_BOOKMARK_PATH = "/post/{id}/bookmark";
-    public static final String POST_CLIENT_DELETE_PATH = "/post/{id}/update";
-    public static final String POST_CLIENT_UPDATE_PATH = "/post/{id}/delete";
+    public static final String POST_CLIENT_DELETE_PATH = "/post/{id}/delete";
+    public static final String POST_CLIENT_UPDATE_PATH = "/post/{id}/update";
 
     public static final String GET_ALL_COMMENT_PATH       = "/comments";
     public static final String MY_COMMENTS_PATH           = "/my/comments";
