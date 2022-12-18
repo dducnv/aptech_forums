@@ -7,6 +7,7 @@ import com.example.forums_backend.entity.my_enum.NotificationType;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public class NotificationService {
 
     public List<Notification> getAllNotification() {
         Account account = accountService.getUserInfoData();
-        return notificationRepository.findNotificationByReceiver_Id(account.getId());
+        Sort sort = Sort.by(
+                Sort.Order.desc("createdAt"));
+        return notificationRepository.findNotificationByReceiver_IdOrderByStatus(account.getId(),sort);
     }
 
     public Notification saveNotification(Notification notification) {

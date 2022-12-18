@@ -15,8 +15,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findAccountByEmail(String email);
     Optional<Account> findByEmail(String email);
     Optional<Account> findFirstByUsername(String username);
-    @Query("select p from Account p where p.name like concat('%',:query,'%')")
-    List<Account> searchAccount(String query);
+
+    List<Account> findByNameContaining(String query);
     @Query("select p from Account p where p.username like concat(:query,'%') ")
-    List<Account> searchAccountbyUserName(String query);
+    List<Account> searchAccountByUserName(String query);
 }

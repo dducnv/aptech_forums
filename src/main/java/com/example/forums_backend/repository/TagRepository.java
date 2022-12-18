@@ -14,6 +14,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     //Top 5 tag được sử dụng
     @Query("select p from Tag p order by p.posts.size + p.follow_count desc")
     List<Tag> findTagsPopular();
-    @Query("select p from Tag p where p.name like concat('#',:query,'%')")
+    @Query("select p from Tag p where p.name like concat('%',:query,'%')")
     List<Tag> searchTag(String query);
 }

@@ -107,11 +107,15 @@ public class AccountService implements UserDetailsService {
             Context context = new Context();
             context.setVariable("password", password);
             String template = templateEngine.process("one_time_password", context);
+
+
             EmailDetails emailDetails = new EmailDetails();
             emailDetails.setRecipient(accountUpdate.getEmail());
             emailDetails.setMsgBody(template);
             emailDetails.setSubject("OTP LOGIN");
             emailService.sendSimpleMail(emailDetails);
+
+
             return CheckAccount.builder()
                     .accountExist(true)
                     .build();

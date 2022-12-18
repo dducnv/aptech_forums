@@ -60,33 +60,35 @@ public class SearchService {
         if (Objects.equals(type, "post")) {
             return searchPost(keyword, limit);
         } else if (Objects.equals(type, "account")) {
-            return searchAcc(keyword);
+            return searchAccount(keyword,limit);
         } else if (Objects.equals(type, "tag")) {
-            return searchTag(keyword);
+            return searchTag(keyword,limit);
         }
         return null;
     }
 
-    public List<PostSearchDto> searchPost(String keyword, int limit) {
+    public List<PostResDto> searchPost(String keyword, int limit) {
+        Account currentUser = accountService.getUserInfoData();
         List<Post> postListSearch = postRepository.searchAllPopular(keyword);
-        return postListSearch.stream().distinct().limit(limit).map(this::fromTagFollowingToTag).collect(Collectors.toList());
+        return postListSearch.stream().distinct().limit(limit).map(it-> postService.fromEntityPostDto(it,currentUser)).collect(Collectors.toList());
     }
 
-    public List<Account> searchAcc(String keyword) {
+    public List<UserAllInfoDto> searchAccount(String keyword, int limit) {
         List<Account> accountList = new ArrayList<>();
         if (keyword.startsWith("@")) {
             String key = keyword.replace("@", "").trim();
-            accountList = accountRepository.searchAccountbyUserName(key);
+            accountList = accountRepository.searchAccountByUserName(key);
         }
         else {
-            accountList = accountRepository.searchAccount(keyword);
+            accountList = accountRepository.findByNameContaining(keyword);
         }
-        return accountList;
+        return accountList.stream().distinct().limit(limit).map(this::fromAccountToDto).collect(Collectors.toList());
     }
 
-    public List<Tag> searchTag(String keyword) {
+    public List<TagFollowResDto> searchTag(String keyword, int limit) {
+        Account account = accountService.getUserInfoData();
         List<Tag> tagList = tagRepository.searchTag(keyword);
-        return tagList;
+        return tagList.stream().distinct().limit(limit).map(it -> tagService.fromEntityTagDto(it, account)).collect(Collectors.toList());
     }
 
 
@@ -101,10 +103,18 @@ public class SearchService {
         return postSearchDto;
     }
 
-    public AccountSearchDto fromTagFollowingToTag(Account account) {
-        AccountSearchDto accountSearchDto = new AccountSearchDto();
-        accountSearchDto.setName(account.getName());
-        return accountSearchDto;
+    public UserAllInfoDto fromAccountToDto(Account account) {
+
+        return UserAllInfoDto.builder()
+                .name(account.getName())
+                .avatar(account.getImageUrl())
+                .username(account.getUsername())
+                .reputation(account.getReputation())
+                .post_count(account.getPosts().size())
+                .comment_count(account.getComments().size())
+                .tag_flowing_count(account.getTagFollowings().size())
+                .badge_count(account.getUserBadge().size())
+                .build();
     }
 }
 

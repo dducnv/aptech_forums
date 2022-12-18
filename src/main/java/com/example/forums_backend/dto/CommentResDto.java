@@ -27,4 +27,5 @@ public class CommentResDto {
     private boolean myComment;
     private LocalDateTime createdAt;
     private List<CommentResDto> reply;
+    private CommentResDto parent;
 }

@@ -149,6 +149,7 @@ public class CommentService {
         Voting voting = null;
         Bookmark bookmark = null;
         CommentResDto commentResDto = new CommentResDto();
+        CommentResDto commentResDtoParent = new CommentResDto();
         if (currentUser != null) {
             voting = voteRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), currentUser.getId()).orElse(null);
             bookmark = bookmarkRepository.findFirstByComment_IdAndAccount_Id(comment.getId(), currentUser.getId()).orElse(null);
@@ -166,6 +167,12 @@ public class CommentService {
         commentResDto.setMyComment(comment.getAccount() == currentUser);
         commentResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());
         commentResDto.setCreatedAt(comment.getCreatedAt());
+        if(comment.getParent() != null ){
+            commentResDtoParent.setId(comment.getParent().getId());
+            commentResDtoParent.setAccount(comment.getParent().getAccount());
+            commentResDtoParent.setContent(comment.getParent().getContent());
+            commentResDto.setParent(commentResDtoParent);
+        }
         return commentResDto;
     }
 }
