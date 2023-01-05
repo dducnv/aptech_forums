@@ -2,11 +2,12 @@ spring:
   jackson:
     time-zone: Asia/Ho_Chi_Minh
   datasource:
-    url: jdbc:mysql://forumaptech.ca9slibhnzcr.ap-northeast-1.rds.amazonaws.com/forum_aptech?createDatabaseIfNotExist=true&useSSL=false
-#    url: jdbc:mysql://34.87.38.9/forum_aptech?createDatabaseIfNotExist=true
+#    url: jdbc:mysql://forumaptech.ca9slibhnzcr.ap-northeast-1.rds.amazonaws.com/forum_aptech?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:mysql://ap-southeast.connect.psdb.cloud/forums?createDatabaseIfNotExist=true&ssl={"rejectUnauthorized":true}
 #    url: jdbc:mysql://google/forum_aptech?cloudSqlInstance=appcuaduc:asia-southeast1:forums-db&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=root&password=Dduc_NV0712
-    username: admin
-    password: Dduc_NV0712
+    username: wjrvv7wuvkdlghnttp0o
+    password: pscale_pw_DbGxU1QUaBFjFpJbJGp8uJc3xr8ojC3vb3p43xMMfmo
+    driverClassName: com.mysql.cj.jdbc.Driver
 #     url: jdbc:mysql://sql6.freesqldatabase.com/sql6584138?createDatabaseIfNotExist=true
 #     username: sql6584138
 #     password: Cj4adeDHBq
@@ -20,6 +21,7 @@ spring:
 #     username: dducnv
 #     password: qP6VlDJWhxsoThc7ttmW0g
 #     driverClassName: org.postgresql.Driver
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
