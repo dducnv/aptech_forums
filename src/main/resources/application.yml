@@ -50,14 +50,14 @@ spring:
           google:
             clientId: 572511665932-lam11rsjg0f9hlfmjkc5mri9ndm33u2a.apps.googleusercontent.com
             clientSecret: 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
-            redirectUri: "https://appcuaduc.as.r.appspot.com/oauth2/callback/{registrationId}"
+            redirectUri: "https://newbiedev-pqvws.appengine.bfcplatform.vn/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           github:
             clientId: 31c2e8628954c21966c1
             clientSecret: b361c098f56d45e7df4149c1cce6639b65eaac89
-            redirectUri: "https://appcuaduc.as.r.appspot.com/oauth2/callback/{registrationId}"
+            redirectUri: "https://newbiedev-pqvws.appengine.bfcplatform.vn/oauth2/callback/{registrationId}"
             scope:
               - user:email
               - read:user
