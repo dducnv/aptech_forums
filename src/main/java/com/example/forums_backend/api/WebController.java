@@ -82,7 +82,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/api/filter/{slug}/posts-by-tag")
-    public ResponseEntity<?> postsByTag(@PathVariable String slug) throws AppException {
-        return ResponseEntity.ok(searchService.filterPostByTag(slug));
+    public ResponseEntity<?> postsByTag(@PathVariable String slug, @RequestParam(defaultValue = "", required = false) String tags) throws AppException {
+        return ResponseEntity.ok(searchService.filterPostByTag(slug, tags));
     }
 }

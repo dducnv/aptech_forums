@@ -37,19 +37,34 @@ public class SearchService {
     @Autowired
     TagService tagService;
 
-    public PostsByTagDto filterPostByTag(String slug) throws AppException {
+    public PostsByTagDto filterPostByTag(String slug, String tags) throws AppException {
         Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
         if (!tagOptional.isPresent()) {
             throw new AppException("TAG NOT FOUND");
+        }
+        String[] tagsArray;
+        if (!tags.isEmpty()) {
+            tagsArray = tags.split("\\,");
+        } else {
+            tagsArray = null;
         }
         Account currentUser = accountService.getUserInfoData();
         Tag tag = tagOptional.get();
         TagFollowResDto tagFollowResDto = tagService.fromEntityTagDto(tag, currentUser);
         List<Post> postList = postRepository.findByTagsIn(Collections.singleton(tag), Sort.by(Sort.Direction.DESC, "createdAt"));
-        List<PostResDto> postResDtoList = postList.stream()
-                .distinct()
-                .map(it -> postService.fromEntityPostDto(it, currentUser))
-                .collect(Collectors.toList());
+        List<PostResDto> postResDtoList;
+        if (!tags.isEmpty()) {
+            postResDtoList = postList.stream()
+                    .distinct()
+                    .filter(it -> it.getTags().containsAll(tagService.convertTagsFromString(tagsArray)))
+                    .map(it -> postService.fromEntityPostDto(it, currentUser))
+                    .collect(Collectors.toList());
+        } else {
+            postResDtoList = postList.stream()
+                    .distinct()
+                    .map(it -> postService.fromEntityPostDto(it, currentUser))
+                    .collect(Collectors.toList());
+        }
         return PostsByTagDto.builder()
                 .tag_details(tagFollowResDto)
                 .posts(postResDtoList)
@@ -60,9 +75,9 @@ public class SearchService {
         if (Objects.equals(type, "post")) {
             return searchPost(keyword, limit);
         } else if (Objects.equals(type, "account")) {
-            return searchAccount(keyword,limit);
+            return searchAccount(keyword, limit);
         } else if (Objects.equals(type, "tag")) {
-            return searchTag(keyword,limit);
+            return searchTag(keyword, limit);
         }
         return null;
     }
@@ -70,7 +85,7 @@ public class SearchService {
     public List<PostResDto> searchPost(String keyword, int limit) {
         Account currentUser = accountService.getUserInfoData();
         List<Post> postListSearch = postRepository.searchAllPopular(keyword);
-        return postListSearch.stream().distinct().limit(limit).map(it-> postService.fromEntityPostDto(it,currentUser)).collect(Collectors.toList());
+        return postListSearch.stream().distinct().limit(limit).map(it -> postService.fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
     public List<UserAllInfoDto> searchAccount(String keyword, int limit) {
@@ -78,8 +93,7 @@ public class SearchService {
         if (keyword.startsWith("@")) {
             String key = keyword.replace("@", "").trim();
             accountList = accountRepository.searchAccountByUserName(key);
-        }
-        else {
+        } else {
             accountList = accountRepository.findByNameContaining(keyword);
         }
         return accountList.stream().distinct().limit(limit).map(this::fromAccountToDto).collect(Collectors.toList());

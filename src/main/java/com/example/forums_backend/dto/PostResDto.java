@@ -24,6 +24,7 @@ public class PostResDto {
     private boolean isBookmark;
     private int commentCount;
     private int bookmarkCount;
+    private int viewCount;
     private VoteType voteType;
     private int voteCount;
     private boolean isMyPost;

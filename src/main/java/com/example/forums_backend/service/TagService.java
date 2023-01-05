@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.TagUtils;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,6 +119,14 @@ public class TagService {
         return tagRepository.save(tagModal);
     }
 
+    public List<Tag> convertTagsFromString (String[] tagsLug){
+        List<Tag> tags = new ArrayList<>();
+        for (String item : tagsLug) {
+            Optional<Tag> tagOptional = tagRepository.findFirstBySlug(item);
+            tags.add(tagOptional.get());
+        }
+        return tags;
+    }
     public void delete(Long id){
         tagRepository.deleteById(id);
     }

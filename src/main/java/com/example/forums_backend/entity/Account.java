@@ -78,6 +78,10 @@ public class Account {
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     Set<UserContact> userContacts = new HashSet<>(); //null
+    @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Set<PostView> postViews  = new HashSet<>(); //null
     @OneToMany
     @JsonIgnore
     Set<UserBadge> userBadge = new HashSet<>();

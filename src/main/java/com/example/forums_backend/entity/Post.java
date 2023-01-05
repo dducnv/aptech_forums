@@ -55,6 +55,10 @@ public class Post {
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     Set<Bookmark> bookmarks = new HashSet<>();
+    @OneToMany(mappedBy = "post",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Set<PostView> postViews = new HashSet<>();
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

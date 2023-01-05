@@ -1,6 +1,5 @@
 package com.example.forums_backend.service;
 
-import com.example.forums_backend.dto.CommentResDto;
 import com.example.forums_backend.dto.PostResDto;
 import com.example.forums_backend.entity.*;
 import com.example.forums_backend.dto.PostRequestDto;
@@ -10,6 +9,7 @@ import com.example.forums_backend.entity.my_enum.VoteType;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.PostRepository;
 import com.example.forums_backend.repository.BookmarkRepository;
+import com.example.forums_backend.repository.PostViewRepository;
 import com.example.forums_backend.repository.VoteRepository;
 import com.example.forums_backend.utils.SlugGenerating;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +20,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,37 +41,59 @@ public class PostService {
     BookmarkRepository bookmarkRepository;
 
     @Autowired
-    public PostService(@Lazy  CommentService commentService) {
+    PostViewRepository postViewRepository;
+
+    @Autowired
+    public PostService(@Lazy CommentService commentService) {
         this.commentService = commentService;
     }
 
     public List<PostResDto> findPostsPopular() {
         Account currentUser = accountService.getUserInfoData();
         List<Post> postList = postRepository.findAllPopular();
-       return postList.stream().limit(5).map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
+        return postList.stream().limit(5).map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
-    public Page<PostResDto> findAllPaginate(SortPost sortPost, Pageable pageable) {
+    public Page<PostResDto> findAllPaginate(SortPost sortPost, Pageable pageable, String tags) {
+        String[] tagsArray;
+        if (!tags.isEmpty()) {
+            tagsArray = tags.split("\\,");
+        } else {
+            tagsArray = null;
+        }
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
         Account currentUser = accountService.getUserInfoData();
         List<Tag> tagFollowings = tagService.myTagFollowing();
         List<Post> postList = null;
-        if(sortPost.equals(SortPost.hot)) {
-            postList = postRepository.findAllPopular();
-        }else if(sortPost.equals(SortPost.relevant) && !tagFollowings.isEmpty() && currentUser != null){
-            postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
+        if (sortPost.equals(SortPost.hot)) {
+            if (tags.isEmpty()) {
+                postList = postRepository.findAllPopular();
+            } else {
+                postList = postRepository.findAllPopular().stream().filter(it->it.getTags().containsAll(tagService.convertTagsFromString(tagsArray))).collect(Collectors.toList());
+            }
+        } else if (sortPost.equals(SortPost.relevant) && !tagFollowings.isEmpty() && currentUser != null) {
+            if (tags.isEmpty()) {
+                postList = postRepository.findByTagsIn(tagFollowings, Sort.by(Sort.Direction.DESC, "createdAt"));
+            } else {
+                postList = postRepository.findByTagsIn(tagService.convertTagsFromString(tagsArray), Sort.by(Sort.Direction.DESC, "createdAt"));
+            }
         } else {
-            postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            if (tags.isEmpty()) {
+                postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            } else {
+                postList = postRepository.findByTagsIn(tagService.convertTagsFromString(tagsArray), Sort.by(Sort.Direction.DESC, "createdAt"));
+            }
+
         }
-        List<PostResDto>  dtoList = postList.stream()
+        List<PostResDto> dtoList = postList.stream()
                 .distinct()
                 .map(it -> fromEntityPostDto(it, currentUser))
                 .collect(Collectors.toList());
 
         List<PostResDto> postListData;
-        if(dtoList.size() < startItem) {
+        if (dtoList.size() < startItem) {
             postListData = Collections.emptyList();
         } else {
             int toIndex = Math.min(startItem + pageSize, dtoList.size());
@@ -86,7 +105,7 @@ public class PostService {
         return postPage;
     }
 
-    public List<PostResDto> findAllNotSort(){
+    public List<PostResDto> findAllNotSort() {
         Account currentUser = accountService.getUserInfoData();
         List<Post> postList = postRepository.findAll();
         return postList.stream()
@@ -94,10 +113,11 @@ public class PostService {
                 .map(it -> fromEntityPostDto(it, currentUser))
                 .collect(Collectors.toList());
     }
+
     public List<PostResDto> findAllPostByTagFollowing(Account account, SortPost sortPost) {
         List<Tag> tagFollowings = tagService.myTagFollowing();
         if (tagFollowings.isEmpty()) {
-            final  List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+            final List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
             return postList.stream()
                     .distinct()
                     .map(it -> fromEntityPostDto(it, account))
@@ -111,17 +131,16 @@ public class PostService {
     }
 
 
-
     public List<PostResDto> myPosts() {
         Account currentUser = accountService.getUserInfoData();
-        List<Post> postList = postRepository.findByAuthor_id(currentUser.getId(),Sort.by(Sort.Direction.DESC,"createdAt"));
+        List<Post> postList = postRepository.findByAuthor_id(currentUser.getId(), Sort.by(Sort.Direction.DESC, "createdAt"));
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
     public List<PostResDto> userPosts(String username) {
         Account currentUser = accountService.getUserInfoData();
         Account account = accountService.findByUsername(username);
-        List<Post> postList = postRepository.findByAuthor_id(account.getId(),Sort.by(Sort.Direction.DESC,"createdAt"));
+        List<Post> postList = postRepository.findByAuthor_id(account.getId(), Sort.by(Sort.Direction.DESC, "createdAt"));
         return postList.stream().map(it -> fromEntityPostDto(it, currentUser)).collect(Collectors.toList());
     }
 
@@ -136,7 +155,7 @@ public class PostService {
         postSave.setTags(postRequestDto.getTags());
         postSave.setAuthor(author);
         postSave.setStatus(StatusEnum.ACTIVE);
-        author.setReputation(author.getReputation()+ 15);
+        author.setReputation(author.getReputation() + 15);
         postRepository.save(postSave);
         return fromEntityPostDto(postSave, currentUser);
     }
@@ -149,7 +168,7 @@ public class PostService {
         }
         Post post = postOptional.get();
         String slugGenerate = SlugGenerating.toSlug(postRequestDto.getTitle()).concat("-" + System.currentTimeMillis());
-        post.setTitle(postRequestDto.getTitle() );
+        post.setTitle(postRequestDto.getTitle());
         post.setContent(postRequestDto.getContent());
         post.setTags(postRequestDto.getTags());
         post.setSlug(slugGenerate);
@@ -176,13 +195,15 @@ public class PostService {
                 throw new AppException("POST NOT FOUND!");
             }
             Post resultPost = optionalPost.get();
+            countViewerPost(resultPost, currentUser);
             return fromEntityPostDto(resultPost, currentUser);
         } catch (Exception exception) {
             log.info(exception.getMessage());
         }
         return null;
     }
-    public void deletePost(Long id){
+
+    public void deletePost(Long id) {
         postRepository.deleteById(id);
     }
 
@@ -209,15 +230,27 @@ public class PostService {
         postResDto.setSlug(post.getSlug());
         postResDto.setContent(post.getContent());
         postResDto.setAccount(post.getAuthor());
-        postResDto.setVoteCount(post.getVoteCount()      );
+        postResDto.setVoteCount(post.getVoteCount());
         postResDto.setTags(post.getTags());
         postResDto.setCommentCount(post.getComment().size());
         postResDto.setBookmarkCount(post.getBookmarks().size());
+        postResDto.setViewCount(post.getPostViews().size());
         postResDto.setVote(voting != null);
         postResDto.setVoteType(voting == null ? VoteType.UNDEFINED : voting.getType());
         postResDto.setBookmark(bookmark != null);
         postResDto.setCreatedAt(post.getCreatedAt());
         postResDto.setMyPost(isMyPost);
         return postResDto;
+    }
+
+    public void countViewerPost(Post post, Account account) {
+        Optional<PostView> postView = postViewRepository.findFirstByPost_IdAndAccount_Id(post.getId(), account.getId());
+        if (postView.isPresent()) {
+            return;
+        }
+        PostView postViewSave = new PostView();
+        postViewSave.setPost(post);
+        postViewSave.setAccount(account);
+        postViewRepository.save(postViewSave);
     }
 }
