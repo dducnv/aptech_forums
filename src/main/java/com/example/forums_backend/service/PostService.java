@@ -201,6 +201,21 @@ public class PostService {
         }
         return null;
     }
+    public PostResDto detailsPostStatic(String slug) throws AppException {
+        try {
+            Account currentUser = accountService.getUserInfoData();
+            Optional<Post> optionalPost = postRepository.findFirstBySlug(slug);
+            if (!optionalPost.isPresent()) {
+                throw new AppException("POST NOT FOUND!");
+            }
+            Post resultPost = optionalPost.get();
+            return fromEntityPostDto(resultPost, currentUser);
+        } catch (Exception exception) {
+            log.info(exception.getMessage());
+        }
+        return null;
+    }
+
 
     public void deletePost(Long id) {
         postRepository.deleteById(id);

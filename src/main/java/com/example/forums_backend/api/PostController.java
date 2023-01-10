@@ -89,6 +89,13 @@ public class PostController {
         }
         return ResponseEntity.ok(postService.detailsPost(slug));
     }
+    @RequestMapping(value = "/post/{slug}/static/details", method = RequestMethod.GET)
+    public ResponseEntity<?> getDetailsStatic(@PathVariable("slug") String slug) throws AppException {
+        if (slug.isEmpty()) {
+            return ResponseEntity.status(404).body("Param not found");
+        }
+        return ResponseEntity.ok(postService.detailsPostStatic(slug));
+    }
 
     @RequestMapping(value = POST_CLIENT_CREATE_POST_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createPost(@RequestBody PostRequestDto postRequestDto) {

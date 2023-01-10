@@ -45,6 +45,7 @@ public class ApiAuthorizationFilter extends OncePerRequestFilter {
             "/api/posts/popular",
             "/api/users/famous",
             "/api/tag/\\S*/details",
+            "/post/\\S*/static/details",
             "/api/search"
     };
 
