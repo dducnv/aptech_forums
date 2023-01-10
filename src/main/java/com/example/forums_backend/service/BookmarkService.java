@@ -89,7 +89,7 @@ public class BookmarkService {
         String url_redirect = null;
         if(bookmark.getSubject().equals(Subject.COMMENT)){
             content = bookmark.getComment().getContent();
-            url_redirect = "/bai-dang/".concat(bookmark.getComment().getPost().getSlug()+"#comment-"+bookmark.getComment().getId());
+            url_redirect = "/bai-dang/".concat(bookmark.getComment().getPost().getSlug()+"?to_comment=comment-"+bookmark.getComment().getId());
         }else {
             content = bookmark.getPost().getTitle();
             url_redirect = "/bai-dang/".concat(bookmark.getPost().getSlug());

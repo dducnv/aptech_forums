@@ -138,7 +138,7 @@ public class VoteService {
         Notification notification = new Notification();
         notification.setReceiver(comment.getAccount());
         notification.setInteractive_user(account);
-        notification.setRedirect_url("/bai-dang/".concat(comment.getPost().getSlug()+"#"+"comment-"+comment.getId()));
+        notification.setRedirect_url("/bai-dang/".concat(comment.getPost().getSlug()+"?to_comment=comment-"+comment.getId()));
         if (!votingOptional.isPresent()) {
             Voting voteSave = new Voting();
             voteSave.setComment(comment);
