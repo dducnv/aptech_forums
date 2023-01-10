@@ -31,9 +31,9 @@ public class TagController {
     public ResponseEntity<?> getTagsPopular(){
         return ResponseEntity.ok(tagService.tagsPopular());
     }
-    @RequestMapping(value = "/tag/${slug}/details", method = RequestMethod.GET)
+    @RequestMapping(value = "/tag/{slug}/details", method = RequestMethod.GET)
     public ResponseEntity<?> getTagDetails(@PathVariable String slug) throws AppException {
-        return ResponseEntity.ok(searchService.tagDetails(slug));
+        return ResponseEntity.ok(searchService.findTagDetails(slug));
     }
     @RequestMapping(value = TAG_CLIENT_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createTag(@RequestBody @Valid Tag tag){

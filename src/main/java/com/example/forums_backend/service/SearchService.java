@@ -38,15 +38,14 @@ public class SearchService {
     @Autowired
     TagService tagService;
 
-    public TagFollowResDto tagDetails(String slug) throws AppException {
+    public TagFollowResDto findTagDetails(String slug) throws AppException {
         Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
         Account currentUser = accountService.getUserInfoData();
         if (!tagOptional.isPresent()) {
             throw new AppException("TAG NOT FOUND");
         }
         Tag tag = tagOptional.get();
-        TagFollowResDto tagFollowResDto = tagService.fromEntityTagDto(tag, currentUser);
-        return tagFollowResDto;
+        return tagService.fromEntityTagDto(tag, currentUser);
     }
 
     public Page<PostResDto> filterPostByTag(String slug, SortPost sortPost, Pageable pageable, String tags) throws AppException {
