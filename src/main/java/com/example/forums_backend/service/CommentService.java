@@ -74,7 +74,7 @@ public class CommentService {
             comment.setPost(post);
             comment.setStatus(StatusEnum.ACTIVE);
             Comment commentResult = commentRepository.save(comment);
-            notification.setRedirect_url("/bai-dang/".concat(post.getSlug() + "#" + "comment-" + commentResult.getId()));
+            notification.setRedirect_url("/bai-dang/".concat(post.getSlug() + "?to_comment=comment-" + commentResult.getId()));
             if (!account.equals(post.getAuthor()) && comment.getParent() == null) {
                 account.setReputation(account.getReputation() + 25);
                 notificationService.saveNotification(notification);
