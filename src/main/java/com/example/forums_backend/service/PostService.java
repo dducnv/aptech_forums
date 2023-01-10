@@ -195,7 +195,7 @@ public class PostService {
                 throw new AppException("POST NOT FOUND!");
             }
             Post resultPost = optionalPost.get();
-            countViewerPost(resultPost, currentUser);
+//            countViewerPost(resultPost, currentUser);
             return fromEntityPostDto(resultPost, currentUser);
         } catch (Exception exception) {
             log.info(exception.getMessage());
@@ -245,12 +245,11 @@ public class PostService {
 
     public void countViewerPost(Post post, Account account) {
         Optional<PostView> postView = postViewRepository.findFirstByPost_IdAndAccount_Id(post.getId(), account.getId());
-        if (postView.isPresent()) {
-            return;
+        if (!postView.isPresent()) {
+            PostView postViewSave = new PostView();
+            postViewSave.setPost(post);
+            postViewSave.setAccount(account);
+            postViewRepository.save(postViewSave);
         }
-        PostView postViewSave = new PostView();
-        postViewSave.setPost(post);
-        postViewSave.setAccount(account);
-        postViewRepository.save(postViewSave);
     }
 }
