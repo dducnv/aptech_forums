@@ -5,6 +5,7 @@ import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
 import com.example.forums_backend.entity.TagFollowing;
+import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.AccountRepository;
 import com.example.forums_backend.repository.PostRepository;
@@ -12,7 +13,7 @@ import com.example.forums_backend.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,7 +38,18 @@ public class SearchService {
     @Autowired
     TagService tagService;
 
-    public PostsByTagDto filterPostByTag(String slug, String tags) throws AppException {
+    public TagFollowResDto tagDetails(String slug) throws AppException {
+        Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
+        Account currentUser = accountService.getUserInfoData();
+        if (!tagOptional.isPresent()) {
+            throw new AppException("TAG NOT FOUND");
+        }
+        Tag tag = tagOptional.get();
+        TagFollowResDto tagFollowResDto = tagService.fromEntityTagDto(tag, currentUser);
+        return tagFollowResDto;
+    }
+
+    public Page<PostResDto> filterPostByTag(String slug, SortPost sortPost, Pageable pageable, String tags) throws AppException {
         Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
         if (!tagOptional.isPresent()) {
             throw new AppException("TAG NOT FOUND");
@@ -48,27 +60,31 @@ public class SearchService {
         } else {
             tagsArray = null;
         }
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
         Account currentUser = accountService.getUserInfoData();
         Tag tag = tagOptional.get();
-        TagFollowResDto tagFollowResDto = tagService.fromEntityTagDto(tag, currentUser);
-        List<Post> postList = postRepository.findByTagsIn(Collections.singleton(tag), Sort.by(Sort.Direction.DESC, "createdAt"));
-        List<PostResDto> postResDtoList;
-        if (!tags.isEmpty()) {
-            postResDtoList = postList.stream()
-                    .distinct()
-                    .filter(it -> it.getTags().containsAll(tagService.convertTagsFromString(tagsArray)))
-                    .map(it -> postService.fromEntityPostDto(it, currentUser))
-                    .collect(Collectors.toList());
+        List<Post> postList = null;
+        if (sortPost.equals(SortPost.hot)) {
+            postList = postRepository.findAllPopular().stream().filter(it -> it.getTags().contains(tag)).collect(Collectors.toList());
         } else {
-            postResDtoList = postList.stream()
-                    .distinct()
-                    .map(it -> postService.fromEntityPostDto(it, currentUser))
-                    .collect(Collectors.toList());
+            postList = postRepository.findByTagsIn((Collection<Tag>) tag, Sort.by(Sort.Direction.DESC, "createdAt"));
         }
-        return PostsByTagDto.builder()
-                .tag_details(tagFollowResDto)
-                .posts(postResDtoList)
-                .build();
+        List<PostResDto> dtoList = postList.stream()
+                .distinct()
+                .map(it -> postService.fromEntityPostDto(it, currentUser))
+                .collect(Collectors.toList());
+
+        List<PostResDto> postListData;
+        if (dtoList.size() < startItem) {
+            postListData = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, dtoList.size());
+            postListData = dtoList.subList(startItem, toIndex);
+        }
+        return new PageImpl<PostResDto>(postListData,
+                PageRequest.of(currentPage, pageSize), dtoList.size());
     }
 
     public List<?> searchByKeyword(String keyword, String type, int limit) {

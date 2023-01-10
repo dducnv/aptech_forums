@@ -2,16 +2,19 @@ package com.example.forums_backend.api;
 
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.UserContact;
+import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 
@@ -82,7 +85,14 @@ public class WebController {
     }
 
     @RequestMapping(value = "/api/filter/{slug}/posts-by-tag")
-    public ResponseEntity<?> postsByTag(@PathVariable String slug, @RequestParam(defaultValue = "", required = false) String tags) throws AppException {
-        return ResponseEntity.ok(searchService.filterPostByTag(slug, tags));
+    public ResponseEntity<?> postsByTag(
+            @PathVariable String slug,
+            @RequestParam(defaultValue = "", required = false) String tags,
+            @RequestParam(defaultValue = "none") SortPost sort,
+            @RequestParam(defaultValue = "1") Optional<Integer> page,
+            @RequestParam(defaultValue = "5") Optional<Integer> size) throws AppException {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(51);
+        return ResponseEntity.ok(searchService.filterPostByTag(slug,sort, PageRequest.of(currentPage - 1, pageSize), tags));
     }
 }

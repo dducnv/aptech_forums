@@ -3,14 +3,12 @@ package com.example.forums_backend.api;
 import com.example.forums_backend.dto.TagFollowReqDto;
 import com.example.forums_backend.entity.Tag;
 import com.example.forums_backend.exception.AppException;
+import com.example.forums_backend.service.SearchService;
 import com.example.forums_backend.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -22,6 +20,8 @@ import static com.example.forums_backend.config.constant.route.ClientRoute.*;
 public class TagController {
     @Autowired
     TagService tagService;
+    @Autowired
+    SearchService searchService;
     @RequestMapping(value = TAG_CLIENT_PATH, method = RequestMethod.GET)
     public ResponseEntity<?> getAll(){
         return ResponseEntity.ok(tagService.findAll());
@@ -30,6 +30,10 @@ public class TagController {
     @RequestMapping(value = "/tags/popular", method = RequestMethod.GET)
     public ResponseEntity<?> getTagsPopular(){
         return ResponseEntity.ok(tagService.tagsPopular());
+    }
+    @RequestMapping(value = "/tag/${slug}/details", method = RequestMethod.GET)
+    public ResponseEntity<?> getTagDetails(@PathVariable String slug) throws AppException {
+        return ResponseEntity.ok(searchService.tagDetails(slug));
     }
     @RequestMapping(value = TAG_CLIENT_PATH, method = RequestMethod.POST)
     public ResponseEntity<?> createTag(@RequestBody @Valid Tag tag){

@@ -100,9 +100,8 @@ public class PostService {
             postListData = dtoList.subList(startItem, toIndex);
         }
 
-        Page<PostResDto> postPage = new PageImpl<PostResDto>(postListData,
+        return new PageImpl<PostResDto>(postListData,
                 PageRequest.of(currentPage, pageSize), dtoList.size());
-        return postPage;
     }
 
     public List<PostResDto> findAllNotSort() {
