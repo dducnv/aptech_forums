@@ -4,7 +4,6 @@ import com.example.forums_backend.dto.*;
 import com.example.forums_backend.entity.Account;
 import com.example.forums_backend.entity.Post;
 import com.example.forums_backend.entity.Tag;
-import com.example.forums_backend.entity.TagFollowing;
 import com.example.forums_backend.entity.my_enum.SortPost;
 import com.example.forums_backend.exception.AppException;
 import com.example.forums_backend.repository.AccountRepository;
@@ -37,6 +36,7 @@ public class SearchService {
     AccountService accountService;
     @Autowired
     TagService tagService;
+    private Object Collection;
 
     public TagFollowResDto findTagDetails(String slug) throws AppException {
         Optional<Tag> tagOptional = tagRepository.findFirstBySlug(slug);
@@ -65,10 +65,12 @@ public class SearchService {
         Account currentUser = accountService.getUserInfoData();
         Tag tag = tagOptional.get();
         List<Post> postList = null;
+        List<Tag> tagList = new ArrayList<>();
+        tagList.add(tag);
         if (sortPost.equals(SortPost.hot)) {
-            postList = postRepository.findAllPopular().stream().filter(it -> it.getTags().contains(tag)).collect(Collectors.toList());
+            postList = postRepository.findAllPopular().stream().filter(it -> it.getTags().containsAll(tagList)).collect(Collectors.toList());
         } else {
-            postList = postRepository.findByTagsIn((Collection<Tag>) tag, Sort.by(Sort.Direction.DESC, "createdAt"));
+            postList = postRepository.findByTagsIn(tagList, Sort.by(Sort.Direction.DESC, "createdAt"));
         }
         List<PostResDto> dtoList = postList.stream()
                 .distinct()
