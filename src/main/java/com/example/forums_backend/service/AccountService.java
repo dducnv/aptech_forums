@@ -62,7 +62,7 @@ public class AccountService implements UserDetailsService {
     private TemplateEngine templateEngine;
 
     public List<UserAllInfoDto> usersFamous(){
-        List<Account> accountList = accountRepository.findAll(Sort.by(Sort.Direction.DESC,"reputation"));
+        List<Account> accountList = accountRepository.findAll(Sort.by(Sort.Direction.DESC,"reputation")).stream().filter(it-> it.getReputation() > 10).collect(Collectors.toList());
         return accountList.stream().limit(5).map(this::toDto).collect(Collectors.toList());
     }
     public CredentialDto loginWithOTP(LoginDto loginDto) throws AccountException {
