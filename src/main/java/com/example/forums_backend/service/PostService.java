@@ -195,7 +195,7 @@ public class PostService {
                 throw new AppException("POST NOT FOUND!");
             }
             Post resultPost = optionalPost.get();
-//            countViewerPost(resultPost, currentUser);
+            countViewerPost(resultPost, currentUser);
             return fromEntityPostDto(resultPost, currentUser);
         } catch (Exception exception) {
             log.info(exception.getMessage());
