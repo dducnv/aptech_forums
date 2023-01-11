@@ -251,6 +251,7 @@ public class AccountService implements UserDetailsService {
                 .name(account.getName())
                 .username(account.getUsername())
                 .avatar(account.getImageUrl())
+                .bio(account.getBio())
                 .skill(account.getSkill())
                 .reputation(account.getReputation())
                 .github_username(account.getGithub_username())
