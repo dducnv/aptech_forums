@@ -34,6 +34,13 @@ public class Account {
     private String email;// not null - unique
     @Column(unique = true)
     private String username;//not null - unique
+
+    //info
+    private String education;
+    private String email_display;
+    private  String web_url;
+
+    //
     @JsonIgnore
     private String password; //null
     @JsonIgnore

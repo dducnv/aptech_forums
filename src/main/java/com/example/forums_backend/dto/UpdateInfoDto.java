@@ -17,4 +17,7 @@ public class UpdateInfoDto {
     private String username;
     private String skill;
     private String github_username;
+    private String education;
+    private String email_display;
+    private  String web_url;
 }

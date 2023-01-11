@@ -21,6 +21,9 @@ public class UserAllInfoDto {
     private String github_username;
     private int reputation; // default 0
     private String role; //USER - ADMIN
+    private String education;
+    private String email_display;
+    private  String web_url;
     private LocalDateTime createdAt; //null
     private int post_count;
     private int comment_count;

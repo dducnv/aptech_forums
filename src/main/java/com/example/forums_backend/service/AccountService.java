@@ -259,6 +259,9 @@ public class AccountService implements UserDetailsService {
                 .tag_flowing_count(account.getTagFollowings().size())
                 .badge_count(account.getUserBadge().size())
                 .role(account.getRole())
+                .web_url(account.getWeb_url())
+                .education(account.getEducation())
+                .email_display(account.getEmail_display())
                 .createdAt(account.getCreatedAt())
                 .build();
         return ProfileDto.builder()
@@ -284,6 +287,9 @@ public class AccountService implements UserDetailsService {
                 .comment_count(account.getComments().size())
                 .tag_flowing_count(account.getTagFollowings().size())
                 .role(account.getRole())
+                .web_url(account.getWeb_url())
+                .education(account.getEducation())
+                .email_display(account.getEmail_display())
                 .badge_count(account.getUserBadge().size())
                 .email(account.getEmail())
                 .createdAt(account.getCreatedAt())
@@ -309,6 +315,9 @@ public class AccountService implements UserDetailsService {
                 .github_username(account.getGithub_username())
                 .tag_flowing_count(account.getTagFollowings().size())
                 .role(account.getRole())
+                .web_url(account.getWeb_url())
+                .education(account.getEducation())
+                .email_display(account.getEmail_display())
                 .badge_count(account.getUserBadge().size())
                 .email(account.getEmail())
                 .createdAt(account.getCreatedAt())
@@ -330,7 +339,7 @@ public class AccountService implements UserDetailsService {
     public UpdateInfoDto updateInfoDto(UpdateInfoDto updateInfoDto) throws AppException {
         Account account = getUserInfoData();
         ProfileDto accountUsername = findUserInfoByUsername(updateInfoDto.getUsername());
-        if(accountUsername.getInfo().getEmail() != null && !Objects.equals(updateInfoDto.getUsername(), account.getUsername())){
+        if(accountUsername.getInfo().getEmail() != null && !Objects.equals(accountUsername.getInfo().getEmail(), account.getEmail())){
             throw new AppException("USERNAME IS USED");
         }
         account.setUsername(updateInfoDto.getUsername());
@@ -338,6 +347,9 @@ public class AccountService implements UserDetailsService {
         account.setName(updateInfoDto.getName());
         account.setSkill(updateInfoDto.getSkill());
         account.setBio(updateInfoDto.getBio());
+        account.setEducation(updateInfoDto.getEducation());
+        account.setWeb_url(updateInfoDto.getWeb_url());
+        account.setEmail_display(updateInfoDto.getEmail_display());
         account.setGithub_username(updateInfoDto.getGithub_username());
         accountRepository.save(account);
         return updateInfoDto;
