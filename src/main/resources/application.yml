@@ -7,19 +7,10 @@ spring:
     username: wjrvv7wuvkdlghnttp0o
     password: pscale_pw_DbGxU1QUaBFjFpJbJGp8uJc3xr8ojC3vb3p43xMMfmo
     driverClassName: com.mysql.cj.jdbc.Driver
-#     url: jdbc:mysql://sql6.freesqldatabase.com/sql6584138?createDatabaseIfNotExist=true
-#     username: sql6584138
-#     password: Cj4adeDHBq
-#     url: jdbc:mysql://appcuaduc:asia-southeast1:forums-db
-#     username: root
-#     password:
-#    url: jdbc:mysql://us-east.connect.psdb.cloud/forums_t2009m1_db?sslMode=VERIFY_IDENTITY
-#    username: ykx2en5o1rqd9e60arbt
-#    password: pscale_pw_dW1Cs3MsLqT2fVmdxz3hNAXqfXPsZGX0G0wrM5NbKTV
-#     url: jdbc:postgresql://free-tier8.aws-ap-southeast-1.cockroachlabs.cloud:26257/defaultdb?options=--cluster%3Dfancy-dragon-2874&password=qP6VlDJWhxsoThc7ttmW0g&sslmode=verify-full&user=dducnv
-#     username: dducnv
-#     password: qP6VlDJWhxsoThc7ttmW0g
-#     driverClassName: org.postgresql.Driver
+#     url:
+#     username: 
+#     password: 
+
 
   mvc:
     pathmatch:
@@ -27,8 +18,8 @@ spring:
   mail:
     port: 587
     host: smtp.gmail.com
-    username: forum.fptaptech@gmail.com
-    password: rmdiupuwvzfvguon
+    username: 
+    password: 
     properties.mail.smtp:
       auth: true
       starttls.enable: true
@@ -47,15 +38,15 @@ spring:
       client:
         registration:
           google:
-            clientId: 572511665932-lam11rsjg0f9hlfmjkc5mri9ndm33u2a.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: 
+            clientSecret:
             redirectUri: "https://newbiedev-pqvws.appengine.bfcplatform.vn/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           github:
-            clientId: 31c2e8628954c21966c1
-            clientSecret: b361c098f56d45e7df4149c1cce6639b65eaac89
+            clientId: 
+            clientSecret: 
             redirectUri: "https://newbiedev-pqvws.appengine.bfcplatform.vn/oauth2/callback/{registrationId}"
             scope:
               - user:email
